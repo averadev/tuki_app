@@ -28,14 +28,17 @@ local txtPName, txtPConcept, lastYP
 -- Arrays
 local covers, currentP, rowPartner = {}, {}, {}
 local txtBg, txtFiltro, fpRows = {}, {}, {}
-local partnerFav = {{"imgPartner1.jpg", "El Encanto", "Brochetas" }, 
-                    {"imgPartner2.jpg", "Dulce Tentación", "Cafe y Postres"}, 
-                    {"imgPartner3.jpg", "Maria Bonita", "Comida Mexicana"}, 
-                    {"imgPartner4.jpg", "Arte Taurino", "Tapas y Carnes Frias"}, 
-                    {"imgPartner5.jpg", "La Plaza", "Cafeteria"}, 
-                    {"imgPartner6.jpg", "Linda Argentina", "Cortes Argentinos"}, 
-                    {"imgPartner7.jpg", "Happy Rainbow", "Pasteleria"}}
-local filtroP = {"HOTELES", "PARQUES", "ANTROS", "VIAJES", "RESTAURANTES", "HOTELES", "PARQUES", "ANTROS", "ENTRETENIMIENTO", "BARES", "RESTAURANTES",}
+local partnerFav = {{"imgPartner1.png", "Las Brochetas Grill", "Brochetas y Tragos", {.2, .5, .7}, 1}, 
+                    {"imgPartner2.png", "Dulce Tentación", "Cafe y Postres", {.2, .7, .2}, 0}, 
+                    {"imgPartner3.png", "Maria Bonita", "Comida Mexicana", {.5, .2, .7}, 1}, 
+                    {"imgPartner4.png", "Arte Taurino", "Tapas y Carnes Frias", {.7, .2, .2}, 0}, 
+                    {"imgPartner5.png", "La Plaza", "Cafeteria", {.7, .2, .7}, 0}, 
+                    {"imgPartner6.png", "Linda Argentina", "Cortes Argentinos", {.5, .5, .2}, 1}, 
+                    {"imgPartner7.png", "La Perla", "Pasteleria", {.7, .7, .2}, 1}}
+
+
+local filtroP = {{"TODO", "iconFilter"}, {"HOGAR", "iconFilter"}, {"COMPRAS", "iconFilter"}, {"MODA", "iconFilter"}, 
+                 {"CAFE", "iconFilter"}, {"NIÑOS", "iconFilter"}, {"ANTROS", "iconFilter"}, {"COMIDA", "iconFilter"}}
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
@@ -43,25 +46,24 @@ local filtroP = {"HOTELES", "PARQUES", "ANTROS", "VIAJES", "RESTAURANTES", "HOTE
 -- Crea el coverflow de comercios destacados
 function getCoverFirstFlow()
     -- Get first covers
-    lastX = -40
     for z = 1, 3, 1 do 
         createCover(partnerFav[z])
     end
     
-    covers[1].x = 110
-    covers[3].x = 370
+    covers[1].x = 120
+    covers[3].x = 360
     
     covers[2].alpha = 1
     covers[2]:toFront()
-    covers[2].y = 130
-    covers[2].bg.width = 236
-    covers[2].bg.height = 236
+    covers[2].y = 220
+    covers[2].bg.width = 240
+    covers[2].bg.height = 150
     covers[2].img.width = 220
-    covers[2].img.height = 220
+    covers[2].img.height = 90
     
     txtPName = display.newText({
         text = covers[2].name,     
-        x = midW, y = 270, width = 440,
+        x = midW, y = 315, width = 440,
         font = native.systemFontBold,   
         fontSize = 26, align = "center"
     })
@@ -70,7 +72,7 @@ function getCoverFirstFlow()
 
     txtPConcept = display.newText({
         text = covers[2].concept,     
-        x = midW, y = 300, width = 440,
+        x = midW, y = 340, width = 440,
         font = native.systemFont,   
         fontSize = 20, align = "center"
     })
@@ -83,105 +85,101 @@ end
 function createCover()
     local idx = #covers + 1
     local partner = partnerFav[idx]
-    lastX = lastX + 140
     
-    covers[idx] = display.newContainer( 226, 226 )
+    covers[idx] = display.newContainer( 240, 150 )
     covers[idx].alpha = .5
-    covers[idx]:translate( midW, 100 )
+    covers[idx]:translate( midW, 200 )
     covers[idx].name = partner[2]
     covers[idx].concept = partner[3]
     scrViewP:insert( covers[idx] )
     
-    covers[idx].bg = display.newRect(0, 0, 186, 186 )
-    covers[idx].bg:setFillColor( .58 )
+    covers[idx].bg = display.newRoundedRect(0, 0, 200, 125, 10 )
+    covers[idx].bg:setFillColor( partner[4][1], partner[4][2], partner[4][3] )
     covers[idx]:insert( covers[idx].bg )
     
     covers[idx].img = display.newImage("img/deco/"..partner[1])
+    covers[idx].img.height = 80
+    covers[idx].img.width = 200
     covers[idx].img:translate( 0, 0 )
-    covers[idx].img.width = 180
-    covers[idx].img.height = 180
+    
     covers[idx]:insert( covers[idx].img )
+    
 end
 
--- Evento opcion filtro
-function tapFilterPartner(event)
+-- Creamos filtros del comercio
+function tapFilter(event)
     local t = event.target
-    if t.set then
-        t.set = false
-        t:setFillColor( .91 )
-        txtFiltro[t.idx]:setFillColor( .68 )
+    if t.bgFP1.alpha == 0 then
+        t.bgFP1.alpha = 1
+        t.bgFP2.alpha = 1
+        t.iconOn.alpha = 1
+        t.iconOff.alpha = 0
+        t.txt:setFillColor( 1 )
     else
-        t.set = true
-        t:setFillColor( .15, .72, .91 )
-        txtFiltro[t.idx]:setFillColor( 1 )
+        t.bgFP1.alpha = 0
+        t.bgFP2.alpha = 0
+        t.iconOn.alpha = 0
+        t.iconOff.alpha = 1
+        t.txt:setFillColor( .68 )
     end
-    return true
 end
 
 -- Creamos filtros del comercio
 function filterPartner()
-    local lastY = 350
+    
+    local bgFP = display.newRect(midW, 435, intW, 150 )
+    bgFP:setFillColor( 246/255, 252/255, 1 )
+    scrViewP:insert( bgFP )
+    
+    for z = 1, #filtroP, 1 do 
+        local xPosc = (z * 130) - 65
+        
+        local bg = display.newContainer( 150, 150 )
+        bg:translate( xPosc, 435 )
+        scrViewP:insert( bg )
+        bg:addEventListener( 'tap', tapFilter)
+        
+        bg.bgFP1 = display.newRoundedRect(0, 0, 130, 130, 10 )
+        bg.bgFP1:setFillColor( 236/255 )
+        bg.bgFP1.alpha = 0
+        bg:insert( bg.bgFP1 )
+        
+        bg.bgFP2 = display.newRoundedRect(0, 0, 120, 120, 10 )
+        bg.bgFP2:setFillColor( 46/255, 190/255, 239/255 )
+        bg.bgFP2.alpha = 0
+        bg:insert( bg.bgFP2 )
+        
+        bg.iconOn = display.newImage("img/icon/"..filtroP[z][2].."On.png")
+        bg.iconOn:translate(0, -10)
+        bg.iconOn.alpha = 0
+        bg:insert( bg.iconOn )
+        
+        bg.iconOff = display.newImage("img/icon/"..filtroP[z][2].."Off.png")
+        bg.iconOff:translate(0, -10)
+        bg:insert( bg.iconOff )
+        
+        bg.txt = display.newText({
+            text = filtroP[z][1], 
+            x = -5, y = 35, width = 120, 
+            font = native.systemFontBold,   
+            fontSize = 16, align = "center"
+        })
+        bg.txt:setFillColor( .68 )
+        bg:insert( bg.txt )
+        
+        -- Activate All
+        if z == 1 then
+            tapFilter({target = bg})
+        end
+        -- 202
+        --#filtroP
+    end
+    
     local fieldBlueSearch = display.newImage("img/deco/fieldBlueSearch.png")
-    fieldBlueSearch:translate(midW, lastY)
+    fieldBlueSearch:translate(midW, 540)
     scrViewP:insert( fieldBlueSearch )
     
-    local fpx = 20
-    local fpy = 410
-    for z = 1, #filtroP, 1 do 
-        txtBg[z] = display.newRoundedRect( fpx, fpy, 100, 45, 10 )
-        txtBg[z].anchorX = 0
-        txtBg[z].idx = z
-        txtBg[z].set = false
-        txtBg[z]:setFillColor( .91 )
-        txtBg[z]:addEventListener( 'tap', tapFilterPartner)
-        scrViewP:insert( txtBg[z] )
-        
-        txtFiltro[z] = display.newText({
-            text = filtroP[z],     
-            x = fpx + 10, y = fpy,
-            font = native.systemFont,   
-            fontSize = 14, align = "left"
-        })
-        txtFiltro[z].anchorX = 0
-        txtFiltro[z]:setFillColor( .68 )
-        scrViewP:insert( txtFiltro[z] )
-        -- Resize background
-        txtBg[z].width = txtFiltro[z].width + 20
-        
-        -- Set new X
-        if txtBg[z].x + txtBg[z].width > 460 then
-            fpx = 20
-            fpy = fpy + 55
-            txtBg[z].x = fpx
-            txtBg[z].y = fpy
-            txtFiltro[z].x = fpx + 10
-            txtFiltro[z].y = fpy
-            fpRows[#fpRows + 1] = z - 1
-        end
-        fpx = txtBg[z].x + txtBg[z].width + 15
-    end
-    lastYP = fpy
-    fpRows[#fpRows + 1] = #filtroP
-    
-    -- Reorder
-    for z = 1, #fpRows, 1 do 
-        local lastBG = 1
-        if z > 1 then 
-           lastBG = fpRows[z - 1] + 1
-        end
-        
-        if lastBG < fpRows[z] then
-            local xtraX = 460 - (txtBg[fpRows[z]].x + txtBg[fpRows[z]].width)
-            local xtraByP = xtraX / (fpRows[z] - lastBG)
-            
-            local noY = 1
-            for y = lastBG + 1, fpRows[z], 1 do 
-                txtBg[y].x = txtBg[y].x + (xtraByP * noY)
-                txtFiltro[y].x = txtFiltro[y].x + (xtraByP * noY)
-                noY = noY + 1
-            end
-        end
-    end
+    lastYP = 520
 end 
 
 -- Creamos lista de comercios
@@ -196,18 +194,22 @@ function setListPartner()
         bg:setFillColor( 1 )
         rowPartner[z]:insert( bg )
         
+        local bgImg = display.newRoundedRect(-160, 0, 128, 80, 7 )
+        bgImg:setFillColor( currentP[z][4][1], currentP[z][4][2], currentP[z][4][3] )
+        rowPartner[z]:insert( bgImg )
         
         local img = display.newImage("img/deco/"..currentP[z][1])
         img:translate( -160, 0 )
-        img.width = 100
-        img.height = 100
+        img.width = 122
+        img.height = 50
         rowPartner[z]:insert( img )
-        local mask = graphics.newMask( "img/deco/mask100.jpg" )
-        img:setMask( mask )
         
-        local PLinfo = display.newImage("img/icon/PLinfo.png")
+        local isAfil = "partnersAfili.png"
+        if currentP[z][5] == 1 then
+            isAfil = "partnersNext.png"
+        end
+        local PLinfo = display.newImage("img/icon/"..isAfil)
         PLinfo:translate( 190, 0 )
-        PLinfo.alpha = .7
         rowPartner[z]:insert( PLinfo )
         
         local name = display.newText({
@@ -229,12 +231,13 @@ function setListPartner()
         rowPartner[z]:insert( concept )
         
         if z < #currentP then
-            local line = display.newLine(- 200, 119, 200, 119)
-            line:setStrokeColor( .58, .3 )
-            line.strokeWidth = 2
-            rowPartner[z]:insert(line)
+            local line = display.newRect( 0, 59, 400, 2 )
+            line:setFillColor( .58, .3 )
+            rowPartner[z]:insert( line )
         end
     end
+    -- Set new scroll position
+    scrViewP:setScrollHeight(lastYP + (120 * #currentP) + 65)
 end
 
 ---------------------------------------------------------------------------------
@@ -245,12 +248,11 @@ function scene:createScene( event )
     
 	local tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
-    local initY = h + 190 -- inicio en Y del worksite
-    local hWorkSite = intH - (h + 270)
+    local initY = h + 80 -- inicio en Y del worksite
+    local hWorkSite = intH - (h + 160)
     
     scrViewP = widget.newScrollView
 	{
@@ -263,6 +265,8 @@ function scene:createScene( event )
 	}
 	screen:insert(scrViewP)
     scrViewP:toBack()
+    tools:buildNavBar(scrViewP)
+    
     getCoverFirstFlow()
     filterPartner()
     currentP = partnerFav

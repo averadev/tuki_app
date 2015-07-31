@@ -147,7 +147,7 @@ function scene:createScene( event )
     scrViewP:insert( PLcheck )
     
     -- Imagen
-    local imgPBig = display.newImage("img/deco/imgPBig01.png")
+    local imgPBig = display.newImage("img/deco/imgRewardArgBife.jpg")
     imgPBig:translate( midW, 440 )
     scrViewP:insert( imgPBig )
     
