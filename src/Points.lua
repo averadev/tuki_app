@@ -11,6 +11,7 @@
 require('src.Tools')
 local widget = require( "widget" )
 local storyboard = require( "storyboard" )
+local Globals = require( "src.Globals" )
 
 -- Grupos y Contenedores
 local screen
@@ -45,7 +46,7 @@ function scene:createScene( event )
 end	
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
-	
+    Globals.scenes[#Globals.scenes + 1] = storyboard.getCurrentSceneName()
 end
 
 -- Remove Listener

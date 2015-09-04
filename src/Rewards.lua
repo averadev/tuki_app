@@ -79,127 +79,31 @@ end
 function tapReward(event)
     local t = event.target
     audio.play(fxTap)
+    storyboard.removeScene( "src.Reward" )
     storyboard.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
 end
 
 -- Tap toggle event
-function tapFav(event)
+function tapFavRew(event)
     local t = event.target
     audio.play( fxFav )
-    if t.iconHeart2.alpha == 0 then
-        t:setFillColor( 46/255, 190/255, 239/255 )
-        t.iconHeart1.alpha = 0
-        t.iconHeart2.alpha = 1
-    else
-        t:setFillColor( 236/255 )
+    if t.iconHeart1.alpha == 0  then
         t.iconHeart1.alpha = 1
         t.iconHeart2.alpha = 0
+        t:setFillColor( 236/255 )
+        RestManager.setRewardFav(t.idReward, 0)
+    else
+        t.iconHeart1.alpha = 0
+        t.iconHeart2.alpha = 1
+        t:setFillColor( 46/255, 190/255, 239/255 )
+        RestManager.setRewardFav(t.idReward, 1)
     end
     return true
 end
 
--- Creamos filtros del comercio
-function filterReward()
-    
-    local scrViewF = widget.newScrollView
-	{
-		top = 0,
-		left = 10,
-		width = display.contentWidth - 20,
-		height = 120,
-		verticalScrollDisabled = true,
-		backgroundColor = { 1 }
-	}
-	scrViewR:insert(scrViewF)
-    
-    for z = 1, #Globals.filtros, 1 do 
-        local xPosc = (z * 94) - 55
-        
-        local bg = display.newContainer( 90, 90 )
-        bg:translate( xPosc, 60 )
-        scrViewF:insert( bg )
-        bg:addEventListener( 'tap', tapFilter)
-        
-        bg.bgFP1 = display.newRect(0, 0, 100, 100 )
-        bg.bgFP1:setFillColor( 236/255 )
-        bg:insert( bg.bgFP1 )
-        
-        bg.bgFP2 = display.newRect(0, 0, 90, 90 )
-        bg.bgFP2:setFillColor( 46/255, 190/255, 239/255 )
-        bg.bgFP2.alpha = 0
-        bg:insert( bg.bgFP2 )
-        
-        bg.iconOn = display.newImage("img/icon/"..Globals.filtros[z][2].."On.png")
-        bg.iconOn:translate(0, -10)
-        bg.iconOn.alpha = 0
-        bg:insert( bg.iconOn )
-        
-        bg.iconOff = display.newImage("img/icon/"..Globals.filtros[z][2].."Off.png")
-        bg.iconOff:translate(0, -10)
-        bg:insert( bg.iconOff )
-        
-        bg.txt = display.newText({
-            text = Globals.filtros[z][1], 
-            x = xPosc, y = 90,
-            font = native.systemFontBold,   
-            fontSize = 13, align = "center"
-        })
-        bg.txt:setFillColor( .5 )
-        scrViewF:insert( bg.txt )
-        
-        -- Activate All
-        if z == 1 then
-            tapFilter({target = bg})
-        end
-    end
-    -- Set new scroll position
-    scrViewF:setScrollWidth((100 * #Globals.filtros) - 10)
-    
-    -- Toggle Button
-    local bgToggle1 = display.newRect(midW, 160, intW - 20, 62 )
-    bgToggle1:setFillColor( 236/255 )
-    scrViewR:insert( bgToggle1 )
-    local bgToggle2 = display.newRect(midW, 160, intW - 24, 58 )
-    bgToggle2:setFillColor( 1 )
-    scrViewR:insert( bgToggle2 )
-    
-    btnToggle1 = display.newRect(125, 160, 220, 50 )
-    btnToggle1:setFillColor( 236/255 )
-    btnToggle1.isMe = true
-    btnToggle1.active = true
-    scrViewR:insert( btnToggle1 )
-    btnToggle1:addEventListener( 'tap', tapToggle)
-    btnToggle2 = display.newRect(355, 160, 220, 50 )
-    btnToggle2:setFillColor( 236/255 )
-    btnToggle2.isMe = false
-    btnToggle1.active = false
-    scrViewR:insert( btnToggle2 )
-    btnToggle2:addEventListener( 'tap', tapToggle)
-    
-    btnToggle1.txt = display.newText({
-        text = "MIS RECOMPENSAS", 
-        x = 130, y = 160,
-        font = native.systemFontBold,   
-        fontSize = 13, align = "center"
-    })
-    btnToggle1.txt:setFillColor( .5 )
-    scrViewR:insert( btnToggle1.txt )
-    
-    btnToggle2.txt = display.newText({
-        text = "EXPLORAR", 
-        x = 360, y = 160,
-        font = native.systemFontBold,   
-        fontSize = 13, align = "center"
-    })
-    btnToggle2.txt:setFillColor( .5 )
-    scrViewR:insert( btnToggle2.txt )
-    
-    tapToggle({target = btnToggle1})
-end 
-
 -- Creamos lista de comercios
 function setListReward(rewards)
-    lastYP = 160
+    lastYP = 70
     tools:setLoading(false)
     
     for z = 1, #rewards, 1 do 
@@ -219,7 +123,8 @@ function setListReward(rewards)
         local bgFav = display.newRect(-196, 0, 60, 74 )
         bgFav:setFillColor( 236/255 )
         rowReward[z]:insert( bgFav )
-        bgFav:addEventListener( 'tap', tapFav)
+        bgFav.idReward = rewards[z].id
+        bgFav:addEventListener( 'tap', tapFavRew)
         local bgPoints = display.newRect(-126, 0, 80, 74 )
         bgPoints:setFillColor( .21 )
         rowReward[z]:insert( bgPoints )
@@ -388,13 +293,13 @@ function scene:createScene( event )
     scrViewR:toBack()
     
     tools:setLoading(true, scrViewR)
-    filterReward()
+    tools:getFilters(scrViewR)
     RestManager.getRewards()
     
 end	
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
-	
+    Globals.scenes[#Globals.scenes + 1] = storyboard.getCurrentSceneName()
 end
 
 -- Remove Listener

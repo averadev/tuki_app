@@ -4,6 +4,8 @@
 ---------------------------------------------------------------------------------
 local storyboard = require( "storyboard" )
 local Sprites = require('src.Sprites')
+local Globals = require( "src.Globals" )
+local widget = require( "widget" )
 require('src.Menu')
 
 
@@ -11,10 +13,11 @@ Tools = {}
 function Tools:new()
     -- Variables
     local self = display.newGroup()
-    local scrMenu, bgShadow, headLogo, bottomCheck, grpLoading
+    local bgShadow, headLogo, bottomCheck, grpLoading
     local h = display.topStatusBarContentHeight
     local fxTap = audio.loadSound( "fx/click.wav")
     self.y = h
+    
     
     -- Creamos la el toolbar
     function self:buildHeader()
@@ -52,8 +55,11 @@ function Tools:new()
         self:insert( headLogo )
         
          -- Get Menu
-        scrMenu = Menu:new()
-        scrMenu:builScreen()
+        if Globals.menu == nil then
+            print("Build")
+            Globals.menu = Menu:new()
+            Globals.menu:builScreen()
+        end
     end
     
     -- Creamos la el toolbar
@@ -99,7 +105,6 @@ function Tools:new()
         section5.screen = 'Favs'
         section5:addEventListener( 'tap', toScreen)
         self:insert(section5)
-        
         
         bottomCheck = display.newImage("img/icon/bottomCheck.png")
         bottomCheck:translate(245, intH - 55)
@@ -171,7 +176,7 @@ function Tools:new()
             bg.alpha = .01
             bg.idCommerce = data.items[z].idCommerce
             bg.screen = 'Partner'
-            bg:addEventListener( 'tap', toScreen)
+            bg:addEventListener( 'tap', tapCommerce)
             self:insert(bg)
             
             local txtTitle = display.newText({
@@ -246,7 +251,7 @@ function Tools:new()
         
         local btnHome = display.newRect( 360, 110, 240, 60 )
         btnHome:setFillColor( .91 )
-        btnHome:addEventListener( 'tap', backScreen)
+        btnHome:addEventListener( 'tap', toHome)
         grpNavBar:insert(btnHome)
         local navHome = display.newImage("img/icon/navHome.png")
         navHome:translate( 435, 105 )
@@ -278,21 +283,21 @@ function Tools:new()
             grpLoading = display.newGroup()
             parent:insert(grpLoading)
             
-            local bg = display.newRect( (display.contentWidth / 2), (display.contentHeight / 2), 
-                display.contentWidth, display.contentHeight )
+            local bg = display.newRect( (display.contentWidth / 2), (parent.height / 2), 
+                display.contentWidth, parent.height )
             bg:setFillColor( .85 )
             bg.alpha = .3
             grpLoading:insert(bg)
             local sheet = graphics.newImageSheet(Sprites.loading.source, Sprites.loading.frames)
             local loading = display.newSprite(sheet, Sprites.loading.sequences)
             loading.x = display.contentWidth / 2
-            loading.y = display.contentHeight / 2 
+            loading.y = parent.height / 2 
             grpLoading:insert(loading)
             loading:setSequence("play")
             loading:play()
             local titleLoading = display.newText({
                 text = "Loading...",     
-                x = (display.contentWidth / 2) + 5, y = (display.contentHeight / 2) + 60, width = intW,
+                x = (display.contentWidth / 2) + 5, y = (parent.height / 2) + 60, width = intW,
                 font = native.systemFontBold,   
                 fontSize = 18, align = "center"
             })
@@ -300,9 +305,73 @@ function Tools:new()
             grpLoading:insert(titleLoading)
         else
             grpLoading:removeSelf()
-            grpLoading = nil
+            grpLoading = nil 
         end
     end
+    
+    -- Creamos filtros del comercio
+    function self:getFilters(parent)
+    
+        local scrViewF = widget.newScrollView
+        {
+            top = 0,
+            left = 10,
+            width = display.contentWidth - 20,
+            height = 120,
+            verticalScrollDisabled = true,
+            backgroundColor = { 1 }
+        }
+        parent:insert(scrViewF)
+
+        for z = 1, #Globals.filtros, 1 do 
+            local xPosc = (z * 94) - 55
+
+            local bg = display.newContainer( 90, 90 )
+            bg:translate( xPosc, 60 )
+            scrViewF:insert( bg )
+            bg:addEventListener( 'tap', tapFilter)
+
+            bg.bgFP1 = display.newRect(0, 0, 100, 100 )
+            bg.bgFP1:setFillColor( 236/255 )
+            bg:insert( bg.bgFP1 )
+
+            bg.bgFP2 = display.newRect(0, 0, 90, 90 )
+            bg.bgFP2:setFillColor( 46/255, 190/255, 239/255 )
+            bg.bgFP2.alpha = 0
+            bg:insert( bg.bgFP2 )
+
+            bg.iconOn = display.newImage("img/icon/"..Globals.filtros[z][2].."2.png")
+            bg.iconOn:translate(0, -10)
+            bg.iconOn.alpha = 0
+            bg:insert( bg.iconOn )
+
+            bg.iconOff = display.newImage("img/icon/"..Globals.filtros[z][2].."1.png")
+            bg.iconOff:translate(0, -10)
+            bg:insert( bg.iconOff )
+
+            bg.txt = display.newText({
+                text = Globals.filtros[z][1], 
+                x = xPosc, y = 90, width = 85,
+                font = native.systemFontBold,   
+                fontSize = 10, align = "center"
+            })
+            bg.txt:setFillColor( .5 )
+            scrViewF:insert( bg.txt )
+
+            -- Activate All
+            if z == 1 then
+                tapFilter({target = bg})
+            end
+        end
+        -- Set new scroll position
+        scrViewF:setScrollWidth((94 * #Globals.filtros) - 10)
+    end 
+    
+    -- Muestra el menu
+    function showMenu(event)
+        Globals.menu:toFront()
+        Globals.menu:getMenu()
+    end 
     
     -- Cambia pantalla
     function toScreen(event)
@@ -310,30 +379,26 @@ function Tools:new()
         audio.play(fxTap)
         t.alpha = 1
         transition.to( t, { alpha = .01, time = 200, transition = easing.outExpo })
+        storyboard.removeScene( "src."..t.screen )
         storyboard.gotoScene("src."..t.screen, { time = 400, effect = "slideLeft" } )
     end
     
     -- Regresa pantalla
     function backScreen(event)
         audio.play(fxTap)
-        storyboard.gotoScene("src.Home", { time = 400, effect = "slideRight" } )
+        local last = Globals.scenes[#Globals.scenes - 1]
+        table.remove( Globals.scenes )
+        table.remove( Globals.scenes )
+        storyboard.gotoScene(last, { time = 400, effect = "slideRight" } )
         return true
     end
     
-    -- Cerramos o mostramos shadow
-    function showMenu(event)
-        if bgShadow.alpha == 0 then
-            scrMenu:toFront()
-            bgShadow:toFront()
-            bgShadow:addEventListener( 'tap', showMenu)
-            transition.to( bgShadow, { alpha = .5, time = 400, transition = easing.outExpo })
-            transition.to( scrMenu, { x = 0, time = 400, transition = easing.outExpo } )
-        else
-            bgShadow:removeEventListener( 'tap', showMenu)
-            transition.to( bgShadow, { alpha = 0, time = 400, transition = easing.outExpo })
-            transition.to( scrMenu, { x = -400, time = 400, transition = easing.outExpo })
-        end
-        return true;
+    -- Regresa al Home
+    function toHome(event)
+        audio.play(fxTap)
+        Globals.scenes = {}
+        storyboard.gotoScene("src.Home", { time = 400, effect = "slideRight" } )
+        return true
     end
     
     return self

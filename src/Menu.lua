@@ -7,7 +7,7 @@ function Menu:new()
     local intW, intH  = display.contentWidth, display.contentHeight
     local midW, midH  = intW / 2, intH / 2
     local fxTap = audio.loadSound( "fx/click.wav")
-    local Menu
+    local Menu, bgGray
     
     -- Bloquea cierre de menu
     function blockTap()
@@ -16,9 +16,23 @@ function Menu:new()
     
     -- Cambia pantalla
     function changeScreen(event)
-        showMenu()
+        hideMenu()
         toScreen(event)
         return true
+    end
+    
+    -- Cerramos o mostramos shadow
+    function hideMenu()
+        transition.to( self, { x = -400, time = 400, transition = easing.outExpo })
+        transition.to( bgGray, { alpha = 0, time = 400, transition = easing.outExpo })
+        return true;
+    end
+    
+     -- Obtenemos el Menu
+    function self:getMenu()
+        transition.to( self, { x = 0, time = 400, onComplete=function() 
+            bgGray.alpha = .5
+        end })
     end
     
     -- Creamos la pantalla del menu
@@ -34,6 +48,12 @@ function Menu:new()
         elseif intH > 840 then
             minScr = 300 -- Pantalla alta
         end
+        
+        bgGray = display.newRect( midW, midH, intW, intH )
+        bgGray.alpha = 0
+        bgGray:setFillColor( 0 )
+        bgGray:addEventListener( 'tap', hideMenu)
+        self:insert(bgGray)
         
         -- Background
         local background = display.newRect(200, midH, 400, intH )
@@ -95,7 +115,7 @@ function Menu:new()
         bgMenuUser1.anchorX = 0
         bgMenuUser1.screen = ""
         bgMenuUser1:setFillColor( .7 )
-        bgMenuUser1:addEventListener( 'tap', changeScreen)
+        --bgMenuUser1:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenuUser1)
         local menuUser = display.newImage("img/icon/menuUser.png")
         menuUser:translate(66, 120)
@@ -106,7 +126,7 @@ function Menu:new()
         bgMenuUser2.screen = ""
         bgMenuUser2:setFillColor( .7 )
         bgMenuUser2:addEventListener( 'tap', changeScreen)
-        grpOptions:insert(bgMenuUser2)
+        --grpOptions:insert(bgMenuUser2)
         local menuReload = display.newImage("img/icon/menuReload.png")
         menuReload:translate(199, 120)
         grpOptions:insert( menuReload )
@@ -115,7 +135,7 @@ function Menu:new()
         bgMenuUser3.anchorX = 0
         bgMenuUser3.screen = ""
         bgMenuUser3:setFillColor( .7 )
-        bgMenuUser3:addEventListener( 'tap', changeScreen)
+        --bgMenuUser3:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenuUser3)
         local menuClose = display.newImage("img/icon/menuClose.png")
         menuClose:translate(332, 120)

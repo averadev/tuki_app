@@ -8,4 +8,5 @@ display.setStatusBar( display.DarkStatusBar )
 display.setDefault( "background", 1, 1, 1 )
 
 local storyboard = require('storyboard')
-storyboard.gotoScene("src.Rewards")
+storyboard.gotoScene("src.Home")
+--storyboard.gotoScene("src.Partner", { params = { idCommerce = 1 } } )
