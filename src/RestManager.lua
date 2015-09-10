@@ -4,8 +4,8 @@ local RestManager = {}
 	local mime = require("mime")
 	local json = require("json")
 	local crypto = require("crypto")
+    --local site = "http://localhost/unify/"
     local site = "http://geekbucket.com.mx/unify/"
-    --local site = "http://geekbucket.com.mx/unify/"
 	
 	function urlencode(str)
           if (str) then

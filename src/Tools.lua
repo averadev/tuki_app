@@ -20,7 +20,7 @@ function Tools:new()
     
     
     -- Creamos la el toolbar
-    function self:buildHeader()
+    function self:buildHeader(isWelcome)
         
         bgShadow = display.newRect( 0, 0, display.contentWidth, display.contentHeight - h )
         bgShadow.alpha = 0
@@ -34,31 +34,33 @@ function Tools:new()
         toolbar.anchorY = 0
         toolbar:setFillColor( .21 )
         self:insert(toolbar)
-
-        local btnMenu = display.newRect( 0, 0, 80, 80 )
-        btnMenu.anchorX = 0
-        btnMenu.anchorY = 0
-        btnMenu:setFillColor( .29 )
-        btnMenu:addEventListener( 'tap', showMenu)
-        self:insert(btnMenu)
-        
-        local headMenu = display.newImage("img/icon/headMenu.png")
-        headMenu:translate(40, 40)
-        self:insert( headMenu )
-        
-        local headSearch = display.newImage("img/icon/headSearch.png")
-        headSearch:translate(display.contentWidth - 40, 40)
-        self:insert( headSearch )
         
         headLogo = display.newImage("img/icon/headLogo.png")
         headLogo:translate(display.contentWidth /2, 70)
         self:insert( headLogo )
         
-         -- Get Menu
-        if Globals.menu == nil then
-            print("Build")
-            Globals.menu = Menu:new()
-            Globals.menu:builScreen()
+        if not isWelcome then
+
+            local btnMenu = display.newRect( 0, 0, 80, 80 )
+            btnMenu.anchorX = 0
+            btnMenu.anchorY = 0
+            btnMenu:setFillColor( .29 )
+            btnMenu:addEventListener( 'tap', showMenu)
+            self:insert(btnMenu)
+
+            local headMenu = display.newImage("img/icon/headMenu.png")
+            headMenu:translate(40, 40)
+            self:insert( headMenu )
+
+            local headSearch = display.newImage("img/icon/headSearch.png")
+            headSearch:translate(display.contentWidth - 40, 40)
+            self:insert( headSearch )
+            
+             -- Get Menu
+            if Globals.menu == nil then
+                Globals.menu = Menu:new()
+                Globals.menu:builScreen()
+            end
         end
     end
     
@@ -376,11 +378,13 @@ function Tools:new()
     -- Cambia pantalla
     function toScreen(event)
         local t = event.target
-        audio.play(fxTap)
-        t.alpha = 1
-        transition.to( t, { alpha = .01, time = 200, transition = easing.outExpo })
-        storyboard.removeScene( "src."..t.screen )
-        storyboard.gotoScene("src."..t.screen, { time = 400, effect = "slideLeft" } )
+        if not ("src."..t.screen == storyboard.getCurrentSceneName()) then
+            audio.play(fxTap)
+            t.alpha = 1
+            transition.to( t, { alpha = .01, time = 200, transition = easing.outExpo })
+            storyboard.removeScene( "src."..t.screen )
+            storyboard.gotoScene("src."..t.screen, { time = 400, effect = "slideLeft" } )
+        end
     end
     
     -- Regresa pantalla
