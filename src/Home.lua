@@ -76,6 +76,7 @@ end
 function tapCommerce(event)
     local t = event.target
     audio.play(fxTap)
+    print("Partner")
     storyboard.removeScene( "src.Partner" )
     storyboard.gotoScene("src.Partner", { time = 400, effect = "slideLeft", params = { idCommerce = t.idCommerce } } )
     return true
@@ -169,7 +170,7 @@ function tapDetail(event)
         -- Mis Puntos
         local txtPoints1A = display.newText({
             text = item.userPoints, 
-            x = -130, y = yPosc-7, width = 133, 
+            x = -130, y = yPosc-7,
             font = native.systemFontBold,
             fontSize = 24, align = "center"
         })
@@ -177,7 +178,7 @@ function tapDetail(event)
         detailBox:insert( txtPoints1A )
         local txtPoints1B = display.newText({
             text = "MIS PUNTOS", 
-            x = -130, y = yPosc+15, width = 133, 
+            x = -130, y = yPosc+15,
             font = native.systemFont,
             fontSize = 12, align = "center"
         })
@@ -186,7 +187,7 @@ function tapDetail(event)
         -- Puntos
         local txtPoints2A = display.newText({
             text = item.points, 
-            x = 0, y = yPosc-7, width = 133, 
+            x = 0, y = yPosc-7, 
             font = native.systemFontBold,
             fontSize = 26, align = "center"
         })
@@ -194,7 +195,7 @@ function tapDetail(event)
         detailBox:insert( txtPoints2A )
         local txtPoints2B = display.newText({
             text = "VALOR", 
-            x = 0, y = yPosc+15, width = 133, 
+            x = 0, y = yPosc+15, 
             font = native.systemFont,
             fontSize = 12, align = "center"
         })
@@ -209,7 +210,7 @@ function tapDetail(event)
         detailBox:insert( iconRewardCheck2 )
         local txtPoints3 = display.newText({
             text = "", 
-            x = 130, y = yPosc+20, width = 133, 
+            x = 130, y = yPosc+20, 
             font = native.systemFont,
             fontSize = 10, align = "center"
         })

@@ -125,7 +125,7 @@ function Menu:new()
         bgMenuUser2.anchorX = 0
         bgMenuUser2.screen = ""
         bgMenuUser2:setFillColor( .7 )
-        bgMenuUser2:addEventListener( 'tap', changeScreen)
+        --bgMenuUser2:addEventListener( 'tap', changeScreen)
         --grpOptions:insert(bgMenuUser2)
         local menuReload = display.newImage("img/icon/menuReload.png")
         menuReload:translate(199, 120)

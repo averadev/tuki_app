@@ -155,7 +155,7 @@ function Tools:new()
         
         local txtTitle = display.newText({
             text = data.total,     
-            x = 55, y = 115, width = 105,
+            x = 55, y = 115,
             font = native.systemFontBold,   
             fontSize = 24, align = "center"
         })
@@ -163,7 +163,7 @@ function Tools:new()
         self:insert(txtTitle)
         local txtSubTitle = display.newText({
             text = "Mis Puntos",     
-            x = 55, y = 137, width = 100,
+            x = 55, y = 137,
             font = native.systemFont,   
             fontSize = 12, align = "center"
         })
@@ -173,17 +173,17 @@ function Tools:new()
         for z = 1, #data.items, 1 do 
             local xPosc = z * 105
             
-            local bg = display.newRect( 52 + xPosc, 120, 105, 80 )
-            bg:setFillColor( .7 )
-            bg.alpha = .01
-            bg.idCommerce = data.items[z].idCommerce
-            bg.screen = 'Partner'
-            bg:addEventListener( 'tap', tapCommerce)
-            self:insert(bg)
+            local bgCommerce = display.newRect( 52 + xPosc, 120, 105, 80 )
+            bgCommerce:setFillColor( .7 )
+            bgCommerce.alpha = .01
+            bgCommerce.idCommerce = data.items[z].idCommerce
+            bgCommerce.screen = 'Partner'
+            bgCommerce:addEventListener( 'tap', tapCommerce)
+            self:insert(bgCommerce)
             
             local txtTitle = display.newText({
                 text = data.items[z].points,     
-                x = xPosc + 55, y = 115, width = 105,
+                x = xPosc + 55, y = 115,
                 font = native.systemFontBold,   
                 fontSize = 24, align = "center"
             })
@@ -191,7 +191,7 @@ function Tools:new()
             self:insert(txtTitle)
             local txtSubTitle = display.newText({
                 text = data.items[z].name,     
-                x = xPosc + 55, y = 137, width = 100,
+                x = xPosc + 55, y = 137,
                 font = native.systemFont,   
                 fontSize = 12, align = "center"
             })
@@ -373,6 +373,7 @@ function Tools:new()
     function showMenu(event)
         Globals.menu:toFront()
         Globals.menu:getMenu()
+        return true
     end 
     
     -- Cambia pantalla
@@ -385,10 +386,12 @@ function Tools:new()
             storyboard.removeScene( "src."..t.screen )
             storyboard.gotoScene("src."..t.screen, { time = 400, effect = "slideLeft" } )
         end
+        return true
     end
     
     -- Regresa pantalla
     function backScreen(event)
+        print("backScreen")
         audio.play(fxTap)
         local last = Globals.scenes[#Globals.scenes - 1]
         table.remove( Globals.scenes )
