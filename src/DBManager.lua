@@ -6,7 +6,7 @@ local dbManager = {}
 
 	--Open rackem.db.  If the file doesn't exist it will be created
 	local function openConnection( )
-	    path = system.pathForFile("unify.db", system.DocumentsDirectory)
+	    path = system.pathForFile("tuki.db", system.DocumentsDirectory)
         print(path)
 	    db = sqlite3.open( path )     
 	end
