@@ -35,9 +35,20 @@ function Tools:new()
         toolbar:setFillColor( .21 )
         self:insert(toolbar)
         
-        headLogo = display.newImage("img/icon/headLogo.png")
-        headLogo:translate(display.contentWidth /2, 70)
+        headLogo = display.newGroup()
         self:insert( headLogo )
+        
+        local circle1 = display.newCircle( midW, 55, 35 )
+        circle1:setFillColor( unpack(cWhite) )
+        headLogo:insert( circle1 )
+        
+        local circle2 = display.newCircle( midW, 55, 32 )
+        circle2:setFillColor( unpack(cTurquesa) )
+        headLogo:insert( circle2 )
+        
+        local iconLogo = display.newImage("img/icon/iconLogo.png")
+        iconLogo:translate( midW, 55 )
+        headLogo:insert( iconLogo )
         
         if not isWelcome then
 
@@ -108,9 +119,20 @@ function Tools:new()
         section5:addEventListener( 'tap', toScreen)
         self:insert(section5)
         
-        bottomCheck = display.newImage("img/icon/bottomCheck.png")
-        bottomCheck:translate(245, intH - 55)
-        self:insert( bottomCheck )
+        bottomCheck = display.newGroup()
+        self:insert( headLogo )
+        
+        local circle1 = display.newCircle( 245, intH - 40, 50 )
+        circle1:setFillColor( unpack(cWhite) )
+        bottomCheck:insert( circle1 )
+        
+        local circle2 = display.newCircle( 245, intH - 40, 46 )
+        circle2:setFillColor( unpack(cTurquesa) )
+        bottomCheck:insert( circle2 )
+        
+        local iconLogo = display.newImage("img/icon/iconCheckIn.png")
+        iconLogo:translate(245, intH - 40 )
+        bottomCheck:insert( iconLogo )
         
         local bottomWallet = display.newImage("img/icon/bottomWallet.png")
         bottomWallet:translate(43, intH - 40)

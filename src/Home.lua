@@ -31,12 +31,14 @@ local currentCard = 1
 local isDown = true
 local isCard, direction, detailBox
 local txtPoints, txtPoints2, txtName, txtCommerce, iconRewardBig, btnDetail
-local initY, hWorkSite, yItem, itemSize, itemCoverSize  
+local yItem, itemSize, midSize, itemCoverSize  
+local cards, idxA, favH, favOn, favOff
 
 
 -- Arrays
-local items
-local cards = {}
+local cardL = {}
+local cardR = {}
+local rewardsH
 local footer
 
 
@@ -44,19 +46,19 @@ local footer
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 -- Tap toggle event
-function tapFav(event)
+function tapFavHome(event)
     local t = event.target
     audio.play( fxFav )
-    if items[currentCard].id == items[currentCard].fav  then
-        t.img1.alpha = 1
-        t.img2.alpha = 0
-        items[currentCard].fav = nil
-        RestManager.setRewardFav(t.idReward, 0)
+    if rewardsH[idxA].id == rewardsH[idxA].fav  then
+        favOff.alpha = 1
+        favOn.alpha = 0
+        rewardsH[idxA].fav = nil
+        RestManager.setRewardFav(rewardsH[idxA].id, 0)
     else
-        t.img1.alpha = 0
-        t.img2.alpha = 1
-        items[currentCard].fav = items[currentCard].id
-        RestManager.setRewardFav(t.idReward, 1)
+        favOff.alpha = 0
+        favOn.alpha = 1
+        rewardsH[idxA].fav = rewardsH[idxA].id
+        RestManager.setRewardFav(rewardsH[idxA].id, 1)
     end
     return true
 end
@@ -67,7 +69,7 @@ function tapReward(event)
         local t = event.target
         audio.play( fxTap )
         storyboard.removeScene( "src.Reward" )
-        storyboard.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = items[currentCard].id } } )
+        storyboard.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = rewardsH[idxA].id } } )
     end
     return true
 end
@@ -82,10 +84,13 @@ function tapCommerce(event)
     return true
 end
 
--- Tap show detail
+-------------------------------------
+-- Muestra el detalle del reward
+-- @param event evento
+------------------------------------
 function tapDetail(event)
     local t = event.target
-    local item = items[currentCard]
+    local item = rewardsH[idxA]
     workSite:toBack()
     
     if workSite.y == 0 then
@@ -95,7 +100,7 @@ function tapDetail(event)
         end
         detailBox = display.newContainer( itemSize, 350 )
         detailBox.anchorY = 1
-        detailBox:translate( 240, yItem + itemSize + 60 )
+        detailBox:translate( 240, yItem + itemSize + 100 )
         screen:insert( detailBox )
         detailBox:toBack()
 
@@ -109,8 +114,8 @@ function tapDetail(event)
 
         local commerce = display.newText({
             text = item.commerce,     
-            x = 0, y = -140,
-            font = native.systemFont,   
+            x = 0, y = -130,
+            font = fLatoRegular,   
             fontSize = 22, align = "center"
         })
         commerce:setFillColor( .3 )
@@ -118,21 +123,21 @@ function tapDetail(event)
 
         local commerceDesc = display.newText({
             text = item.commerceDesc,
-            x = 0, y = -110,
-            font = native.systemFont,   
+            x = 0, y = -100,
+            font = fLatoRegular,   
             fontSize = 20, align = "center"
         })
         commerceDesc:setFillColor( .68 )
         detailBox:insert(commerceDesc)
 
-        local bg3 = display.newRect(0, -40, itemSize - 4, 80 )
+        local bg3 = display.newRect(0, -30, itemSize - 4, 80 )
         bg3:setFillColor( .91 )
         detailBox:insert( bg3 )
 
         local name = display.newText({
             text = item.name,     
-            x = 0, y = -40, width = itemSize - 40,
-            font = native.systemFont,   
+            x = 0, y = -30, width = itemSize - 40,
+            font = fLatoRegular,   
             fontSize = 28, align = "center"
         })
         name:setFillColor( .3 )
@@ -140,16 +145,16 @@ function tapDetail(event)
 
         local description = display.newText({
             text = item.description,
-            x = 0, y = 30, width = itemSize - 40,
-            font = native.systemFont,   
+            x = 0, y = 50, width = itemSize - 40,
+            font = fLatoRegular,   
             fontSize = 18, align = "center"
         })
         description:setFillColor( .3 )
         detailBox:insert(description)
 
-        iconRewardBig.y = iconRewardBig.bottomY
+        favH.y = favH.bottomY
 
-        local yPosc = 100
+        local yPosc = 120
         -- Barra Puntos
         local btnPointsBg = display.newRoundedRect( 0, yPosc, 400, 60, 10 )
         btnPointsBg:setFillColor( .91 )
@@ -171,13 +176,13 @@ function tapDetail(event)
         local txtPoints1A = display.newText({
             text = item.userPoints, 
             x = -130, y = yPosc-7,
-            font = native.systemFontBold,
+            font = fLatoBold,
             fontSize = 24, align = "center"
         })
         txtPoints1A:setFillColor( 0 )
         detailBox:insert( txtPoints1A )
         local txtPoints1B = display.newText({
-            text = "MIS PUNTOS", 
+            text = fLatoRegular, 
             x = -130, y = yPosc+15,
             font = native.systemFont,
             fontSize = 12, align = "center"
@@ -188,7 +193,7 @@ function tapDetail(event)
         local txtPoints2A = display.newText({
             text = item.points, 
             x = 0, y = yPosc-7, 
-            font = native.systemFontBold,
+            font = fLatoBold,
             fontSize = 26, align = "center"
         })
         txtPoints2A:setFillColor( 0 )
@@ -196,7 +201,7 @@ function tapDetail(event)
         local txtPoints2B = display.newText({
             text = "VALOR", 
             x = 0, y = yPosc+15, 
-            font = native.systemFont,
+            font = fLatoRegular,
             fontSize = 12, align = "center"
         })
         txtPoints2B:setFillColor( .3 )
@@ -211,7 +216,7 @@ function tapDetail(event)
         local txtPoints3 = display.newText({
             text = "", 
             x = 130, y = yPosc+20, 
-            font = native.systemFont,
+            font = fLatoRegular,
             fontSize = 10, align = "center"
         })
         txtPoints3:setFillColor( .3 )
@@ -232,290 +237,194 @@ function tapDetail(event)
         detailBox:toBack()
         transition.to( workSite, { y = 0, time = 200, onComplete=function() 
             if detailBox then
-                iconRewardBig.y = iconRewardBig.topY
+                favH.y = favH.topY
                 detailBox:removeSelf()
                 detailBox = nil
             end
         end })
     else
         isDown = false
-        transition.to( workSite, { y = -350, time = 200 })
+        transition.to( workSite, { y = -370, time = 200 })
     end
     return true
 end
 
--- Crea primeras tarjetas
-function getFirstCards(obj)
-    tools:setLoading(false)
-    items = obj.items
-    
-    currentCard = 1
-    buildCard(items[1])
-    buildCard(items[2])
-    
-    local btnBg = display.newRect(midW, yItem + (itemSize / 2), itemSize, itemSize )
-    btnBg:setFillColor( 0 )
-    btnBg.alpha = .01
-    btnBg:addEventListener( 'tap', tapReward) 
-    workSite:insert( btnBg )
-    
-    footer = display.newImage("img/deco/footerReward.png")
-    footer.anchorY = 0
-    footer:translate(midW, yItem + (itemSize/2) )
-    workSite:insert( footer )
-    
-    -- Grupo de elementos
-    grpElemns = display.newGroup()
-    workSite:insert(grpElemns)
-    
-    iconRewardBig = display.newContainer( 100, 100 )
-    iconRewardBig.idReward = items[1].id
-    iconRewardBig.bottomY = 750
-    iconRewardBig.topY = yItem + (itemSize/8) 
-    iconRewardBig:addEventListener( 'tap', tapFav) 
-    iconRewardBig:translate( 400, yItem + (itemSize/8)  )
-    grpElemns:insert( iconRewardBig )
-    
-    iconRewardBig.img1 = display.newImage("img/icon/iconRewardBig1.png")
-    iconRewardBig:insert( iconRewardBig.img1 )
-    iconRewardBig.img2 = display.newImage("img/icon/iconRewardBig2.png")
-    iconRewardBig:insert( iconRewardBig.img2 )
-    if items[1].id == items[1].fav  then
-        iconRewardBig.img1.alpha = 0
-    else
-        iconRewardBig.img2.alpha = 0
-    end
-    
-    btnDetail = display.newRect(380, yItem + itemSize + 30, 120, 40 )
-    btnDetail.alpha = .01
-    btnDetail:addEventListener( 'tap', tapDetail) 
-    grpElemns:insert(btnDetail)
-    
-    txtPoints = display.newText({
-        text = items[1].points,     
-        y = yItem + (itemSize * .80),
-        x = 110, width = 105,
-        font = native.systemFontBold,   
-        fontSize = 50, align = "center"
-    })
-    txtPoints:setFillColor( 1 )
-    grpElemns:insert(txtPoints)
-    txtPoints2 = display.newText({
-        text = "PUNTOS",     
-        y = yItem + (itemSize * .80) + 43,
-        x = 110, width = 140,
-        font = native.systemFontBold,   
-        fontSize = 25, align = "center"
-    })
-    txtPoints2:setFillColor( 1 )
-    grpElemns:insert(txtPoints2)
-    
-    txtName = display.newText({
-        text = items[1].name,     
-        y = yItem + (itemSize) + 20,
-        x = 215, width = 350,
-        font = native.systemFontBold,   
-        fontSize = 20, align = "left"
-    })
-    txtName:setFillColor( 1 )
-    grpElemns:insert(txtName)
-    
-    txtCommerce = display.newText({
-        text = items[1].commerce,     
-        y = yItem + (itemSize) + 40,
-        x = 215, width = 350,
-        font = native.systemFontBold,   
-        fontSize = 16, align = "left"
-    })
-    txtCommerce:setFillColor( .9 )
-    grpElemns:insert(txtCommerce)
-    
-    cards[1].top.alpha = 1
-    cards[1].bottom.alpha = 1
-    bgM:addEventListener( "touch", touchScreen )
-    
-end
 
--- Arma tarjeta
-function nextCard()
-    currentCard = currentCard + 1
-    if #cards < #items then
-        buildCard(items[#cards + 1])
-    end
-end
-
--- Activa tarjeta
-function activateCard(noC)
-    grpElemns.alpha = 0 
-    
-    cards[noC].top:toBack()
-    cards[noC].top.alpha = 1
-    cards[noC].top.height = itemSize
-    cards[noC].bottom:toBack()
-    cards[noC].bottom.alpha = 1
-    cards[noC].bottom.height = itemSize
-end
-
--- Desactiva tarjeta
-function deactivateCard(noC)
-    grpElemns.alpha = 1
-    grpElemns:toFront();
-    
-    cards[noC].top.alpha = 0
-    cards[noC].bottom.alpha = 0
-end
-
--- Mueve tabs de las hojas
-function anotherCard()
-    grpElemns.alpha = 1
-    grpElemns:toFront();
-    txtPoints.text = items[currentCard].points
-    txtName.text = items[currentCard].name
-    txtCommerce.text = items[currentCard].commerce
-    iconRewardBig.idReward = items[currentCard].id
-    if items[currentCard].id == items[currentCard].fav  then
-        iconRewardBig.img1.alpha = 0
-        iconRewardBig.img2.alpha = 1
-    else
-        iconRewardBig.img1.alpha = 1
-        iconRewardBig.img2.alpha = 0
-    end
-end
-
-
--- Arma tarjeta
-function buildCard(item)
-    local idx = #cards + 1
-    
-    -- Container
-    cards[idx] = {}
-    -- Imagen Top
-    local maskTop = graphics.newMask( "img/deco/maskTop.jpg" )
-    cards[idx].top = display.newImage(item.image, system.TemporaryDirectory)
-    cards[idx].top:translate(midW, yItem + (itemSize / 2))
-    cards[idx].top.alpha = 0
-    cards[idx].top:setMask( maskTop )
-    cards[idx].top.width = itemSize
-    cards[idx].top.height = itemSize
-    workSite:insert( cards[idx].top )
-    
-    -- Imagen Bottom
-    local maskBottom = graphics.newMask( "img/deco/maskBottom.jpg" )
-    cards[idx].bottom = display.newImage(item.image, system.TemporaryDirectory)
-    cards[idx].bottom:translate(midW, yItem + (itemSize / 2))
-    cards[idx].bottom.alpha = 0
-    cards[idx].bottom:setMask( maskBottom )
-    cards[idx].bottom.width = itemSize
-    cards[idx].bottom.height = itemSize
-    workSite:insert( cards[idx].bottom )
-end
-
--- Listener Touch Screen
-function touchScreen(event)
-    local nextC = currentCard + 1
-    local prevC = currentCard - 1
-    if event.phase == "began" and isDown then
-        if event.yStart > yItem  and event.yStart < (yItem + itemSize + 55) then
-            isCard = true
-            direction = 0
-        else
-            isCard = false
-        end
-    elseif event.phase == "moved" and (isCard) and isDown then
-        local y = (event.y - event.yStart)
-        if direction == 0 then
-            if y < -10 and currentCard < #items then
-                direction = 1
-                activateCard(nextC)
-                cards[nextC].top.height = 0
-            elseif y > 10 and currentCard > 1 then
-                direction = -1
-                activateCard(prevC)
-                cards[prevC].bottom.height = 0
-            end
-        elseif direction == 1 then
-            if y < 0 then
-                if ((-y * 4) < itemSize) then
-                    cards[nextC].top.alpha = 0
-                    cards[currentCard].bottom.alpha = 1
-                    footer.alpha = 1
-                    
-                    cards[currentCard].bottom.height = itemSize + (y * 4)
-                    footer.height = (itemSize / 2) + (y * 2)
-                elseif cards[nextC].top.height < itemSize then
-                    cards[nextC].top.alpha = 1
-                    cards[currentCard].bottom.alpha = 0
-                    footer.alpha = 0
-                    cards[nextC].top:toFront()
-                    
-                    if itemSize + ((-y * 4) - (itemSize*2)) > itemSize then
-                        cards[nextC].top.height = itemSize
-                    else
-                        cards[nextC].top.height = itemSize + ((-y * 4) - (itemSize*2))
-                    end
-                end
-            end
-        elseif direction == -1 then
-            if y > 0 then
-                if ((y * 4) < itemSize) then
-                    cards[prevC].bottom.alpha = 0
-                    cards[currentCard].top.alpha = 1
-                    cards[currentCard].top.height = itemSize - (y * 4)
-                elseif cards[prevC].bottom.height < itemSize then
-                    cards[prevC].bottom:toFront()
-                    cards[prevC].bottom.alpha = 1
-                    cards[currentCard].top.alpha = 0
-                    if itemSize + ((y * 4) - (itemSize*2)) > itemSize then
-                        cards[prevC].bottom.height = itemSize
-                    else
-                        cards[prevC].bottom.height = itemSize + ((y * 4) - (itemSize*2))
-                    end
-                end
-            end
-        end
-    elseif event.phase == "ended" or event.phase == "cancelled" then
-        
-        -- Movimiento
-        if direction == 1 and (isCard) then
-            if  cards[currentCard].bottom.alpha == 1 then
-                transition.to( footer, { height = itemCoverSize, time = 200 })
-                transition.to( cards[currentCard].bottom, { height = itemSize, time = 200, onComplete=function() 
-                    deactivateCard(nextC)
-                end })
-            elseif cards[currentCard].bottom.alpha == 0 then
-                footer.height = itemCoverSize
-                transition.to( footer, { alpha = 1, time = 200 })
-                transition.to( cards[nextC].top, { height = itemSize, time = 200, onComplete=function() 
-                    deactivateCard(currentCard)
-                    nextCard()
-                    anotherCard()
-                end })
-            end
-        elseif direction == -1 and (isCard) then
-            if  cards[currentCard].top.alpha == 1 then
-                transition.to( cards[currentCard].top, { height = itemSize, time = 200, onComplete=function() 
-                    deactivateCard(prevC)
-                end })
-            elseif cards[currentCard].top.alpha == 0 then
-                footer.alpha = 0
-                footer:toFront()
-                transition.to( footer, { alpha = 1, time = 200 })
-                transition.to( cards[prevC].bottom, { height = itemSize, time = 200, onComplete=function() 
-                    deactivateCard(currentCard)
-                    currentCard = currentCard - 1
-                    anotherCard()
-                end })
-            end
-        end
-        isCard = false
-        direction = 0
-    end
-end
-
+-------------------------------------
+-- Actualiza los puntos del toolbar
+-- @param data info del WS
+------------------------------------
 function getPointsBar(data)
     tools:setPointsBar(data)
 end
 
+-------------------------------------
+-- Genera primer lote de tarjetas
+-- @param obj info del WS
+------------------------------------
+function getFirstCards(obj)
+    tools:setLoading(false)
+    rewardsH = obj.items
+    for i = 1, #rewardsH, 1 do
+        buildCard(rewardsH[i])
+    end
+    
+    idxA = 1
+    cardL[idxA].alpha = 1
+    cardR[idxA].alpha = 1
+    setRewardDetail(idxA)
+    screen:addEventListener( "touch", touchScreen )
+end
+
+-------------------------------------
+-- Actualiza la informacion de la recompensa
+-- @param item registro que incluye la info del reward
+------------------------------------
+function setRewardDetail(idx)
+    txtPoints.text = rewardsH[idx].points
+    txtName.text = rewardsH[idx].name
+    txtCommerce.text = rewardsH[idx].commerce
+    -- Fav actions
+    if rewardsH[idx].id == rewardsH[idx].fav  then
+        favOff.alpha = 0 
+        favOn.alpha = 1
+    else
+        favOff.alpha = 1
+        favOn.alpha = 0 
+    end
+end
+
+-------------------------------------
+-- Muestra imagenes y mascaras
+-- @param item registro que incluye el nombre de la imagen
+------------------------------------
+function buildCard(item)
+    local idx = #cardL + 1
+    local imgS = graphics.newImageSheet( item.image, system.TemporaryDirectory, { width = 150, height = 300, numFrames = 2 })
+    
+    cardL[idx] = display.newRect( midW, yItem, midSize, itemSize )
+    cardL[idx].alpha = 0
+    cardL[idx].anchorY = 0
+    cardL[idx].anchorX = 1
+    cardL[idx].fill = { type = "image", sheet = imgS, frame = 1 }
+    cards:insert(cardL[idx])
+    
+    cardR[idx] = display.newRect( midW, yItem, midSize, itemSize )
+    cardR[idx].alpha = 0
+    cardR[idx].anchorY = 0
+    cardR[idx].anchorX = 0
+    cardR[idx].fill = { type = "image", sheet = imgS, frame = 2 }
+    cards:insert(cardR[idx])
+    
+end
+
+-------------------------------------
+-- Listener para el flip del reward
+-- @param event objeto evento
+------------------------------------
+function touchScreen(event)
+    if event.phase == "began" and workSite.y == 0 then
+        if event.yStart > 140 and event.yStart < 820 then
+            isCard = true
+            direction = 0
+        end
+    elseif event.phase == "moved" and (isCard) then
+        local x = (event.x - event.xStart)
+        local xM = (x * 1.5)
+        
+        if direction == 0 then
+            if x < -10 and idxA < #rewardsH then
+                direction = 1
+                cardR[idxA+1]:toBack()
+                cardR[idxA+1].alpha = 1
+                cardR[idxA+1].width = midSize
+            elseif x > 10 and idxA > 1 then
+                direction = -1
+                cardL[idxA-1]:toBack()
+                cardL[idxA-1].alpha = 1
+                cardL[idxA-1].width = midSize
+            end
+        elseif direction == 1 and x <= 0 and xM >= -itemSize then
+            if xM > -midSize then
+                if cardR[idxA].alpha == 0 then
+                    cardL[idxA+1].alpha = 0
+                    cardR[idxA].alpha = 1
+                    cardR[idxA].width = 0
+                end
+                -- Move current to left
+                cardR[idxA].width = midSize + xM
+            else
+                if cardL[idxA+1].alpha == 0 then
+                    cardR[idxA].alpha = 0
+                    cardL[idxA+1]:toFront()
+                    cardL[idxA+1].alpha = 1
+                    cardL[idxA+1].width = 0
+                end
+                -- Move new to left
+                cardL[idxA+1].width = (xM*-1)-midSize
+            end
+        elseif direction == -1 and x >= 0 then
+            if xM < midSize then
+                if cardL[idxA].alpha == 0 then
+                    cardR[idxA-1].alpha = 0
+                    cardL[idxA].alpha = 1
+                    cardL[idxA].width = 0
+                end
+                -- Move current to left
+                cardL[idxA].width = midSize - xM
+            elseif xM < itemSize then
+                if cardR[idxA-1].alpha == 0 then
+                    cardL[idxA].alpha = 0
+                    cardR[idxA-1]:toFront()
+                    cardR[idxA-1].alpha = 1
+                    cardR[idxA-1].width = 0
+                end
+                -- Move new to left
+                cardR[idxA-1].width = xM - midSize
+            end
+            
+        end
+    elseif event.phase == "ended" or event.phase == "cancelled" then
+        local xM = ((event.x - event.xStart) * 3)
+        -- To Rigth
+        if direction == 1 and xM >= -itemSize then
+            cardR[idxA].alpha = 1
+            cardL[idxA+1].alpha = 0
+            transition.to( cardR[idxA], { width = midSize, time = 200, onComplete=function()
+                cardR[idxA+1].alpha = 0
+            end})
+        elseif direction == 1 and xM < -itemSize then
+            cardR[idxA].alpha = 0
+            cardL[idxA+1].alpha = 1
+            setRewardDetail(idxA+1)
+            transition.to( cardL[idxA+1], { width = midSize, time = 200, onComplete=function()
+                cardL[idxA].alpha = 0
+                cardR[idxA].alpha = 0
+                idxA = idxA + 1
+            end})
+        end
+        -- To Left
+        if direction == -1 and xM <= itemSize then
+            cardL[idxA].alpha = 1
+            cardR[idxA-1].alpha = 0
+            transition.to( cardL[idxA], { width = midSize, time = 200, onComplete=function()
+                cardR[idxA-1].alpha = 0
+            end})
+        elseif direction == -1 and xM > itemSize then
+            cardL[idxA].alpha = 0
+            cardR[idxA-1].alpha = 1
+            setRewardDetail(idxA-1)
+            transition.to( cardR[idxA-1], { width = midSize, time = 200, onComplete=function()
+                cardL[idxA].alpha = 0
+                cardR[idxA].alpha = 0
+                idxA = idxA - 1
+            end})
+        end
+        
+        isCard = false
+        direction = 0
+    end
+end
 
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
@@ -531,31 +440,171 @@ function scene:createScene( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildPointsBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
     -- Tamaños y posicones
-    initY = h + 160 -- inicio en Y del worksite
-    hWorkSite = intH - (h + 240) -- altura del worksite
-    -- Tamaño de las recompensas
-    itemSize = 320 -- Pantalla chica
-    if hWorkSite > 440 and hWorkSite < 500 then 
-        itemSize = 360 -- Pantalla mediana
-    elseif hWorkSite > 500 then 
-        itemSize = 420 -- Pantalla alta
-    end
-    itemCoverSize = (itemSize / 2) + 60
+    local isPointsBar = false
+    local xLCircle = 115
+    local rLCircle = 80
+    local fsPoints = 65
+    local fyPoints = 55
+    local fsTuks = 25
+    local fsReward = 22
+    local fsCommerce = 16
+    local sBgFoot = 100
+    local sBgDetail = 30
+    local spBgDetail = 80
+    allH = intH - h
+    itemSize = 420
+    midSize = itemSize / 2
+    yItem = 0
     
-    -- Y del Item
-    yItem = initY + ((hWorkSite/2) - (itemSize/2)) - 35 -- centro del worksite
+    if allH > 820 then
+        isPointsBar = true
+        tools:buildPointsBar()
+        yItem = (h+170) + (allH - 820)/2
+    elseif allH > 730 then
+        yItem = (h+115) + (allH - 770)/2
+    elseif allH > 685 then
+        itemSize = 370
+        midSize = itemSize / 2
+        yItem = (h+115) + (allH - 735)/2
+        xLCircle = 130
+        rLCircle = 70
+        fsPoints = 55
+        fyPoints = 50
+        fsReward = 20
+        fsCommerce = 14
+        fsTuks = 22
+    else
+        itemSize = 330
+        midSize = itemSize / 2
+        yItem = (h+115) + (allH - 660)/2
+        xLCircle = 150
+        rLCircle = 55
+        fsPoints = 45
+        fyPoints = 45
+        fsReward = 18
+        fsCommerce = 12
+        fsTuks = 20
+        sBgFoot = 70
+        sBgDetail = 23
+        spBgDetail = 58
+    end
     
     -- Contenedor area de trabajo
     workSite = display.newGroup()
     screen:insert(workSite)
+    
+    local bgGray = display.newRect(midW, yItem + (itemSize / 2), itemSize + 4, itemSize + 4 )
+    bgGray:setFillColor( unpack(cGrayM) )
+    bgGray:addEventListener( 'tap', tapReward) 
+    workSite:insert( bgGray )
+    
+    cards = display.newGroup()
+    workSite:insert(cards)
+    
+    -- Favs
+    local rmid = (midW + (itemSize/2)) - 60
+    favH = display.newGroup()
+    favH:translate( rmid + 25, yItem + 35 )
+    favH.bottomY = yItem + itemSize - 220
+    favH.topY = yItem + 35
+    screen:insert(favH)
+    local bgFav = display.newRect( 0, 0, 60, 60 )
+    bgFav.alpha = .01
+    bgFav:addEventListener( 'tap', tapFavHome) 
+    favH:insert( bgFav )
+    favOn = display.newImage("img/icon/iconRewardBig2.png")
+    favH:insert( favOn )
+    favOff = display.newImage("img/icon/iconRewardBig1.png")
+    favH:insert( favOff )
+        
+    local circle1 = display.newCircle( xLCircle, (yItem + itemSize) - (rLCircle/2), rLCircle )
+    circle1:setFillColor( unpack(cWhite) )
+    workSite:insert( circle1 )
+
+    local circle2 = display.newCircle( xLCircle, (yItem + itemSize) - (rLCircle/2), rLCircle - 5 )
+    circle2:setFillColor( unpack(cTurquesa) )
+    workSite:insert( circle2 )
+    
+    local bgLine = display.newRect(midW, (yItem + itemSize) + 4, itemSize +4, 2 )
+    bgLine.anchorY = 0
+    bgLine:setFillColor( unpack(cWhite) )
+    workSite:insert( bgLine )
+    
+    local bgInfo = display.newRect(midW, (yItem + itemSize) + 6, itemSize +4, sBgFoot )
+    bgInfo.anchorY = 0
+    bgInfo:setFillColor( unpack(cBlueH) )
+    workSite:insert( bgInfo )
+    
+    -- Grupo de elementos
+    grpElemns = display.newGroup()
+    workSite:insert(grpElemns)
+    
+    txtPoints = display.newText({
+        text = '',     
+        y = (yItem + itemSize) - fyPoints,
+        x = xLCircle, width = 150,
+        font = fLatoBold,   
+        fontSize = fsPoints, align = "center"
+    })
+    txtPoints:setFillColor( unpack(cWhite) )
+    grpElemns:insert(txtPoints)
+    
+    txtTuks = display.newText({
+        text = 'TUKS', 
+        y = (yItem + itemSize) - 13,
+        x = xLCircle, width = 150,
+        font = fLatoBold,   
+        fontSize = fsTuks, align = "center"
+    })
+    txtTuks:setFillColor( unpack(cBlueH) )
+    grpElemns:insert(txtTuks)
+    
+    txtName = display.newText({
+        text = '',   
+        y = yItem + (itemSize) + 30,
+        x = midW, width = itemSize -30,
+        font = fLatoBold,   
+        fontSize = fsReward, align = "left"
+    })
+    txtName:setFillColor( 1 )
+    grpElemns:insert(txtName)
+    
+    txtCommerce = display.newText({
+        text = '', 
+        y = yItem + (itemSize) + 60,
+        x = midW, width = itemSize -30,
+        font = "Lato",   
+        fontSize = fsCommerce, align = "left"
+    })
+    txtCommerce:setFillColor( .9 )
+    grpElemns:insert(txtCommerce)
+    
+    -- Buton
+    local bgBtn = display.newRoundedRect( rmid, yItem + (itemSize) + spBgDetail, 100, sBgDetail, 5 )
+    bgBtn:setFillColor( unpack(cGrayH) )
+    bgBtn:addEventListener( 'tap', tapDetail) 
+    grpElemns:insert(bgBtn)
+    
+    -- Circles
+    local circle1 = display.newRoundedRect( rmid-25, yItem + (itemSize) + spBgDetail, 10, 10, 5 )
+    circle1:setFillColor( .9 )
+    grpElemns:insert(circle1)
+    local circle2 = display.newRoundedRect( rmid, yItem + (itemSize) + spBgDetail, 10, 10, 5 )
+    circle2:setFillColor( .9 )
+    grpElemns:insert(circle2)
+    local circle3 = display.newRoundedRect( rmid+25, yItem + (itemSize) + spBgDetail, 10, 10, 5 )
+    circle3:setFillColor( .9 )
+    grpElemns:insert(circle3)
+    
     -- Crea la primera tanda
     tools:setLoading(true, screen)
-    RestManager.getPointsBar()
+    if isPointsBar then
+        RestManager.getPointsBar()
+    end
     RestManager.getHomeRewards()
 end	
 -- Called immediately after scene has moved onscreen:
