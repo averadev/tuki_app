@@ -30,8 +30,8 @@ local bgM, tools, grpElemns
 local currentCard = 1
 local isDown = true
 local isCard, direction, detailBox
-local txtPoints, txtPoints2, txtName, txtCommerce, iconRewardBig, btnDetail
-local yItem, itemSize, midSize, itemCoverSize  
+local txtPoints, txtTuks, txtPoints2, txtName, txtCommerce, iconRewardBig, btnDetail
+local yItem, itemSize, midSize, itemCoverSize, cTuks1, cTuks2
 local cards, idxA, favH, favOn, favOff
 
 
@@ -45,7 +45,10 @@ local footer
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------
--- Tap toggle event
+-------------------------------------
+-- Tap en fav, realiza fav del reward
+-- @param event objeto evento
+------------------------------------
 function tapFavHome(event)
     local t = event.target
     audio.play( fxFav )
@@ -63,7 +66,10 @@ function tapFavHome(event)
     return true
 end
 
--- Tap toggle event
+-------------------------------------
+-- Tap en Reward, cambio de pantalla
+-- @param event objeto evento
+------------------------------------
 function tapReward(event)
     if isDown then
         local t = event.target
@@ -74,7 +80,10 @@ function tapReward(event)
     return true
 end
 
--- Tap commerce event
+-------------------------------------
+-- Tap en puntos, cambio de pantalla a Comercio
+-- @param event objeto evento
+------------------------------------
 function tapCommerce(event)
     local t = event.target
     audio.play(fxTap)
@@ -182,9 +191,9 @@ function tapDetail(event)
         txtPoints1A:setFillColor( 0 )
         detailBox:insert( txtPoints1A )
         local txtPoints1B = display.newText({
-            text = fLatoRegular, 
+            text = "TUS TUKS", 
             x = -130, y = yPosc+15,
-            font = native.systemFont,
+            font = fLatoRegular,
             fontSize = 12, align = "center"
         })
         txtPoints1B:setFillColor( .3 )
@@ -227,7 +236,7 @@ function tapDetail(event)
         if userPoints > points  then
             iconRewardCheck1.alpha = 0
         else
-            txtPoints3.text = "FALTAN " .. (points-userPoints) .. " PUNTOS"
+            txtPoints3.text = "FALTAN " .. (points-userPoints) .. " TUKS"
             iconRewardCheck2.alpha = 0
         end
     end
@@ -249,6 +258,12 @@ function tapDetail(event)
     return true
 end
 
+-------------------------------------
+-- Comprobamos imagen QR
+------------------------------------
+function verifyQR()
+    
+end
 
 -------------------------------------
 -- Actualiza los puntos del toolbar
@@ -280,6 +295,24 @@ end
 -- Actualiza la informacion de la recompensa
 -- @param item registro que incluye la info del reward
 ------------------------------------
+function showHElments(vAlpha)
+    txtPoints.alpha = vAlpha
+    txtTuks.alpha = vAlpha
+    txtName.alpha = vAlpha
+    txtCommerce.alpha = vAlpha
+    cTuks1.alpha = vAlpha
+    cTuks2.alpha = vAlpha
+    if favOn.active then
+        favOn.alpha = vAlpha
+    elseif favOff.active then
+        favOff.alpha = vAlpha
+    end
+end
+
+-------------------------------------
+-- Actualiza la informacion de la recompensa
+-- @param item registro que incluye la info del reward
+------------------------------------
 function setRewardDetail(idx)
     txtPoints.text = rewardsH[idx].points
     txtName.text = rewardsH[idx].name
@@ -287,10 +320,14 @@ function setRewardDetail(idx)
     -- Fav actions
     if rewardsH[idx].id == rewardsH[idx].fav  then
         favOff.alpha = 0 
+        favOff.active = false
         favOn.alpha = 1
+        favOn.active = true
     else
         favOff.alpha = 1
+        favOff.active = true
         favOn.alpha = 0 
+        favOn.active = false
     end
 end
 
@@ -327,11 +364,12 @@ function touchScreen(event)
         if event.yStart > 140 and event.yStart < 820 then
             isCard = true
             direction = 0
+            --showHElments(0)
         end
     elseif event.phase == "moved" and (isCard) then
         local x = (event.x - event.xStart)
         local xM = (x * 1.5)
-        
+        local vAlpha = (xM/200)
         if direction == 0 then
             if x < -10 and idxA < #rewardsH then
                 direction = 1
@@ -345,6 +383,10 @@ function touchScreen(event)
                 cardL[idxA-1].width = midSize
             end
         elseif direction == 1 and x <= 0 and xM >= -itemSize then
+            vAlpha = 1+vAlpha
+            if (vAlpha<=1) then
+                showHElments(vAlpha)
+            end
             if xM > -midSize then
                 if cardR[idxA].alpha == 0 then
                     cardL[idxA+1].alpha = 0
@@ -364,6 +406,10 @@ function touchScreen(event)
                 cardL[idxA+1].width = (xM*-1)-midSize
             end
         elseif direction == -1 and x >= 0 then
+            vAlpha = 1-vAlpha
+            if (vAlpha>0) then
+                showHElments(vAlpha)
+            end
             if xM < midSize then
                 if cardL[idxA].alpha == 0 then
                     cardR[idxA-1].alpha = 0
@@ -421,6 +467,7 @@ function touchScreen(event)
             end})
         end
         
+        showHElments(1)
         isCard = false
         direction = 0
     end
@@ -521,13 +568,13 @@ function scene:createScene( event )
     favOff = display.newImage("img/icon/iconRewardBig1.png")
     favH:insert( favOff )
         
-    local circle1 = display.newCircle( xLCircle, (yItem + itemSize) - (rLCircle/2), rLCircle )
-    circle1:setFillColor( unpack(cWhite) )
-    workSite:insert( circle1 )
+    cTuks1 = display.newCircle( xLCircle, (yItem + itemSize) - (rLCircle/2), rLCircle )
+    cTuks1:setFillColor( unpack(cWhite) )
+    workSite:insert( cTuks1 )
 
-    local circle2 = display.newCircle( xLCircle, (yItem + itemSize) - (rLCircle/2), rLCircle - 5 )
-    circle2:setFillColor( unpack(cTurquesa) )
-    workSite:insert( circle2 )
+    cTuks2 = display.newCircle( xLCircle, (yItem + itemSize) - (rLCircle/2), rLCircle - 5 )
+    cTuks2:setFillColor( unpack(cTurquesa) )
+    workSite:insert( cTuks2 )
     
     local bgLine = display.newRect(midW, (yItem + itemSize) + 4, itemSize +4, 2 )
     bgLine.anchorY = 0
@@ -585,7 +632,7 @@ function scene:createScene( event )
     
     -- Buton
     local bgBtn = display.newRoundedRect( rmid, yItem + (itemSize) + spBgDetail, 100, sBgDetail, 5 )
-    bgBtn:setFillColor( unpack(cGrayH) )
+    bgBtn:setFillColor( unpack(cGrayXXH) )
     bgBtn:addEventListener( 'tap', tapDetail) 
     grpElemns:insert(bgBtn)
     
@@ -599,6 +646,9 @@ function scene:createScene( event )
     local circle3 = display.newRoundedRect( rmid+25, yItem + (itemSize) + spBgDetail, 10, 10, 5 )
     circle3:setFillColor( .9 )
     grpElemns:insert(circle3)
+    
+    -- Verificar QR
+    verifyQR()
     
     -- Crea la primera tanda
     tools:setLoading(true, screen)

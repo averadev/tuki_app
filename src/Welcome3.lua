@@ -12,6 +12,8 @@ require('src.Tools')
 local widget = require( "widget" )
 local storyboard = require( "storyboard" )
 local Globals = require( "src.Globals" )
+local DBManager = require('src.DBManager')
+local RestManager = require( "src.RestManager" )
 
 -- Grupos y Contenedores
 local screen
@@ -84,7 +86,6 @@ function scene:createScene( event )
     txtNear2:setFillColor( 46/255, 190/255, 239/255 )
     screen:insert( txtNear2 )
     
-    
     local btnTxt2 = display.newRect( midW + 130, midH + 200, 150, 40 )
     btnTxt2:setFillColor( 1 )
     btnTxt2:addEventListener( 'tap', goToHome )
@@ -103,7 +104,11 @@ function scene:createScene( event )
 end	
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
-    
+    -- Deshabilitar welcome
+    DBManager.disableWelcome()
+    -- Obtener imagen QR
+    dbConfig = DBManager.getSettings()
+    RestManager.getQR(dbConfig.id)
 end
 
 -- Remove Listener

@@ -10,10 +10,15 @@ h = display.topStatusBarContentHeight
 
 -- Colors
 cWhite = { 1 }
+cGrayXL = { .9 }
+cGrayL = { .7 }
 cGrayM = { .63 }
-cGrayH = { .14 }
-cTurquesa = { .18, .74, .93  }
+cGrayH = { .45 }
+cGrayXH = { .29 }
+cGrayXXH = { .14 }
 cBlueH = { .02, .16, .35  }
+cPurple = { .27, .11, .36  }
+cTurquesa = { .18, .74, .93  }
 
 -- Fonts
 fLatoBold = 'Lato Bold'

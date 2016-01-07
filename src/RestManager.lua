@@ -4,7 +4,7 @@ local RestManager = {}
 	local mime = require("mime")
 	local json = require("json")
 	local crypto = require("crypto")
-    local site = "http://localhost/tuki_ws/"
+    local site = "http://192.168.1.70/tuki_ws/"
     --local site = "http://geekbucket.com.mx/unify/"
 	
 	function urlencode(str)
@@ -69,6 +69,30 @@ local RestManager = {}
             goToMethod(obj)
         end
     end
+
+    RestManager.getQR = function(key)
+        -- Verificamos si existe el codigo
+        local path = system.pathForFile( key..".png", system.TemporaryDirectory )
+        local fhd = io.open( path )
+        if fhd then
+            fhd:close()
+        else
+            -- Solicitamos el codigo
+            local url = site.."api/getQR/"..key
+            local function callback(event)
+                if ( event.isError ) then
+                else
+                    -- Almacenamos QR
+                    local data = {}
+                    data[1] = {image = "1014858604001209.png"}
+                    loadImage({idx = 0, name = "", path = "assets/img/api/qr/", items = data})
+                end
+                return true
+            end
+            -- Do request
+            network.request( url, "GET", callback )
+        end
+	end
 	
 	RestManager.getHomeRewards = function()
 		local url = site.."api/getHomeRewards/format/json/idUser/1"
@@ -155,8 +179,23 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
-    RestManager.getCommerces = function()
-		local url = site.."api/getCommerces/format/json/idUser/1"
+    RestManager.getCommerces = function(filters)
+		local url = site.."api/getCommerces/format/json/idUser/1/filters/"..filters
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                loadImage({idx = 0, name = "Commerces", path = "assets/img/api/commerce/", items = data.items})
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
+    RestManager.getJoined = function(filters)
+		local url = site.."api/getJoined/format/json/idUser/1/filters/"..filters
         
         local function callback(event)
             if ( event.isError ) then
