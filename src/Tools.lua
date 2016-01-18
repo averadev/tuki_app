@@ -13,13 +13,16 @@ Tools = {}
 function Tools:new()
     -- Variables
     local self = display.newGroup()
-    local bgShadow, headLogo, bottomCheck, grpLoading, filters
+    local bgShadow, headLogo, grpLoading, filters
     local h = display.topStatusBarContentHeight
     local fxTap = audio.loadSound( "fx/click.wav")
     self.y = h
     
     
-    -- Creamos la el toolbar
+    -------------------------------------
+    -- Creamos el top bar
+    -- @param isWelcome boolean pantalla principal
+    ------------------------------------ 
     function self:buildHeader(isWelcome)
         
         bgShadow = display.newRect( 0, 0, display.contentWidth, display.contentHeight - h )
@@ -43,7 +46,7 @@ function Tools:new()
         headLogo:insert( circle1 )
         
         local circle2 = display.newCircle( midW, 55, 32 )
-        circle2:setFillColor( unpack(cTurquesa) )
+        circle2:setFillColor( unpack(cPurpleL) )
         headLogo:insert( circle2 )
         
         local iconLogo = display.newImage("img/icon/iconLogo.png")
@@ -75,7 +78,9 @@ function Tools:new()
         end
     end
     
-    -- Creamos la el toolbar
+    -------------------------------------
+    -- Creamos el bottom bar
+    ------------------------------------ 
     function self:buildBottomBar()
         local intH = display.contentHeight - h
         
@@ -119,22 +124,17 @@ function Tools:new()
         section5:addEventListener( 'tap', toScreen)
         self:insert(section5)
         
-        bottomCheck = display.newGroup()
-        self:insert( headLogo )
-        
-        local circle1 = display.newCircle( 245, intH - 40, 50 )
+        local circle1 = display.newCircle( 245, intH - 65, 50 )
         circle1:setFillColor( unpack(cWhite) )
-        bottomCheck:insert( circle1 )
-        
-        local circle2 = display.newCircle( 245, intH - 40, 46 )
+        self:insert( circle1 )
+        local circle2 = display.newCircle( 245, intH - 65, 46 )
         circle2:setFillColor( unpack(cTurquesa) )
         circle2.screen = 'CheckIn'
         circle2:addEventListener( 'tap', toScreen)
-        bottomCheck:insert( circle2 )
-        
+        self:insert( circle2 )
         local iconLogo = display.newImage("img/icon/iconCheckIn.png")
-        iconLogo:translate(245, intH - 40 )
-        bottomCheck:insert( iconLogo )
+        iconLogo:translate(245, intH - 60 )
+        self:insert( iconLogo )
         
         local bottomWallet = display.newImage("img/icon/bottomWallet.png")
         bottomWallet:translate(43, intH - 40)
@@ -150,7 +150,9 @@ function Tools:new()
         self:insert( bottomFav )
     end
     
-    -- Creamos la el toolbar
+    -------------------------------------
+    -- Creamos la barra de puntos
+    ------------------------------------ 
     function self:buildPointsBar()
         
         local toolbar = display.newRect( 0, 80, display.contentWidth, 80 )
@@ -167,7 +169,10 @@ function Tools:new()
         headLogo:toFront()
     end
     
-    -- Creamos la el toolbar
+    -------------------------------------
+    -- Asignamos valores a la barra de puntos
+    -- @param data valores
+    ------------------------------------ 
     function self:setPointsBar(data)
         
         local bg = display.newRect( 52, 120, 105, 80 )
@@ -177,6 +182,7 @@ function Tools:new()
         bg:addEventListener( 'tap', toScreen)
         self:insert(bg)
         
+        Globals.menu:updateTuks(data.total)
         local txtTitle = display.newText({
             text = data.total,     
             x = 55, y = 115,
@@ -236,7 +242,7 @@ function Tools:new()
         local bg = display.newRect( 450, 120, 60, 80 )
         bg:setFillColor( .7 )
         bg.alpha = .01
-        bg.screen = 'Points'
+        bg.screen = 'Joined'
         bg:addEventListener( 'tap', toScreen)
         self:insert(bg)
         
@@ -247,7 +253,10 @@ function Tools:new()
         headLogo:toFront()
     end
     
-    -- Creamos la el toolbar
+    -------------------------------------
+    -- Creamos la barra de navegacion
+    -- @param scrView objeto contenedor
+    ------------------------------------ 
     function self:buildNavBar(scrView)
         
         local grpNavBar = display.newGroup()

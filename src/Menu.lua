@@ -7,7 +7,7 @@ function Menu:new()
     local intW, intH  = display.contentWidth, display.contentHeight
     local midW, midH  = intW / 2, intH / 2
     local fxTap = audio.loadSound( "fx/click.wav")
-    local Menu, bgGray
+    local Menu, bgGray, txtTitleTuks
     
     -- Bloquea cierre de menu
     function blockTap()
@@ -28,11 +28,16 @@ function Menu:new()
         return true;
     end
     
-     -- Obtenemos el Menu
+    -- Obtenemos el Menu
     function self:getMenu()
         transition.to( self, { x = 0, time = 400, onComplete=function() 
             bgGray.alpha = .5
         end })
+    end
+    
+    -- Obtenemos el Menu
+    function self:updateTuks(myTuks)
+        txtTitleTuks.text = myTuks
     end
     
     -- Creamos la pantalla del menu
@@ -69,9 +74,9 @@ function Menu:new()
         local fbPhoto = display.newImage("img/deco/fbPhoto.png")
         fbPhoto:translate(200, minScr/2)
         self:insert( fbPhoto )
-        local fbFrame = display.newImage("img/deco/fbFrame.png")
-        fbFrame:translate(200, minScr/2)
-        self:insert( fbFrame )
+        --local fbFrame = display.newImage("img/deco/fbFrame.png")
+        --fbFrame:translate(200, minScr/2)
+        --self:insert( fbFrame )
         
         local grpOptions = display.newGroup()
         grpOptions.y = minScr --340
@@ -88,8 +93,22 @@ function Menu:new()
         bgFB.screen = "Points"
         bgFB:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgFB)
-        local txtTitle = display.newText( "MIS PUNTOS", 200, 40, 300, 0, native.systemFontBold, 22)
-        txtTitle:setFillColor( 1 )
+        txtTitleTuks = display.newText({
+            text = "0", 
+            x = 145, y = 40, width = 100, 
+            font = fLatoBold,   
+            fontSize = 45, align = "right"
+        })
+        txtTitleTuks:setFillColor( unpack(cWhite) )
+        grpOptions:insert( txtTitleTuks )
+        local txtTitle = display.newText({
+            text = "TUKS", 
+            x = 255, y = 42, width = 100, 
+            font = fLatoBold,   
+            fontSize = 24, align = "left"
+        })
+        txtTitle:setFillColor( unpack(cWhite) )
+        grpOptions:insert( txtTitle )
         grpOptions:insert(txtTitle)
         local menuPoints = display.newImage("img/icon/menuPoints.png")
         menuPoints:translate(332, 40)
@@ -142,29 +161,29 @@ function Menu:new()
         grpOptions:insert( menuClose )
         
         -- Menu vertical
-        local bgMenu1 = display.newRect( 200, 220, 400, 60 )
+        local bgMenu1 = display.newRect( 200, 290, 400, 60 )
         bgMenu1.alpha = .01
         bgMenu1.screen = "Partners"
         bgMenu1:setFillColor( .7 )
         bgMenu1:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenu1)
         local menuComercios = display.newImage("img/icon/menuComercios.png")
-        menuComercios:translate(66, 220)
+        menuComercios:translate(66, 290)
         grpOptions:insert( menuComercios )
-        local txtTitle1 = display.newText( "Comercios Disponibles", 240, 220, 250, 0, native.systemFontBold, 20)
+        local txtTitle1 = display.newText( "Comercios Disponibles", 240, 290, 250, 0, native.systemFontBold, 20)
         txtTitle1:setFillColor( 1 )
         grpOptions:insert(txtTitle1)
         
-        local bgMenu2 = display.newRect( 200, 290, 400, 60 )
+        local bgMenu2 = display.newRect( 200, 220, 400, 60 )
         bgMenu2.alpha = .01
         bgMenu2.screen = "Partners"
         bgMenu2:setFillColor( .7 )
         bgMenu2:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenu2)
         local menuComercios = display.newImage("img/icon/menuProgramas.png")
-        menuComercios:translate(66, 290)
+        menuComercios:translate(66, 220)
         grpOptions:insert( menuComercios )
-        local txtTitle2 = display.newText( "Mis programas de lealtad", 240, 290, 250, 0, native.systemFontBold, 20)
+        local txtTitle2 = display.newText( "Mis programas de lealtad", 240, 220, 250, 0, native.systemFontBold, 20)
         txtTitle2:setFillColor( 1 )
         grpOptions:insert(txtTitle2)
         

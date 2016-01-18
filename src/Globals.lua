@@ -16,15 +16,20 @@ cGrayM = { .63 }
 cGrayH = { .45 }
 cGrayXH = { .29 }
 cGrayXXH = { .14 }
+cBlue = { 0, .62, .89  }
 cBlueH = { .02, .16, .35  }
 cPurple = { .27, .11, .36  }
+cPurpleL = { .38, .17, .51  }
 cTurquesa = { .18, .74, .93  }
+cTurquesaL = { .49, .81, .96  }
 
 -- Fonts
-fLatoBold = 'Lato Bold'
+fLatoBold = 'Lato-Heavy'
+fLatoItalic = 'Lato-Regular'
 fLatoRegular = 'Lato-Regular'
 
 -- Otras
+myTuks = ''
 local Globals = {}
 Globals.filtros = {
     {"TODO", "iconFilterA"}, 

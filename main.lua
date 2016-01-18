@@ -13,8 +13,10 @@ DBManager.setupSquema()
 
 local dbConfig = DBManager.getSettings()
 if dbConfig.isNew == 1 then
-    storyboard.gotoScene("src.Welcome1")
+    storyboard.gotoScene("src.WelcomeHome")
 else
-    storyboard.gotoScene("src.Home")
+    storyboard.gotoScene("src.WelcomeHome")
+    --storyboard.gotoScene("src.Rewards")
+    --storyboard.gotoScene("src.Reward", { params = { idReward = 5 } } )
+    --storyboard.gotoScene("src.Partner", { params = { idCommerce = 1 } } )
 end
---storyboard.gotoScene("src.Partner", { params = { idCommerce = 1 } } )

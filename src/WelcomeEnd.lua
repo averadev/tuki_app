@@ -8,7 +8,6 @@
 -- OBJETOS Y VARIABLES
 ---------------------------------------------------------------------------------
 -- Includes
-require('src.Tools')
 local widget = require( "widget" )
 local storyboard = require( "storyboard" )
 local Globals = require( "src.Globals" )
@@ -42,64 +41,61 @@ end
 function scene:createScene( event )
 	screen = self.view
     
-	local tools = Tools:new()
-    tools:buildHeader(true)
-    screen:insert(tools)
+    local bgWelcome = display.newImage("img/deco/bgWelcome.png")
+    bgWelcome:translate( midW, midH)
+    screen:insert( bgWelcome )
     
-    -- Middle work place
-    local midH = ((display.contentHeight - h - 80  ) / 2) + h + 80
+    local logoBig = display.newImage("img/icon/logoBig.png")
+    logoBig:translate( midW, midH - 180 )
+    screen:insert( logoBig )
     
     local txt1 = display.newText({
         text = "¡LISTO!",
-        x = midW, y = midH - 190,
-        font = native.systemFontBold,   
-        fontSize = 40, align = "center"
+        x = midW, y = midH - 50,
+        font = fLatoBold,   
+        fontSize = 30, align = "center"
     })
-    txt1:setFillColor( 46/255, 190/255, 239/255 )
+    txt1:setFillColor( unpack(cGrayXH) )
     screen:insert( txt1 )
     
     local txt2 = display.newText({
-        text = "¡RECUERDA AFILIARTE A TODOS LOS\nPROGRAMAS DE LEALTAD!\n\nY\n\nOBTENER BENEFICIOS DIARIAMENTE\nEN TU CONSUMO",
-        x = midW, y = midH - 40,
-        font = native.systemFontBold,   
-        fontSize = 20, align = "center"
+        text = "Ahora puedes comenzar",
+        x = midW, y = midH-15,
+        font = fLatoBold,   
+        fontSize = 23, align = "center"
     })
-    txt2:setFillColor( .1 )
+    txt2:setFillColor( unpack(cGrayXH) )
     screen:insert( txt2 )
     
-    -- Botons
-    local btnNearBg1 = display.newRoundedRect( midW, midH + 120, 350, 70, 10 )
-    btnNearBg1:setFillColor( 46/255, 190/255, 239/255 )
-    screen:insert(btnNearBg1)
-    local btnNearBg2 = display.newRoundedRect( midW, midH + 120, 344, 66, 10 )
-    btnNearBg2:setFillColor( 1 )
-    screen:insert(btnNearBg2)
-    local menuProgramas = display.newImage("img/icon/menuProgramas.png")
-    menuProgramas:translate( midW - 70, midH + 118)
-    screen:insert( menuProgramas )
-    local txtNear2 = display.newText({
-        text = "AFILIARME",
-        x = midW + 30, y = midH + 120,
-        font = native.systemFont,   
-        fontSize = 22, align = "center"
+    local txt3 = display.newText({
+        text = "a ganar recompensas por tus visitas",
+        x = midW, y = midH+15,
+        font = fLatoBold,   
+        fontSize = 23, align = "center"
     })
-    txtNear2:setFillColor( 46/255, 190/255, 239/255 )
-    screen:insert( txtNear2 )
+    txt3:setFillColor( unpack(cGrayXH) )
+    screen:insert( txt3 )
     
-    local btnTxt2 = display.newRect( midW + 130, midH + 200, 150, 40 )
-    btnTxt2:setFillColor( 1 )
-    btnTxt2:addEventListener( 'tap', goToHome )
-    screen:insert(btnTxt2)
-    local txt2 = display.newText({
-        text = "CONTINUAR >>",
-        x = midW + 80, y = midH + 200,
-        width = 200, font = native.systemFont,   
-        fontSize = 14, align = "right"
+    
+    local btnInterBg1 = display.newRoundedRect( midW, midH + 120, 350, 70, 10 )
+    btnInterBg1:setFillColor( unpack(cPurpleL) )
+    btnInterBg1:addEventListener( 'tap', goToHome )
+    screen:insert(btnInterBg1)
+    local btnInterBg2 = display.newRoundedRect( midW, midH + 120, 344, 64, 10 )
+    btnInterBg2:setFillColor( unpack(cPurple) )
+    screen:insert(btnInterBg2)
+    local icoWArrow = display.newImage("img/icon/icoWArrow.png")
+    icoWArrow:translate( midW + 60, midH + 118 )
+    screen:insert( icoWArrow )
+    local txtInter2 = display.newText({
+        text = "ENTRAR",
+        x = midW - 50, y = midH + 120,
+        font = fLatoBold, width = 150,
+        fontSize = 20, align = "right"
     })
-    txt2:setFillColor( 46/255, 190/255, 239/255 )
-    screen:insert( txt2 )
+    txtInter2:setFillColor( unpack(cWhite) )
+    screen:insert( txtInter2 )
     
-    tools:toFront()
     
 end	
 -- Called immediately after scene has moved onscreen:

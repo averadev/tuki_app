@@ -4,7 +4,10 @@ local RestManager = {}
 	local mime = require("mime")
 	local json = require("json")
 	local crypto = require("crypto")
-    local site = "http://geekbucket.com.mx/unify/"
+    local DBManager = require('src.DBManager')
+    local dbConfig = DBManager.getSettings()
+
+    local site = "http://localhost/tuki_ws/"
     --local site = "http://geekbucket.com.mx/unify/"
 	
 	function urlencode(str)
@@ -21,6 +24,8 @@ local RestManager = {}
     function goToMethod(obj)
         if obj.name == "HomeRewards" then
             getFirstCards(obj)
+        elseif obj.name == "ListWelcome" then
+            setListWelcome(obj.items)
         elseif obj.name == "Reward" then
             setReward(obj.items[1])
         elseif obj.name == "CommerceFlow" then
@@ -110,7 +115,7 @@ local RestManager = {}
 	end
 
     RestManager.getPointsBar = function()
-		local url = site.."api/getPointsBar/format/json/idUser/1"
+		local url = site.."api/getPointsBar/format/json/idUser/"..dbConfig.id
         
         local function callback(event)
             if ( event.isError ) then
@@ -124,8 +129,38 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
-    RestManager.getRewards = function()
-		local url = site.."api/getRewards/format/json/idUser/1"
+    RestManager.getCommercesByGPS = function(latitude, longitude)
+		local url = site.."api/getCommercesByGPS/format/json/latitude/"..latitude.."/longitude/"..longitude
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                loadImage({idx = 0, name = "ListWelcome", path = "assets/img/api/commerce/", items = data.items})
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
+    RestManager.getCommercesWCat = function(filters)
+		local url = site.."api/getCommercesWCat/format/json/filters/"..filters
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                loadImage({idx = 0, name = "ListWelcome", path = "assets/img/api/commerce/", items = data.items})
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
+    RestManager.getRewards = function(filters)
+		local url = site.."api/getRewards/format/json/idUser/"..dbConfig.id.."/filters/"..filters
         
         local function callback(event)
             if ( event.isError ) then
@@ -140,7 +175,7 @@ local RestManager = {}
 	end
 
     RestManager.setRewardFav = function(idReward, isFav)
-		local url = site.."api/setRewardFav/format/json/idUser/1/idReward/"..idReward.."/isFav/"..isFav
+		local url = site.."api/setRewardFav/format/json/idUser/"..dbConfig.id.."/idReward/"..idReward.."/isFav/"..isFav
         
         local function callback(event)
             return true

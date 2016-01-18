@@ -53,9 +53,13 @@ settings =
 			},
 			
             UIAppFonts = {
-                "Lato-Light.ttf",
                 "Lato-Regular.ttf",
-                "Lato-Bold.ttf"
+                "Lato-Italic",
+                "Lato-Bold.ttf",
+                "Lato-Light.ttf",
+                "Lato-Heavy.ttf",
+                "Lato-HeavyItalic.ttf",
+                
             },
 
 			--[[
@@ -81,6 +85,8 @@ settings =
 		usesPermissions =
 		{
 			"android.permission.INTERNET",
+            "android.permission.ACCESS_FINE_LOCATION",
+            "android.permission.ACCESS_COARSE_LOCATION",
 		},
 	},
 }

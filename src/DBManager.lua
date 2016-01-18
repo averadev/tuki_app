@@ -48,7 +48,7 @@ local dbManager = {}
 	dbManager.setupSquema = function()
 		openConnection( )
 		
-		local query = "CREATE TABLE IF NOT EXISTS config (id TEXT PRIMARY KEY, isNew INTEGER);"
+		local query = "CREATE TABLE IF NOT EXISTS config (id TEXT PRIMARY KEY, fbid TEXT, isNew INTEGER);"
 		db:exec( query )
 
         for row in db:nrows("SELECT * FROM config;") do
@@ -56,7 +56,8 @@ local dbManager = {}
 			do return end
 		end
 
-		query = "INSERT INTO config VALUES (1014858604001209,1);"
+        query = "INSERT INTO config VALUES ('1014858604001209', '10152713865899218', 1);"
+		--query = "INSERT INTO config VALUES (1014858604001209, 0, 1);"
 		db:exec( query )
     
 		closeConnection( )

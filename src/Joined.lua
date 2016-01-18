@@ -75,7 +75,7 @@ function doFilter(txtFil)
     end
     for z = 1, #rowPartner, 1 do 
         rowPartner[z]:removeSelf()
-        rowPartner[z]:addEventListener( 'tap', tapCommerce)
+        rowPartner[z]:addEventListener( 'tap', tapCommerce )
         rowPartner[z] = nil
     end
     
@@ -95,98 +95,99 @@ function setListCommerce(items)
     -- Valida registros vacios
     if #items == 0 then
         tools:setEmpty(rowPartner, scrViewP)
+    else
+        -- Recorre registros y arma lista
+        for z = 1, #items, 1 do 
+            lastYP = 80
+            rowPartner[z] = display.newContainer( 480, 95 )
+            rowPartner[z]:translate( midW, lastYP + (95*z) )
+            scrViewP:insert( rowPartner[z] )
+
+            -- Fondo
+            local bg1 = display.newRect( 0, 0, 460, 80 )
+            bg1:setFillColor( unpack(cGrayXL) )
+            rowPartner[z]:insert( bg1 )
+            local bg2 = display.newRect( 0, 0, 452, 72 )
+            bg2:setFillColor( unpack(cWhite) )
+            bg2.partner = items[z]
+            bg2:addEventListener( 'tap', tapCommerce)
+            rowPartner[z]:insert( bg2 )
+
+            -- Imagen Comercio
+            local bgImg0 = display.newRect( -188, 0, 85, 85 )
+            bgImg0:setFillColor( unpack(cGrayH) )
+            rowPartner[z]:insert( bgImg0 )
+            local bgImg = display.newRect( -188, 0, 75, 75 )
+            bgImg:setFillColor( tonumber(items[z].colorA1)/255, tonumber(items[z].colorA2)/255, tonumber(items[z].colorA3)/255 )
+            rowPartner[z]:insert( bgImg )
+            local img = display.newImage( items[z].image, system.TemporaryDirectory )
+            img:translate( -188, 0 )
+            img.width = 70
+            img.height = 70
+            rowPartner[z]:insert( img )
+
+            -- Textos
+            local name = display.newText({
+                text = items[z].name,     
+                x = poscLabels, y = -15, width = 270, 
+                font = fLatoBold,   
+                fontSize = 22, align = "left"
+            })
+            name:setFillColor( unpack(cGrayXH) )
+            rowPartner[z]:insert( name )
+
+            -- Tuks
+            local bgTuks = display.newRect( -144, 20, 184, 30 )
+            bgTuks.anchorX = 0
+            bgTuks:setFillColor( unpack(cBlueH) )
+            rowPartner[z]:insert( bgTuks )
+            local lblTuks1 = display.newText({
+                text = items[z].points, 
+                x = -80, y = 20, width = 60, 
+                font = fLatoBold,   
+                fontSize = 18, align = "right"
+            })
+            lblTuks1:setFillColor( unpack(cWhite) )
+            rowPartner[z]:insert( lblTuks1 )
+            local lblTuks2 = display.newText({
+                text = "TUKS", 
+                x = -15, y = 20, width = 60, 
+                font = fLatoRegular,   
+                fontSize = 12, align = "left"
+            })
+            lblTuks2:setFillColor( unpack(cWhite) )
+            rowPartner[z]:insert( lblTuks2 )
+
+            -- Rewards
+            local bgRew = display.newRect( 41, 20, 184, 30 )
+            bgRew.anchorX = 0
+            bgRew:setFillColor( unpack(cPurple) )
+            rowPartner[z]:insert( bgRew )
+            local iconMedal = display.newImage("img/icon/iconMedalSmall.png")
+            iconMedal.alpha = .7
+            iconMedal:translate( 110, 20 )
+            rowPartner[z]:insert( iconMedal )
+            local lblTuks1 = display.newText({
+                text = items[z].posible, 
+                x = 110, y = 20, width = 60, 
+                font = fLatoRegular,   
+                fontSize = 18, align = "right"
+            })
+            lblTuks1:setFillColor( unpack(cWhite) )
+            rowPartner[z]:insert( lblTuks1 )
+            local lblTuks2 = display.newText({
+                text = " / "..items[z].rewards, 
+                x = 170, y = 20, width = 60, 
+                font = fLatoRegular,   
+                fontSize = 12, align = "left"
+            })
+            lblTuks2:setFillColor( unpack(cWhite) )
+            rowPartner[z]:insert( lblTuks2 )
+
+        end
+        -- Set new scroll position
+        scrViewP:setScrollHeight(lastYP + (95 * #items) + 70)
     end
-    -- Recorre registros y arma lista
-    for z = 1, #items, 1 do 
-        lastYP = 80
-        rowPartner[z] = display.newContainer( 480, 95 )
-        rowPartner[z]:translate( midW, lastYP + (95*z) )
-        scrViewP:insert( rowPartner[z] )
-        
-        -- Fondo
-        local bg1 = display.newRect( 0, 0, 460, 80 )
-        bg1:setFillColor( unpack(cGrayXL) )
-        rowPartner[z]:insert( bg1 )
-        local bg2 = display.newRect( 0, 0, 452, 72 )
-        bg2:setFillColor( unpack(cWhite) )
-        bg2.partner = items[z]
-        bg2:addEventListener( 'tap', tapCommerce)
-        rowPartner[z]:insert( bg2 )
-        
-        -- Imagen Comercio
-        local bgImg0 = display.newRect( -188, 0, 85, 85 )
-        bgImg0:setFillColor( unpack(cGrayH) )
-        rowPartner[z]:insert( bgImg0 )
-        local bgImg = display.newRect( -188, 0, 75, 75 )
-        bgImg:setFillColor( tonumber(items[z].colorA1)/255, tonumber(items[z].colorA2)/255, tonumber(items[z].colorA3)/255 )
-        rowPartner[z]:insert( bgImg )
-        local img = display.newImage( items[z].image, system.TemporaryDirectory )
-        img:translate( -188, 0 )
-        img.width = 70
-        img.height = 70
-        rowPartner[z]:insert( img )
-        
-        -- Textos
-        local name = display.newText({
-            text = items[z].name,     
-            x = poscLabels, y = -15, width = 270, 
-            font = fLatoBold,   
-            fontSize = 22, align = "left"
-        })
-        name:setFillColor( unpack(cGrayXH) )
-        rowPartner[z]:insert( name )
-        
-        -- Tuks
-        local bgTuks = display.newRect( -144, 20, 184, 30 )
-        bgTuks.anchorX = 0
-        bgTuks:setFillColor( unpack(cBlueH) )
-        rowPartner[z]:insert( bgTuks )
-        local lblTuks1 = display.newText({
-            text = items[z].points, 
-            x = -80, y = 20, width = 60, 
-            font = fLatoBold,   
-            fontSize = 18, align = "right"
-        })
-        lblTuks1:setFillColor( unpack(cWhite) )
-        rowPartner[z]:insert( lblTuks1 )
-        local lblTuks2 = display.newText({
-            text = "TUKS", 
-            x = -15, y = 20, width = 60, 
-            font = fLatoRegular,   
-            fontSize = 12, align = "left"
-        })
-        lblTuks2:setFillColor( unpack(cWhite) )
-        rowPartner[z]:insert( lblTuks2 )
-        
-        -- Rewards
-        local bgRew = display.newRect( 41, 20, 184, 30 )
-        bgRew.anchorX = 0
-        bgRew:setFillColor( unpack(cPurple) )
-        rowPartner[z]:insert( bgRew )
-        local iconMedal = display.newImage("img/icon/iconMedalSmall.png")
-        iconMedal.alpha = .7
-        iconMedal:translate( 110, 20 )
-        rowPartner[z]:insert( iconMedal )
-        local lblTuks1 = display.newText({
-            text = items[z].posible, 
-            x = 110, y = 20, width = 60, 
-            font = fLatoRegular,   
-            fontSize = 18, align = "right"
-        })
-        lblTuks1:setFillColor( unpack(cWhite) )
-        rowPartner[z]:insert( lblTuks1 )
-        local lblTuks2 = display.newText({
-            text = " / "..items[z].rewards, 
-            x = 170, y = 20, width = 60, 
-            font = fLatoRegular,   
-            fontSize = 12, align = "left"
-        })
-        lblTuks2:setFillColor( unpack(cWhite) )
-        rowPartner[z]:insert( lblTuks2 )
-        
-    end
-    -- Set new scroll position
-    scrViewP:setScrollHeight(lastYP + (95 * #items) + 70)
     tools:setLoading(false)
 end
 
