@@ -407,6 +407,7 @@ end
 -- @param event objeto evento
 ------------------------------------ 
 function scene:exitScene( event )
+    tools:delFilters()
 end
 
 scene:addEventListener("createScene", scene )

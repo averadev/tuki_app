@@ -186,7 +186,7 @@ function setCommerce(item, rewards)
     
     yPosc = yPosc + 75
     for z = 1, #rewards, 1 do 
-        newReward(rewards[z], yPosc)
+        newReward(rewards[z], yPosc, item.points)
         yPosc = yPosc + 95
     end
     
@@ -226,108 +226,88 @@ function setCommerce(item, rewards)
 end
 
 -- Creamos lista de comercios
-function newReward(reward, lastYP)
+function newReward(reward, lastYP, cpoints)
     
-    local rewardRow = display.newContainer( 462, 95 )
-    rewardRow:translate( midW, lastYP )
-    scrViewPa:insert( rewardRow )
+    local parent = display.newContainer( 462, 95 )
+    parent:translate( midW, lastYP )
+    scrViewPa:insert( parent )
 
-    local bg1 = display.newRect(0, 0, intW - 20, 80 )
+    local bg1 = display.newRect(0, 0, intW - 20, 70 )
     bg1:setFillColor( 236/255 )
-    rewardRow:insert( bg1 )
-    local bg2 = display.newRect(0, 0, intW - 24, 76 )
+    parent:insert( bg1 )
+    local bg2 = display.newRect(0, 0, intW - 24, 66 )
     bg2:setFillColor( 1 )
-    rewardRow:insert( bg2 )
+    parent:insert( bg2 )
     bg2.idReward = reward.id
     bg2:addEventListener( 'tap', tapReward)
 
-    local bgFav = display.newRect(-196, 0, 60, 74 )
+    local bgFav = display.newRect(-116, 0, 60, 64 )
     bgFav:setFillColor( 236/255 )
-    rewardRow:insert( bgFav )
-    bgFav.idReward = reward.id
+    parent:insert( bgFav )
+    bgFav.idReward = reward.id 
     bgFav:addEventListener( 'tap', tapFavComRew)
-    local bgPoints = display.newRect(-126, 0, 80, 74 )
+    local bgPoints = display.newRect(-186, 0, 80, 64 )
     bgPoints:setFillColor( .21 )
-    rewardRow:insert( bgPoints )
+    parent:insert( bgPoints ) 
 
     bgFav.iconHeart1 = display.newImage("img/icon/iconRewardHeart1.png")
-    bgFav.iconHeart1:translate( -196, 0 )
-    rewardRow:insert( bgFav.iconHeart1 )
+    bgFav.iconHeart1:translate( -116, 0 )
+    parent:insert( bgFav.iconHeart1 )
 
     bgFav.iconHeart2 = display.newImage("img/icon/iconRewardHeart2.png")
-    bgFav.iconHeart2:translate( -196, 0 )
-    rewardRow:insert( bgFav.iconHeart2 )
+    bgFav.iconHeart2:translate( -116, 0 )
+    parent:insert( bgFav.iconHeart2 )
 
     -- Fav actions
     if reward.id == reward.fav  then
         bgFav.id = reward.id 
         bgFav:setFillColor( 46/255, 190/255, 239/255 )
-        bgFav.iconHeart1.alpha = 0 
+        bgFav.iconHeart1.alpha = 0
     else
-        bgFav.iconHeart2.alpha = 0 
+        bgFav.iconHeart2.alpha = 0
     end
-
+    
     -- Textos y descripciones
     if reward.points == 0 or reward.points == "0" then
         local points = display.newText({
             text = "GRATIS", 
-            x = -127, y = 0,
-            font = native.systemFontBold,   
+            x = -186, y = 0,
+            font = fLatoBold,   
             fontSize = 20, align = "center"
         })
         points:rotate( -45 )
         points:setFillColor( 1 )
-        rewardRow:insert( points )
+        parent:insert( points )
     else
         local points = display.newText({
             text = reward.points, 
-            x = -126, y = -7,
-            font = native.systemFontBold,   
+            x = -186, y = -7,
+            font = fLatoBold,   
             fontSize = 26, align = "center"
         })
         points:setFillColor( 1 )
-        rewardRow:insert( points )
+        parent:insert( points )
         local points2 = display.newText({
-            text = "PUNTOS", 
-            x = -126, y = 18,
-            font = native.systemFontBold,   
-            fontSize = 14, align = "center"
+            text = "TUKS", 
+            x = -186, y = 18,
+            font = fLatoBold,   
+            fontSize = 16, align = "center"
         })
         points2:setFillColor( 1 )
-        rewardRow:insert( points2 )
+        parent:insert( points2 )
     end
-
-    local commerce = display.newText({
-        text = reward.commerce,     
-        x = 70, y = -15, width = 300, 
-        font = native.systemFontBold,   
-        fontSize = 17, align = "left"
-    })
-    commerce:setFillColor( .6 )
-    rewardRow:insert( commerce )
 
     local name = display.newText({
         text = reward.name, 
-        x = 70, y = 10, width = 300,
-        font = native.systemFont,   
+        x = 70, y = 0, width = 280,
+        font = fLatoRegular,   
         fontSize = 19, align = "left"
     })
     name:setFillColor( .3 )
-    rewardRow:insert( name )
-
-    if name.height > 25 then
-        name.height = 25
-        name.text = string.sub(name.text, 0, 30).."..."
-        if name.height > 25 then
-            name.text = string.sub(name.text, 0, 27).."..."
-            if name.height > 25 then
-                name.text = string.sub(name.text, 0, 24).."..."
-            end
-        end
-    end
+    parent:insert( name )
 
     -- Set value Progress Bar
-    if reward.userPoints then
+    if cpoints then
         -- Progress Bar
         local progressBar = display.newRect( 0, 0, 300, 5 )
         progressBar:setFillColor( {
@@ -337,10 +317,10 @@ function newReward(reward, lastYP)
             direction = "bottom"
         } ) 
         progressBar:translate( 70, 30 )
-        rewardRow:insert(progressBar)
+        parent:insert(progressBar)
 
         local points = tonumber(reward.points)
-        local userPoints = tonumber(reward.userPoints)
+        local userPoints = tonumber(cpoints)
 
         -- Usuario con puntos
         if userPoints > 0 or points == 0  then
@@ -375,9 +355,9 @@ function newReward(reward, lastYP)
             } ) 
             progressBar2.anchorX = 0
             progressBar2:translate( -80, 30 )
-            rewardRow:insert(progressBar2)
+            parent:insert(progressBar2)
         end
-    end 
+    end
 end
 
 function setCommercePhotos(photos)
@@ -394,7 +374,7 @@ function setCommercePhotos(photos)
             -- Set new scroll position
             scrViewPa:setScrollHeight( yPosc + 365 )
         else
-            local scrViewPhotos = widget.newScrollView
+            scrViewPhotos = widget.newScrollView
             {
                 top = yPosc,
                 left = 0,
@@ -459,6 +439,10 @@ end
 
 -- Remove Listener
 function scene:exitScene( event )
+    if scrViewPhotos then
+        scrViewPhotos:removeSelf()
+        scrViewPhotos = nil;
+    end
 end
 
 scene:addEventListener("createScene", scene )

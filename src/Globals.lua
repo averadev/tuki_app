@@ -22,6 +22,7 @@ cPurple = { .27, .11, .36  }
 cPurpleL = { .38, .17, .51  }
 cTurquesa = { .18, .74, .93  }
 cTurquesaL = { .49, .81, .96  }
+cFB = { 0, .42, .68 }
 
 -- Fonts
 fLatoBold = 'Lato-Heavy'

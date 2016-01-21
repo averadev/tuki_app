@@ -7,8 +7,8 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    local site = "http://localhost/tuki_ws/"
-    --local site = "http://geekbucket.com.mx/unify/"
+    --local site = "http://192.168.1.70/tuki_ws/"
+    local site = "http://geekbucket.com.mx/unify/"
 	
 	function urlencode(str)
           if (str) then
@@ -34,7 +34,9 @@ local RestManager = {}
             setListCommerce(obj.items)
         elseif obj.name == "Commerce" then
             setCommerce(obj.items[1], obj.rewards)
-            loadImage({idx = 0, name = "CommercePhotos", path = "assets/img/api/commerce/photos/", items = obj.photos})
+            if #obj.photos > 0 then
+                loadImage({idx = 0, name = "CommercePhotos", path = "assets/img/api/commerce/photos/", items = obj.photos})
+            end
         elseif obj.name == "CommercePhotos" then
             setCommercePhotos(obj.items)
         elseif obj.name == "Wallet" then
@@ -77,6 +79,7 @@ local RestManager = {}
 
     RestManager.getQR = function(key)
         -- Verificamos si existe el codigo
+        local key = dbConfig.id
         local path = system.pathForFile( key..".png", system.TemporaryDirectory )
         local fhd = io.open( path )
         if fhd then
@@ -89,7 +92,7 @@ local RestManager = {}
                 else
                     -- Almacenamos QR
                     local data = {}
-                    data[1] = {image = "1014858604001209.png"}
+                    data[1] = {image = key..".png"}
                     loadImage({idx = 0, name = "", path = "assets/img/api/qr/", items = data})
                 end
                 return true
@@ -97,6 +100,24 @@ local RestManager = {}
             -- Do request
             network.request( url, "GET", callback )
         end
+	end
+
+    RestManager.createUser = function(fbid, email, name)
+		local url = site.."api/insertUser/format/json/fbid/"..fbid.."/email/"..email.."/name/"..name
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.success then
+                    DBManager.createUser(data.user)
+                    gotoHomeL()
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
 	end
 	
 	RestManager.getHomeRewards = function()
@@ -200,7 +221,7 @@ local RestManager = {}
 	end
 
     RestManager.getReward = function(idReward)
-		local url = site.."api/getReward/format/json/idUser/1/idReward/"..idReward
+		local url = site.."api/getReward/format/json/idUser/"..dbConfig.id.."/idReward/"..idReward
         
         local function callback(event)
             if ( event.isError ) then
@@ -215,7 +236,7 @@ local RestManager = {}
 	end
 
     RestManager.getCommerces = function(filters)
-		local url = site.."api/getCommerces/format/json/idUser/1/filters/"..filters
+		local url = site.."api/getCommerces/format/json/idUser/"..dbConfig.id.."/filters/"..filters
         
         local function callback(event)
             if ( event.isError ) then
@@ -230,7 +251,7 @@ local RestManager = {}
 	end
 
     RestManager.getJoined = function(filters)
-		local url = site.."api/getJoined/format/json/idUser/1/filters/"..filters
+		local url = site.."api/getJoined/format/json/idUser/"..dbConfig.id.."/filters/"..filters
         
         local function callback(event)
             if ( event.isError ) then
@@ -270,7 +291,7 @@ local RestManager = {}
 	end
 
     RestManager.getCommerce = function(idCommerce)
-		local url = site.."api/getCommerce/format/json/idUser/1/idCommerce/"..idCommerce
+		local url = site.."api/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
         
         local function callback(event)
             if ( event.isError ) then

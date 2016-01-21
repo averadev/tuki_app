@@ -103,8 +103,7 @@ function scene:enterScene( event )
     -- Deshabilitar welcome
     DBManager.disableWelcome()
     -- Obtener imagen QR
-    dbConfig = DBManager.getSettings()
-    RestManager.getQR(dbConfig.id)
+    RestManager.getQR()
 end
 
 -- Remove Listener

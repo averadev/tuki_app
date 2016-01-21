@@ -13,7 +13,7 @@ Tools = {}
 function Tools:new()
     -- Variables
     local self = display.newGroup()
-    local bgShadow, headLogo, grpLoading, filters
+    local bgShadow, headLogo, grpLoading, filters, scrViewF
     local h = display.topStatusBarContentHeight
     local fxTap = audio.loadSound( "fx/click.wav")
     self.y = h
@@ -378,10 +378,16 @@ function Tools:new()
     -- Muestra carrusel de filtro
     -- @param parent objeto contenedor
     ------------------------------------
+    function self:delFilters()
+        if scrViewF then
+            scrViewF:removeSelf()
+            scrViewF = nil;
+        end
+    end
     function self:getFilters(parent)
     
         filters = {}
-        local scrViewF = widget.newScrollView
+        scrViewF = widget.newScrollView
         {
             top = 0,
             left = 10,

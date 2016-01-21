@@ -5,7 +5,7 @@
 
 settings =
 {
-	
+
 	orientation =
 	{
 		-- Supported values for orientation:
@@ -20,6 +20,14 @@ settings =
 		iphone = { "Icon-*dpi.png", },
 		android = { "Icon.png", "Icon-Small-*.png", "Icon*@2x.png", },
 	},
+    
+    plugins =
+    {
+        ["plugin.facebook.v4"] =
+        {
+            publisherId = "com.coronalabs"
+        },
+    },
 
 	--
 	-- iOS Section
@@ -31,6 +39,56 @@ settings =
 			UIStatusBarHidden = false,
 			UIPrerenderedIcon = true, -- set to false for "shine" overlay
 			--UIApplicationExitsOnSuspend = true, -- uncomment to quit app on suspend
+            
+            UIApplicationExitsOnSuspend = false,
+            FacebookAppID = "1091330010907264",  --replace XXXXXXXXXX with your Facebook App ID
+            CFBundleURLTypes =
+            {
+                { CFBundleURLSchemes = { "fb1091330010907264", } }  --replace XXXXXXXXXX with your Facebook App ID
+            },
+            
+            -- Whitelist Facebook Servers for Network Requests
+            NSAppTransportSecurity = 
+            {
+                NSExceptionDomains = 
+                {
+                    ["mytuki.com"] = 
+                    {
+                        NSIncludesSubdomains = true,
+                        NSExceptionRequiresForwardSecrecy = false,
+                    },
+                    ["fbcdn.net"] = 
+                    {
+                        NSIncludesSubdomains = true,
+                        NSExceptionRequiresForwardSecrecy = false,
+                    },
+                    ["facebook.com"] = 
+                    {
+                        NSIncludesSubdomains = true,
+                        NSExceptionRequiresForwardSecrecy = false,
+                    },
+                    ["akamaihd.net"] = 
+                    {
+                        NSIncludesSubdomains = true,
+                        NSExceptionRequiresForwardSecrecy = false,
+                    },
+                },
+            },
+
+            -- Whitelist Facebook Apps
+            LSApplicationQueriesSchemes = 
+            {   
+                "fb",
+                "fbapi20130214",
+                "fbapi20130410",
+                "fbapi20140410",
+                "fbapi20140116",
+                "fbapi20150313",
+                "fbapi20150629",
+                "fbauth",
+                "fbauth2",
+                "fb-messenger-api20140430",
+            },
 
 			CFBundleIconFiles =
 			{
@@ -61,19 +119,6 @@ settings =
                 "Lato-HeavyItalic.ttf",
                 
             },
-
-			--[[
-			-- iOS app URL schemes:
-			CFBundleURLTypes =
-			{
-				{
-					CFBundleURLSchemes =
-					{
-						"fbXXXXXXXXX",  -- replace XXXXXXXXX with your Facebook appId
-					}
-				}
-			}
-			--]]
 		}
 	},
 	
@@ -82,6 +127,7 @@ settings =
 	--
 	android =
 	{
+        facebookAppId = "1091330010907264",
 		usesPermissions =
 		{
 			"android.permission.INTERNET",

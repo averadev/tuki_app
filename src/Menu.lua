@@ -176,7 +176,7 @@ function Menu:new()
         
         local bgMenu2 = display.newRect( 200, 220, 400, 60 )
         bgMenu2.alpha = .01
-        bgMenu2.screen = "Partners"
+        bgMenu2.screen = "Joined"
         bgMenu2:setFillColor( .7 )
         bgMenu2:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenu2)

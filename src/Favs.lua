@@ -304,6 +304,7 @@ end
 
 -- Remove Listener
 function scene:exitScene( event )
+    tools:delFilters()
 end
 
 scene:addEventListener("createScene", scene )
