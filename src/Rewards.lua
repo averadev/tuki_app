@@ -10,7 +10,7 @@
 -- Includes
 require('src.Tools')
 local widget = require( "widget" )
-local storyboard = require( "storyboard" )
+local composer = require( "composer" )
 local Globals = require( "src.Globals" )
 local RestManager = require( "src.RestManager" )
 local fxTap = audio.loadSound( "fx/click.wav")
@@ -18,7 +18,7 @@ local fxFav = audio.loadSound( "fx/fav.wav")
 
 -- Grupos y Contenedores
 local screen, scrViewR, tools
-local scene = storyboard.newScene()
+local scene = composer.newScene()
 
 -- Variables
 local intW = display.contentWidth
@@ -67,8 +67,8 @@ end
 function tapReward(event)
     local t = event.target
     audio.play(fxTap)
-    storyboard.removeScene( "src.Reward" )
-    storyboard.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
+    composer.removeScene( "src.Reward" )
+    composer.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
 end
 
 -------------------------------------
@@ -364,7 +364,7 @@ end
 -- Called immediately before scene has moved onscreen:
 -- @param event objeto evento
 ------------------------------------
-function scene:createScene( event )
+function scene:create( event )
 	screen = self.view
     
 	tools = Tools:new()
@@ -398,20 +398,24 @@ end
 -- Called immediately after scene has moved onscreen:
 -- @param event objeto evento
 ------------------------------------ 
-function scene:enterScene( event )
-    Globals.scenes[#Globals.scenes + 1] = storyboard.getCurrentSceneName()
+function scene:show( event )
+    if event.phase == "will" then 
+        Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
+    end
 end
 
 -------------------------------------
 -- Salir escena
 -- @param event objeto evento
 ------------------------------------ 
-function scene:exitScene( event )
+function scene:destroy( event )
     tools:delFilters()
 end
 
-scene:addEventListener("createScene", scene )
-scene:addEventListener("enterScene", scene )
-scene:addEventListener("exitScene", scene )
+-- Listener setup
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+--scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
 return scene

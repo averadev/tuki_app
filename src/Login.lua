@@ -7,14 +7,14 @@
 ---------------------------------------------------------------------------------
 -- REQUIRE & VARIABLES
 ---------------------------------------------------------------------------------
-local storyboard = require( "storyboard" )
+local getSceneName = require( "getSceneName" )
 local Globals = require('src.Globals')
 local Sprites = require('src.Sprites')
 local DBManager = require('src.DBManager')
 local RestManager = require('src.RestManager')
 local facebook = require("plugin.facebook.v4")
 local json = require("json")
-local scene = storyboard.newScene()
+local scene = getSceneName.newScene()
 
 -- Variables
 local circles = {}
@@ -29,20 +29,20 @@ local bottomLogin, loadLogin
 ---------------------------------------------------------------------------------
 function gotoHomeL()
     insertLoading(false)
-    storyboard.removeScene( "src.Home" )
-    storyboard.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
+    getSceneName.removeScene( "src.Home" )
+    getSceneName.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
 end
 
 function toLoginUserName(event)
     Globals.isReadOnly = false
-    storyboard.removeScene( "src.LoginUserName" )
-    storyboard.gotoScene( "src.LoginUserName", { time = 400, effect = "crossFade" })
+    getSceneName.removeScene( "src.LoginUserName" )
+    getSceneName.gotoScene( "src.LoginUserName", { time = 400, effect = "crossFade" })
 end
 
 function toLoginFree()
     Globals.isReadOnly = true
-    storyboard.removeScene( "src.Home" )
-    storyboard.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
+    getSceneName.removeScene( "src.Home" )
+    getSceneName.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
 end
 
 function insertLoading(isLoading)
@@ -166,7 +166,7 @@ end
 -- OVERRIDING SCENES METHODS
 --------------------------------------------------------------- ------------------
 -- Called when the scene's view does not exist:
-function scene:createScene( event )
+function scene:create( event )
 
     -- Agregamos el home
 	screen = self.view
@@ -269,17 +269,19 @@ function scene:createScene( event )
 end
 
 -- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
+function scene:show( event )
 end
 
 -- Remove Listener
-function scene:exitScene( event )
+function scene:destroy( event )
     screen:removeEventListener( "touch", touchScreen )
 end
 
-scene:addEventListener("createScene", scene )
-scene:addEventListener("enterScene", scene )
-scene:addEventListener("exitScene", scene )
+-- Listener setup
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+--scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
     
 return scene

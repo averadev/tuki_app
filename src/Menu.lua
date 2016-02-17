@@ -7,7 +7,7 @@ function Menu:new()
     local intW, intH  = display.contentWidth, display.contentHeight
     local midW, midH  = intW / 2, intH / 2
     local fxTap = audio.loadSound( "fx/click.wav")
-    local Menu, bgGray, txtTitleTuks
+    local Menu, bgGray
     
     -- Bloquea cierre de menu
     function blockTap()
@@ -35,11 +35,6 @@ function Menu:new()
         end })
     end
     
-    -- Obtenemos el Menu
-    function self:updateTuks(myTuks)
-        txtTitleTuks.text = myTuks
-    end
-    
     -- Creamos la pantalla del menu
     function self:builScreen()
         Menu =  menu
@@ -48,11 +43,6 @@ function Menu:new()
         self.x = -400
         
         local minScr = 220 -- Pantalla pequeña
-        if intH > 790 and intH < 840 then
-            minScr = 260 -- Pantalla mediana
-        elseif intH > 840 then
-            minScr = 300 -- Pantalla alta
-        end
         
         bgGray = display.newRect( midW, midH, intW, intH )
         bgGray.alpha = 0
@@ -67,22 +57,40 @@ function Menu:new()
         self:insert(background)
         
         -- Background
-        local bgFB = display.newRect(200, minScr/2, 400, minScr )
+        local bgFB = display.newRect(200, 0, 400, minScr + 40 )
+        bgFB.anchorY = 0
         bgFB:setFillColor( .38, .38, .38 )
         self:insert(bgFB)
         
+        local bgFB = display.newCircle( 200, minScr/2, 78 )
+        bgFB:setFillColor( unpack(cTurquesa) )
+        self:insert(bgFB)
         local fbPhoto = display.newImage("img/deco/fbPhoto.png")
         fbPhoto:translate(200, minScr/2)
         self:insert( fbPhoto )
-        --local fbFrame = display.newImage("img/deco/fbFrame.png")
-        --fbFrame:translate(200, minScr/2)
-        --self:insert( fbFrame )
         
+        local txtNombre = display.newText({
+            text = "Nombre Apellido", 
+            x = 200, y = minScr-10, width = 300, 
+            font = fLatoBold,   
+            fontSize = 20, align = "center"
+        })
+        txtNombre:setFillColor( unpack(cWhite) )
+        self:insert( txtNombre )
+        local txtUbicacion = display.newText({
+            text = "Ciudad, Estado", 
+            x = 200, y = minScr + 10, width = 300, 
+            font = fLatoItalic,   
+            fontSize = 18, align = "center"
+        })
+        txtUbicacion:setFillColor( unpack(cWhite) )
+        self:insert( txtUbicacion )
+                
         local grpOptions = display.newGroup()
-        grpOptions.y = minScr --340
+        grpOptions.y = minScr + 40
         self:insert(grpOptions)
         
-        -- Mis puntos
+        -- Estado de cuenta
         local bgFB = display.newRect(200, 40, 400, 80 )
         bgFB:setFillColor( {
             type = 'gradient',
@@ -91,39 +99,28 @@ function Menu:new()
             direction = "bottom"
         } ) 
         bgFB.screen = "Points"
-        bgFB:addEventListener( 'tap', changeScreen)
+        --bgFB:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgFB)
-        txtTitleTuks = display.newText({
-            text = "0", 
-            x = 145, y = 40, width = 100, 
-            font = fLatoBold,   
-            fontSize = 45, align = "right"
+        local txtTitleTuks = display.newText({
+            text = "Estado de Cuenta", 
+            x = 260, y = 40, width = 300,
+            font = fLatoBold, fontSize = 24, align = "left"
         })
         txtTitleTuks:setFillColor( unpack(cWhite) )
         grpOptions:insert( txtTitleTuks )
-        local txtTitle = display.newText({
-            text = "TUKS", 
-            x = 255, y = 42, width = 100, 
-            font = fLatoBold,   
-            fontSize = 24, align = "left"
-        })
-        txtTitle:setFillColor( unpack(cWhite) )
-        grpOptions:insert( txtTitle )
-        grpOptions:insert(txtTitle)
         local menuPoints = display.newImage("img/icon/menuPoints.png")
-        menuPoints:translate(332, 40)
+        menuPoints:translate(66, 40)
         grpOptions:insert( menuPoints )
         
         -- Lineas
-        local line1 = display.newLine(0, 160, 400, 160)
-        line1:setStrokeColor( 1, .3 )
-        line1.strokeWidth = 2
-        grpOptions:insert(line1)
-        local line2 = display.newLine(133, 80, 133, 160)
+        local bgFB = display.newRect(200, 124, 400, 80 )
+        bgFB:setFillColor( unpack(cPurple) ) 
+        grpOptions:insert(bgFB)
+        local line2 = display.newLine(133, 84, 133, 164)
         line2:setStrokeColor( 1, .3 )
         line2.strokeWidth = 2
         grpOptions:insert(line2)
-        local line3 = display.newLine(267, 80, 267, 160)
+        local line3 = display.newLine(267, 84, 267, 164)
         line3:setStrokeColor( 1, .3 )
         line3.strokeWidth = 2
         grpOptions:insert(line3)
@@ -136,19 +133,33 @@ function Menu:new()
         bgMenuUser1:setFillColor( .7 )
         --bgMenuUser1:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenuUser1)
-        local menuUser = display.newImage("img/icon/menuUser.png")
+        local menuUser = display.newImage("img/icon/menuProgramas.png")
         menuUser:translate(66, 120)
         grpOptions:insert( menuUser )
+        local txtCodigo = display.newText({
+            text = "Código de Regalo", 
+            x = 66, y = 150, width = 120,
+             font = fLatoBold, fontSize = 14, align = "center"
+        })
+        txtCodigo:setFillColor( unpack(cWhite) )
+        grpOptions:insert( txtCodigo )
         local bgMenuUser2 = display.newRect( 134, 120, 133, 80 )
         bgMenuUser2.alpha = .01
         bgMenuUser2.anchorX = 0
         bgMenuUser2.screen = ""
         bgMenuUser2:setFillColor( .7 )
         --bgMenuUser2:addEventListener( 'tap', changeScreen)
-        --grpOptions:insert(bgMenuUser2)
+        grpOptions:insert(bgMenuUser2)
         local menuReload = display.newImage("img/icon/menuReload.png")
         menuReload:translate(199, 120)
         grpOptions:insert( menuReload )
+        local txtCCiudad = display.newText({
+            text = "Cambio de Ciudad", 
+            x = 200, y = 150, width = 120,
+            font = fLatoBold, fontSize = 14, align = "center"
+        })
+        txtCCiudad:setFillColor( unpack(cWhite) )
+        grpOptions:insert( txtCCiudad )
         local bgMenuUser3 = display.newRect( 267, 120, 133, 80 )
         bgMenuUser3.alpha = .01
         bgMenuUser3.anchorX = 0
@@ -159,59 +170,77 @@ function Menu:new()
         local menuClose = display.newImage("img/icon/menuClose.png")
         menuClose:translate(332, 120)
         grpOptions:insert( menuClose )
+        local txtCSession = display.newText({
+            text = "Cerrar Sesión", 
+            x = 333, y = 150, width = 120,
+             font = fLatoBold, fontSize = 14, align = "center"
+        })
+        txtCSession:setFillColor( unpack(cWhite) )
+        grpOptions:insert( txtCSession )
         
         -- Menu vertical
-        local bgMenu1 = display.newRect( 200, 290, 400, 60 )
+        local line1 = display.newLine(0, 310, 400, 310)
+        line1:setStrokeColor( 1, .3 )
+        line1.strokeWidth = 2
+        grpOptions:insert(line1)
+        local bgMenu1 = display.newRect( 200, 280, 400, 60 )
         bgMenu1.alpha = .01
-        bgMenu1.screen = "Partners"
+        bgMenu1.screen = "Joined"
         bgMenu1:setFillColor( .7 )
         bgMenu1:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenu1)
         local menuComercios = display.newImage("img/icon/menuComercios.png")
-        menuComercios:translate(66, 290)
+        menuComercios:translate(66, 280)
         grpOptions:insert( menuComercios )
-        local txtTitle1 = display.newText( "Comercios Disponibles", 240, 290, 250, 0, native.systemFontBold, 20)
+        local txtTitle1 = display.newText({
+            text = "Mis programas de lealtad", 
+            x = 260, y = 280, width = 300,
+            font = fLatoBold, fontSize = 20, align = "left"
+        })
         txtTitle1:setFillColor( 1 )
         grpOptions:insert(txtTitle1)
         
-        local bgMenu2 = display.newRect( 200, 220, 400, 60 )
+        local line2 = display.newLine(0, 240, 400, 240)
+        line2:setStrokeColor( 1, .3 )
+        line2.strokeWidth = 2
+        grpOptions:insert(line2)
+        local bgMenu2 = display.newRect( 200, 210, 400, 60 )
         bgMenu2.alpha = .01
-        bgMenu2.screen = "Joined"
+        bgMenu2.screen = "Partners"
         bgMenu2:setFillColor( .7 )
         bgMenu2:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenu2)
-        local menuComercios = display.newImage("img/icon/menuProgramas.png")
-        menuComercios:translate(66, 220)
+        local menuComercios = display.newImage("img/icon/menuAfiliado.png")
+        menuComercios:translate(66, 210)
         grpOptions:insert( menuComercios )
-        local txtTitle2 = display.newText( "Mis programas de lealtad", 240, 220, 250, 0, native.systemFontBold, 20)
+        local txtTitle2 = display.newText({
+            text = "Comercios Afiliados", 
+            x = 260, y = 210, width = 300,
+            font = fLatoBold, fontSize = 20, align = "left"
+        })
         txtTitle2:setFillColor( 1 )
         grpOptions:insert(txtTitle2)
         
-        local bgMenu3 = display.newRect( 200, 360, 400, 60 )
+        local line3 = display.newLine(0, 380, 400, 380)
+        line3:setStrokeColor( 1, .3 )
+        line3.strokeWidth = 2
+        grpOptions:insert(line3)
+        local bgMenu3 = display.newRect( 200, 350, 400, 60 )
         bgMenu3.alpha = .01
-        bgMenu3.screen = "Favs"
+        bgMenu3.screen = "Rewards"
         bgMenu3:setFillColor( .7 )
         bgMenu3:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenu3)
-        local menuComercios = display.newImage("img/icon/menuFavs.png")
-        menuComercios:translate(66, 360)
+        local menuComercios = display.newImage("img/icon/menuProgramas.png")
+        menuComercios:translate(66, 350)
         grpOptions:insert( menuComercios )
-        local txtTitle3 = display.newText( "Mis favoritos", 240, 360, 250, 0, native.systemFontBold, 20)
+        local txtTitle3 = display.newText({
+            text = "Recompensas Disponibles", 
+            x = 260, y = 350, width = 300,
+            font = fLatoBold, fontSize = 20, align = "left"
+        })
         txtTitle3:setFillColor( 1 )
         grpOptions:insert(txtTitle3)
-        
-        local bgMenu4 = display.newRect( 200, 430, 400, 60 )
-        bgMenu4.alpha = .01
-        bgMenu4.screen = "Rewards"
-        bgMenu4:setFillColor( .7 )
-        bgMenu4:addEventListener( 'tap', changeScreen)
-        grpOptions:insert(bgMenu4)
-        local menuComercios = display.newImage("img/icon/menuRewards.png")
-        menuComercios:translate(66, 430)
-        grpOptions:insert( menuComercios )
-        local txtTitle4 = display.newText( "Recompensas Disponibles", 240, 430, 250, 0, native.systemFontBold, 20)
-        txtTitle4:setFillColor( 1 )
-        grpOptions:insert(txtTitle4)
         
         -- Border Right
         local borderRight = display.newRect( 398, midH, 4, intH )

@@ -2,7 +2,7 @@
 ---------------------------------------------------------------------------------
 -- Encabezao general
 ---------------------------------------------------------------------------------
-local storyboard = require( "storyboard" )
+local composer = require( "composer" )
 local Sprites = require('src.Sprites')
 local Globals = require( "src.Globals" )
 local widget = require( "widget" )
@@ -65,10 +65,6 @@ function Tools:new()
             local headMenu = display.newImage("img/icon/headMenu.png")
             headMenu:translate(40, 40)
             self:insert( headMenu )
-
-            local headSearch = display.newImage("img/icon/headSearch.png")
-            headSearch:translate(display.contentWidth - 40, 40)
-            self:insert( headSearch )
             
              -- Get Menu
             if Globals.menu == nil then
@@ -527,24 +523,33 @@ function Tools:new()
     -- Cambia pantalla
     function toScreen(event)
         local t = event.target
-        if not ("src."..t.screen == storyboard.getCurrentSceneName()) then
+        if not ("src."..t.screen == composer.getSceneName()) then
             audio.play(fxTap)
-            t.alpha = 1
-            transition.to( t, { alpha = .01, time = 200, transition = easing.outExpo })
-            storyboard.removeScene( "src."..t.screen )
-            storyboard.gotoScene("src."..t.screen, { time = 400, effect = "slideLeft" } )
+            --t.alpha = 1
+            --transition.to( t, { alpha = .01, time = 200, transition = easing.outExpo })
+            print("screen: "..t.screen)
+            if  t.screen == "Partners" or t.screen == "Joined" or 
+                t.screen == "Favs" or t.screen == "Rewards"then
+                composer.removeScene( "src.Partners" )
+                composer.removeScene( "src.Joined" )
+                composer.removeScene( "src.Favs" )
+                composer.removeScene( "src.Rewards" )
+            else
+                composer.removeScene( "src."..t.screen )
+            end
+            
+            composer.gotoScene("src."..t.screen, { time = 400, effect = "slideLeft" } )
         end
         return true
     end
     
     -- Regresa pantalla
     function backScreen(event)
-        print("backScreen")
         audio.play(fxTap)
         local last = Globals.scenes[#Globals.scenes - 1]
         table.remove( Globals.scenes )
         table.remove( Globals.scenes )
-        storyboard.gotoScene(last, { time = 400, effect = "slideRight" } )
+        composer.gotoScene(last, { time = 400, effect = "slideRight" } )
         return true
     end
     
@@ -552,7 +557,7 @@ function Tools:new()
     function toHome(event)
         audio.play(fxTap)
         Globals.scenes = {}
-        storyboard.gotoScene("src.Home", { time = 400, effect = "slideRight" } )
+        composer.gotoScene("src.Home", { time = 400, effect = "slideRight" } )
         return true
     end
     

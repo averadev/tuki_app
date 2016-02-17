@@ -11,14 +11,14 @@
 require('src.Tools')
 local widget = require( "widget" )
 local Globals = require( "src.Globals" )
-local storyboard = require( "storyboard" )
+local composer = require( "composer" )
 local RestManager = require( "src.RestManager" )
 local fxTap = audio.loadSound( "fx/click.wav")
 local fxFav = audio.loadSound( "fx/fav.wav")
 
 -- Grupos y Contenedores
 local screen, scrViewMe, tools
-local scene = storyboard.newScene()
+local scene = composer.newScene()
 
 -- Variables
 local intW = display.contentWidth
@@ -37,8 +37,8 @@ local h = display.topStatusBarContentHeight
 function tapReward(event)
     local t = event.target
     audio.play(fxTap)
-    storyboard.removeScene( "src.Reward" )
-    storyboard.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
+    composer.removeScene( "src.Reward" )
+    composer.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
 end
 
 -- Crea contenido del Reward
@@ -59,7 +59,7 @@ function setMessage(item)
     local lblFecha = display.newText({
         text = item.fecha,     
         x = 350, y = 50, width = 200, 
-        font = native.systemFont,
+        font = fLatoRegular,
         fontSize = 16, align = "right"
     })
     lblFecha:setFillColor( .3 )
@@ -68,7 +68,7 @@ function setMessage(item)
     local lblDe1 = display.newText({
         text = "De: ",     
         x = 90, y = 95, width = 100, 
-        font = native.systemFontBold,
+        font = fLatoBold,
         fontSize = 18, align = "left"
     })
     lblDe1:setFillColor( .3 )
@@ -77,7 +77,7 @@ function setMessage(item)
     local lblDe2 = display.newText({
         text = item.from,     
         x = 270, y = 95, width = 300, 
-        font = native.systemFont,
+        font = fLatoRegular,
         fontSize = 18, align = "left"
     })
     lblDe2:setFillColor( .3 )
@@ -86,7 +86,7 @@ function setMessage(item)
     local lblAsunto1 = display.newText({
         text = "Asunto: ",     
         x = 90, y = 130, width = 100, 
-        font = native.systemFontBold,
+        font = fLatoBold,
         fontSize = 18, align = "left"
     })
     lblAsunto1:setFillColor( .3 )
@@ -95,7 +95,7 @@ function setMessage(item)
     local lblAsunto2 = display.newText({
         text = item.name,     
         x = 270, y = 130, width = 300, 
-        font = native.systemFont,
+        font = fLatoRegular,
         fontSize = 18, align = "left"
     })
     lblAsunto2:setFillColor( .3 )
@@ -118,7 +118,7 @@ function setMessage(item)
     local lblDesc = display.newText({
         text = txtDesc,
         x = midW, y = lastY, width = 400, 
-        font = native.systemFont,
+        font = fLatoRegular,
         fontSize = 18, align = "left"
     })
     lblDesc:setFillColor( .3 )
@@ -139,7 +139,7 @@ function setMessage(item)
         local txtCommerce = display.newText({
             text = "VER DETALLE", 
             x = midW, y = lastY,
-            font = native.systemFontBold,
+            font = fLatoBold,
             fontSize = 18, align = "center"
         })
         txtCommerce:setFillColor( 1 )
@@ -158,7 +158,7 @@ end
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
-function scene:createScene( event )
+function scene:create( event )
 	screen = self.view
     local idMessage = event.params.idMessage
     
@@ -188,16 +188,20 @@ function scene:createScene( event )
     
 end	
 -- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
-    Globals.scenes[#Globals.scenes + 1] = storyboard.getCurrentSceneName()
+function scene:show( event )
+    if event.phase == "will" then 
+        Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
+    end
 end
 
 -- Remove Listener
-function scene:exitScene( event )
+function scene:destroy( event )
 end
 
-scene:addEventListener("createScene", scene )
-scene:addEventListener("enterScene", scene )
-scene:addEventListener("exitScene", scene )
+-- Listener setup
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+--scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
 return scene

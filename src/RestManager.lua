@@ -22,8 +22,10 @@ local RestManager = {}
 
     -- Envia al metodo
     function goToMethod(obj)
-        if obj.name == "HomeRewards" then
-            getFirstCards(obj)
+        if obj.name == "HomeCommerces" then
+            getCarCom(obj.items)
+        elseif obj.name == "HomeRewards" then
+            buildCardsR(obj.items)
         elseif obj.name == "ListWelcome" then
             setListWelcome(obj.items)
         elseif obj.name == "Reward" then
@@ -69,7 +71,8 @@ local RestManager = {}
                     end
                 end
                 -- Descargamos de la nube
-                display.loadRemoteImage( site..obj.path..img,"GET", imageListener, img, system.TemporaryDirectory ) 
+                print(site..obj.path..img)
+                display.loadRemoteImage( site..obj.path..img, "GET", imageListener, img, system.TemporaryDirectory ) 
             end
         else
             -- Dirigimos al metodo pertinente
@@ -127,7 +130,7 @@ local RestManager = {}
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
-                loadImage({idx = 0, name = "HomeRewards", path = "assets/img/api/rewards/", items = data.items})
+                loadImage({idx = 0, name = "HomeCommerces", path = "assets/img/api/commerce/", items = data.items})
             end
             return true
         end
@@ -152,7 +155,7 @@ local RestManager = {}
 
     RestManager.getCommercesByGPS = function(latitude, longitude)
 		local url = site.."api/getCommercesByGPS/format/json/latitude/"..latitude.."/longitude/"..longitude
-        
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -165,6 +168,21 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
+    RestManager.getCommercesByGPSLite = function(latitude, longitude)
+		local url = site.."api/getCommercesByGPSLite/format/json/latitude/"..latitude.."/longitude/"..longitude
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                setIconMap(data.items)
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+    
     RestManager.getCommercesWCat = function(filters)
 		local url = site.."api/getCommercesWCat/format/json/filters/"..filters
         
@@ -205,8 +223,8 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
     
-    RestManager.getRewardFavs = function()
-		local url = site.."api/getRewardFavs/format/json/idUser/1"
+    RestManager.getRewardFavs = function(filters)
+		local url = site.."api/getRewardFavs/format/json/idUser/"..dbConfig.id.."/filters/"..filters
         
         local function callback(event)
             if ( event.isError ) then

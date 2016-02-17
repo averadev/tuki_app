@@ -10,13 +10,13 @@
 -- Includes
 require('src.Tools')
 local widget = require( "widget" )
-local storyboard = require( "storyboard" )
+local composer = require( "composer" )
 local Globals = require( "src.Globals" )
 local fxTap = audio.loadSound( "fx/click.wav")
 
 -- Grupos y Contenedores
 local screen
-local scene = storyboard.newScene()
+local scene = composer.newScene()
 
 -- Variables
 local intW = display.contentWidth
@@ -45,8 +45,8 @@ function goToEnd(event)
         -- Change Scene
         local t = event.target
         audio.play(fxTap)
-        storyboard.removeScene( "src.WelcomeList" )
-        storyboard.gotoScene("src.WelcomeList", { time = 400, effect = "slideLeft", params = { filter = txtFil} } )
+        composer.removeScene( "src.WelcomeList" )
+        composer.gotoScene("src.WelcomeList", { time = 400, effect = "slideLeft", params = { filter = txtFil} } )
     end
 end
 
@@ -120,7 +120,7 @@ end
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
-function scene:createScene( event )
+function scene:create( event )
 	screen = self.view
     
     local txt1 = display.newText({
@@ -239,12 +239,12 @@ function scene:createScene( event )
     
 end	
 -- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
+function scene:show( event )
     
 end
 
 -- Remove Listener
-function scene:exitScene( event )
+function scene:destroy( event )
 end
 
 scene:addEventListener("createScene", scene )

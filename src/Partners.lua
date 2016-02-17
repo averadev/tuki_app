@@ -11,14 +11,14 @@
 require('src.Tools')
 local widget = require( "widget" )
 local Globals = require( "src.Globals" )
-local storyboard = require( "storyboard" )
+local composer = require( "composer" )
 local RestManager = require( "src.RestManager" )
 local fxTap = audio.loadSound( "fx/click.wav")
 local fxFav = audio.loadSound( "fx/fav.wav")
 
 -- Grupos y Contenedores
 local screen, scrViewP
-local scene = storyboard.newScene()
+local scene = composer.newScene()
 
 -- Variables
 local intW = display.contentWidth
@@ -47,8 +47,8 @@ local txtBg, txtFiltro, fpRows = {}, {}, {}
 function tapCommerce(event)
     local t = event.target
     audio.play(fxTap)
-    storyboard.removeScene( "src.Partner" )
-    storyboard.gotoScene("src.Partner", { time = 400, effect = "slideLeft", params = {idCommerce = t.partner.id} })
+    composer.removeScene( "src.Partner" )
+    composer.gotoScene("src.Partner", { time = 400, effect = "slideLeft", params = {idCommerce = t.partner.id} })
     return true
 end
 
@@ -282,10 +282,10 @@ function setListCommerce(items)
         
         -- Imagen Comercio
         local bgImg0 = display.newRect( -188, 0, 85, 85 )
-        bgImg0:setFillColor( unpack(cGrayH) )
+        bgImg0:setFillColor( tonumber(items[z].colorA1)/255, tonumber(items[z].colorA2)/255, tonumber(items[z].colorA3)/255 )
         rowPartner[z]:insert( bgImg0 )
         local bgImg = display.newRect( -188, 0, 75, 75 )
-        bgImg:setFillColor( tonumber(items[z].colorA1)/255, tonumber(items[z].colorA2)/255, tonumber(items[z].colorA3)/255 )
+        bgImg:setFillColor( 1 )
         rowPartner[z]:insert( bgImg )
         local img = display.newImage( items[z].image, system.TemporaryDirectory )
         img:translate( -188, 0 )
@@ -337,7 +337,7 @@ end
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
-function scene:createScene( event )
+function scene:create( event )
 	screen = self.view
     
     tools = Tools:new()
@@ -370,17 +370,21 @@ function scene:createScene( event )
     
 end	
 -- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
-    Globals.scenes[#Globals.scenes + 1] = storyboard.getCurrentSceneName()
+function scene:show( event )
+    if event.phase == "will" then 
+        Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
+    end
 end
 
 -- Remove Listener
-function scene:exitScene( event )
+function scene:destroy( event )
     tools:delFilters()
 end
 
-scene:addEventListener("createScene", scene )
-scene:addEventListener("enterScene", scene )
-scene:addEventListener("exitScene", scene )
+-- Listener setup
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+--scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
 return scene

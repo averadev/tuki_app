@@ -10,7 +10,7 @@
 -- Includes
 require('src.Tools')
 local widget = require( "widget" )
-local storyboard = require( "storyboard" )
+local composer = require( "composer" )
 local Globals = require( "src.Globals" )
 local DBManager = require('src.DBManager')
 local RestManager = require( "src.RestManager" )
@@ -18,7 +18,7 @@ local fxTap = audio.loadSound( "fx/click.wav")
 
 -- Grupos y Contenedores
 local screen
-local scene = storyboard.newScene()
+local scene = composer.newScene()
 
 -- Variables
 local intW = display.contentWidth
@@ -36,8 +36,8 @@ function goToEnd(event)
     if minNum > 2 then
         local t = event.target
         audio.play(fxTap)
-        storyboard.removeScene( "src.WelcomeEnd" )
-        storyboard.gotoScene("src.WelcomeEnd", { time = 400, effect = "slideLeft" } )
+        composer.removeScene( "src.WelcomeEnd" )
+        composer.gotoScene("src.WelcomeEnd", { time = 400, effect = "slideLeft" } )
     end
 end
 
@@ -169,7 +169,7 @@ end
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
-function scene:createScene( event )
+function scene:create( event )
 	screen = self.view
     
     tools = Tools:new()
@@ -248,7 +248,7 @@ function scene:createScene( event )
     
 end	
 -- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
+function scene:show( event )
     -- Get by Location
     if event.params.isLocation then
         --Runtime:addEventListener( "location", locationHandler )
@@ -259,7 +259,7 @@ function scene:enterScene( event )
 end
 
 -- Remove Listener
-function scene:exitScene( event )
+function scene:destroy( event )
 end
 
 scene:addEventListener("createScene", scene )

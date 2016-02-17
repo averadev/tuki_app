@@ -11,14 +11,14 @@
 require('src.Tools')
 local widget = require( "widget" )
 local Globals = require( "src.Globals" )
-local storyboard = require( "storyboard" )
+local composer = require( "composer" )
 local RestManager = require( "src.RestManager" )
 local fxTap = audio.loadSound( "fx/click.wav")
 local fxFav = audio.loadSound( "fx/fav.wav")
 
 -- Grupos y Contenedores
 local screen
-local scene = storyboard.newScene()
+local scene = composer.newScene()
 
 -- Variables
 local intW = display.contentWidth
@@ -45,8 +45,8 @@ end
 function tapReward(event)
     local t = event.target
     audio.play(fxTap)
-    storyboard.removeScene( "src.Reward" )
-    storyboard.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
+    composer.removeScene( "src.Reward" )
+    composer.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
 end
 
 -- Tap toggle event
@@ -97,9 +97,11 @@ function setCommerce(item, rewards)
     bg2:setFillColor( 1 )
     scrViewPa:insert( bg2 )
     
-    local bgImg = display.newRect(80, 80, 140, 140, 10 )
-    bgImg:setFillColor( tonumber(item.colorA1)/255, tonumber(item.colorA2)/255, tonumber(item.colorA3)/255 )
-    scrViewPa:insert( bgImg )
+    local bgImg1 = display.newRect(80, 80, 140, 140, 10 )
+    bgImg1:setFillColor( tonumber(item.colorA1)/255, tonumber(item.colorA2)/255, tonumber(item.colorA3)/255 )
+    scrViewPa:insert( bgImg1 )
+    local bgImg2 = display.newRect(80, 80, 132, 132, 10 )
+    scrViewPa:insert( bgImg2 )
     
     local img = display.newImage( item.image, system.TemporaryDirectory )
     img.height = 130
@@ -403,7 +405,7 @@ end
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
-function scene:createScene( event )
+function scene:create( event )
 	screen = self.view
     local idCommerce = event.params.idCommerce
     
@@ -433,20 +435,24 @@ function scene:createScene( event )
     
 end	
 -- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
-    Globals.scenes[#Globals.scenes + 1] = storyboard.getCurrentSceneName()
+function scene:show( event )
+    if event.phase == "will" then 
+        Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
+    end
 end
 
 -- Remove Listener
-function scene:exitScene( event )
+function scene:destroy( event )
     if scrViewPhotos then
         scrViewPhotos:removeSelf()
         scrViewPhotos = nil;
     end
 end
 
-scene:addEventListener("createScene", scene )
-scene:addEventListener("enterScene", scene )
-scene:addEventListener("exitScene", scene )
+-- Listener setup
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+--scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
 return scene

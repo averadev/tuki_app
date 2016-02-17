@@ -9,14 +9,14 @@
 ---------------------------------------------------------------------------------
 -- Includes
 local widget = require( "widget" )
-local storyboard = require( "storyboard" )
+local composer = require( "composer" )
 local Globals = require( "src.Globals" )
 local DBManager = require('src.DBManager')
 local RestManager = require( "src.RestManager" )
 
 -- Grupos y Contenedores
 local screen
-local scene = storyboard.newScene()
+local scene = composer.newScene()
 
 -- Variables
 local intW = display.contentWidth
@@ -31,14 +31,14 @@ local h = display.topStatusBarContentHeight
 function goToHome(event)
     local t = event.target
     audio.play(fxTap)
-    storyboard.removeScene( "src.Home" )
-    storyboard.gotoScene("src.Home", { time = 400, effect = "slideLeft" } )
+    composer.removeScene( "src.Home" )
+    composer.gotoScene("src.Home", { time = 400, effect = "slideLeft" } )
 end
 
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
-function scene:createScene( event )
+function scene:create( event )
 	screen = self.view
     
     local bgWelcome = display.newImage("img/deco/bgWelcome.png")
@@ -99,7 +99,7 @@ function scene:createScene( event )
     
 end	
 -- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
+function scene:show( event )
     -- Deshabilitar welcome
     DBManager.disableWelcome()
     -- Obtener imagen QR
@@ -107,7 +107,7 @@ function scene:enterScene( event )
 end
 
 -- Remove Listener
-function scene:exitScene( event )
+function scene:destroy( event )
 end
 
 scene:addEventListener("createScene", scene )

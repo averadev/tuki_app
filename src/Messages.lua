@@ -10,7 +10,7 @@
 -- Includes
 require('src.Tools')
 local widget = require( "widget" )
-local storyboard = require( "storyboard" )
+local composer = require( "composer" )
 local Globals = require( "src.Globals" )
 local RestManager = require( "src.RestManager" )
 local fxTap = audio.loadSound( "fx/click.wav")
@@ -18,7 +18,7 @@ local fxFav = audio.loadSound( "fx/fav.wav")
 
 -- Grupos y Contenedores
 local screen, scrViewR, tools
-local scene = storyboard.newScene()
+local scene = composer.newScene()
 
 -- Variables
 local intW = display.contentWidth
@@ -45,8 +45,8 @@ local txtBg, txtFiltro, fpRows = {}, {}, {}
 function tapMessage(event)
     local t = event.target
     audio.play(fxTap)
-    storyboard.removeScene( "src.Message" )
-    storyboard.gotoScene("src.Message", { time = 400, effect = "slideLeft", params = { idMessage = t.idMessage } } )
+    composer.removeScene( "src.Message" )
+    composer.gotoScene("src.Message", { time = 400, effect = "slideLeft", params = { idMessage = t.idMessage } } )
 end
 
 -- Creamos lista de comercios
@@ -57,16 +57,16 @@ function setListMessages(rewards)
     
     local function setInfoBar(yPosc, txtInfo)
         local bg1 = display.newRect(midW, yPosc, 462, 30 )
-        bg1:setFillColor( 46/255, 190/255, 239/255 )
+        bg1:setFillColor( unpack(cBlueH) )
         scrViewR:insert( bg1 )
         
         local lblInfo = display.newText({
             text = txtInfo,     
             x = 180, y = yPosc, width = 300, 
-            font = native.systemFontBold,   
+            font = fLatoBold,   
             fontSize = 17, align = "left"
         })
-        lblInfo:setFillColor( 1 )
+        lblInfo:setFillColor( unpack(cWhite) )
         scrViewR:insert( lblInfo )
     end
     
@@ -111,7 +111,7 @@ function setListMessages(rewards)
         local lblFecha = display.newText({
             text = rewards[z].fecha,     
             x = 120, y = -40, width = 200, 
-            font = native.systemFontBold,   
+            font = fLatoBold,   
             fontSize = 14, align = "right"
         })
         lblFecha:setFillColor( .3 )
@@ -120,7 +120,7 @@ function setListMessages(rewards)
         local lblFrom = display.newText({
             text = "De: "..rewards[z].from,     
             x = 50, y = -15, width = 350, 
-            font = native.systemFontBold,   
+            font = fLatoBold,   
             fontSize = 17, align = "left"
         })
         lblFrom:setFillColor( .6 )
@@ -129,7 +129,7 @@ function setListMessages(rewards)
         local lblName = display.newText({
             text = rewards[z].name, 
             x = 50, y = 15, width = 350,
-            font = native.systemFont,   
+            font = fLatoRegular,   
             fontSize = 19, align = "left"
         })
         lblName:setFillColor( .3 )
@@ -148,7 +148,7 @@ end
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
-function scene:createScene( event )
+function scene:create( event )
 	screen = self.view
     
 	tools = Tools:new()
@@ -177,16 +177,20 @@ function scene:createScene( event )
     
 end	
 -- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
-    Globals.scenes[#Globals.scenes + 1] = storyboard.getCurrentSceneName()
+function scene:show( event )
+    if event.phase == "will" then 
+        Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
+    end
 end
 
 -- Remove Listener
-function scene:exitScene( event )
+function scene:destroy( event )
 end
 
-scene:addEventListener("createScene", scene )
-scene:addEventListener("enterScene", scene )
-scene:addEventListener("exitScene", scene )
+-- Listener setup
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+--scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
 return scene
