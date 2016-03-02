@@ -3,6 +3,7 @@ function Menu:new()
     -- Variables
     local self = display.newGroup()
     local widget = require( "widget" )
+    local DBManager = require('src.DBManager')
     local h = display.topStatusBarContentHeight
     local intW, intH  = display.contentWidth, display.contentHeight
     local midW, midH  = intW / 2, intH / 2
@@ -19,6 +20,13 @@ function Menu:new()
         hideMenu()
         toScreen(event)
         return true
+    end
+    
+    -- Cambia pantalla
+    function getFrameFB(x, y)
+        local fbFrame = display.newImage("img/deco/fbFrame.png")
+        fbFrame:translate(x, y)
+        self:insert( fbFrame )
     end
     
     -- Cerramos o mostramos shadow
@@ -41,8 +49,9 @@ function Menu:new()
         self.anchorY = 0
         self.y = h
         self.x = -400
-        
         local minScr = 220 -- Pantalla pequeña
+        
+        local dbConfig = DBManager.getSettings()
         
         bgGray = display.newRect( midW, midH, intW, intH )
         bgGray.alpha = 0
@@ -62,15 +71,26 @@ function Menu:new()
         bgFB:setFillColor( .38, .38, .38 )
         self:insert(bgFB)
         
-        local bgFB = display.newCircle( 200, minScr/2, 78 )
-        bgFB:setFillColor( unpack(cTurquesa) )
-        self:insert(bgFB)
-        local fbPhoto = display.newImage("img/deco/fbPhoto.png")
-        fbPhoto:translate(200, minScr/2)
-        self:insert( fbPhoto )
+        -- Avatar
+        if dbConfig.fbid == 0 then
+            local bgFB = display.newCircle( 200, minScr/2, 78 )
+            bgFB:setFillColor( unpack(cTurquesa) )
+            self:insert(bgFB)
+            local fbPhoto = display.newImage("img/deco/fbPhoto.png")
+            fbPhoto:translate(200, minScr/2)
+            self:insert( fbPhoto )
+        else
+            url = "http://graph.facebook.com/"..dbConfig.fbid.."/picture?large&width=150&height=150"
+            local isReady = retriveImage(dbConfig.fbid.."fbmax", url, self, 200, minScr/2, 150, 150, true)
+            if isReady then
+                local fbFrame = display.newImage("img/deco/fbFrame.png")
+                fbFrame:translate(200, minScr/2)
+                self:insert( fbFrame )
+            end
+        end
         
         local txtNombre = display.newText({
-            text = "Nombre Apellido", 
+            text = dbConfig.name, 
             x = 200, y = minScr-10, width = 300, 
             font = fLatoBold,   
             fontSize = 20, align = "center"
@@ -78,7 +98,7 @@ function Menu:new()
         txtNombre:setFillColor( unpack(cWhite) )
         self:insert( txtNombre )
         local txtUbicacion = display.newText({
-            text = "Ciudad, Estado", 
+            text = dbConfig.city, 
             x = 200, y = minScr + 10, width = 300, 
             font = fLatoItalic,   
             fontSize = 18, align = "center"
@@ -91,16 +111,16 @@ function Menu:new()
         self:insert(grpOptions)
         
         -- Estado de cuenta
-        local bgFB = display.newRect(200, 40, 400, 80 )
-        bgFB:setFillColor( {
+        local bgAccount = display.newRect(200, 40, 400, 80 )
+        bgAccount.screen = "Account"
+        bgAccount:addEventListener( 'tap', changeScreen)
+        bgAccount:setFillColor( {
             type = 'gradient',
             color1 = { 46/255, 190/255, 239/255 }, 
             color2 = { 26/255, 170/255, 219/255 }, 
             direction = "bottom"
         } ) 
-        bgFB.screen = "Points"
-        --bgFB:addEventListener( 'tap', changeScreen)
-        grpOptions:insert(bgFB)
+        grpOptions:insert(bgAccount)
         local txtTitleTuks = display.newText({
             text = "Estado de Cuenta", 
             x = 260, y = 40, width = 300,

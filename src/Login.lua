@@ -7,14 +7,14 @@
 ---------------------------------------------------------------------------------
 -- REQUIRE & VARIABLES
 ---------------------------------------------------------------------------------
-local getSceneName = require( "getSceneName" )
+local composer = require( "composer" )
 local Globals = require('src.Globals')
 local Sprites = require('src.Sprites')
 local DBManager = require('src.DBManager')
 local RestManager = require('src.RestManager')
 local facebook = require("plugin.facebook.v4")
 local json = require("json")
-local scene = getSceneName.newScene()
+local scene = composer.newScene()
 
 -- Variables
 local circles = {}
@@ -27,22 +27,24 @@ local bottomLogin, loadLogin
 ---------------------------------------------------------------------------------
 -- FUNCTIONS
 ---------------------------------------------------------------------------------
-function gotoHomeL()
-    insertLoading(false)
-    getSceneName.removeScene( "src.Home" )
-    getSceneName.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
+
+
+function toLoginFB()
+    Globals.isReadOnly = true
+    composer.removeScene( "src.WelcomeHome" )
+    composer.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
 end
 
 function toLoginUserName(event)
     Globals.isReadOnly = false
-    getSceneName.removeScene( "src.LoginUserName" )
-    getSceneName.gotoScene( "src.LoginUserName", { time = 400, effect = "crossFade" })
+    composer.removeScene( "src.Home" )
+    composer.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
 end
 
 function toLoginFree()
     Globals.isReadOnly = true
-    getSceneName.removeScene( "src.Home" )
-    getSceneName.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
+    composer.removeScene( "src.Home" )
+    composer.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
 end
 
 function insertLoading(isLoading)
@@ -79,7 +81,7 @@ function facebookListener( event )
             end
             -- Inserta en bd
             insertLoading(true)
-            RestManager.createUser(response.user)
+            RestManager.createUserFB(response.id, name, email)
         else
 			-- printTable( event.response, "Post Failed Response", 3 )
 		end
@@ -95,9 +97,11 @@ function newScr(idx)
     direction = 0
     circles[idx]:setFillColor( 75/255, 176/255, 217/255 )
     if idx > 1 then
+        circles[idx-1]:toFront()
         circles[idx-1]:setFillColor( 182/255, 207/255, 229/255 )
     end
-    if idx < 5 then
+    if idx < 4 then
+        circles[idx+1]:toFront()
         circles[idx+1]:setFillColor( 182/255, 207/255, 229/255 )
     end
 end
@@ -109,7 +113,7 @@ function touchScreen(event)
     elseif event.phase == "moved" then
         local x = (event.x - event.xStart)
         if direction == 0 then
-            if x < -10 and idxScr < 5 then
+            if x < -10 and idxScr < 4 then
                 direction = 1
             elseif x > 10 and idxScr > 1 then
                 direction = -1
@@ -170,23 +174,25 @@ function scene:create( event )
 
     -- Agregamos el home
 	screen = self.view
+    local curBG = cTurquesa
     
-    
-    local curBG = cPurpleL
-    local posYBg = intH - 230 
-    
+    local bg = display.newRect( midW, h, intW, intH - h )
+    bg.anchorY = 0
+    bg:setFillColor( unpack(cBlueH) )
+    screen:insert(bg)
+
     -- Circles position
-    for i = 1, 5 do
-        circles[i] = display.newRoundedRect( 165 + (i * 25), posYBg + 50, 15, 15, 8 )
-        circles[i]:setFillColor( 182/255, 207/255, 229/255 )
-        screen:insert(circles[i])
-        
-        if curBG == cPurple then curBG = cPurpleL else curBG = cPurple end
-        bgL[i] = display.newRect( (intW * (i-1)), h, intW, intH - h -210 )
+    for i = 1, 4 do
+        if curBG == cTurquesa then curBG = cTurquesaL else curBG = cTurquesa end
+        bgL[i] = display.newRect( (intW * (i-1)), h, intW, intH - h - 150 )
         bgL[i].anchorX = 0
         bgL[i].anchorY = 0
         bgL[i]:setFillColor( unpack(curBG) )
         screen:insert(bgL[i])
+        
+        circles[i] = display.newRoundedRect( 165 + (i * 25), intH - 170, 15, 15, 8 )
+        circles[i]:setFillColor( 182/255, 207/255, 229/255 )
+        screen:insert(circles[i])
     end
     circles[1]:setFillColor( 75/255, 176/255, 217/255 )
     
@@ -194,31 +200,35 @@ function scene:create( event )
     screen:insert(bottomLogin)
     
     -- Btn FB
-    local btnShadow = display.newImage("img/deco/bgShadow.png", true) 
-    btnShadow.x = midW
-    btnShadow.y = posYBg + 135
-    bottomLogin:insert(btnShadow)
-    
-    local bgBtn = display.newRoundedRect( midW, posYBg + 110, 350, 70, 10 )
-	bgBtn:setFillColor( unpack(cBlueH) )
+    local bgBtn = display.newRect( midW, intH - 100, 354, 59 )
+	bgBtn:setFillColor( unpack(cWhite) )
 	bottomLogin:insert(bgBtn)
     
-    local btn = display.newRoundedRect( midW, posYBg + 108, 350, 65, 10 )
-	btn:setFillColor( unpack(cFB) )
+    local btn = display.newRect( midW, intH - 100, 350, 55 )
+	btn:setFillColor( 39/255, 69/255, 132/255 )
     btn:addEventListener( "tap", loginFB )
 	bottomLogin:insert(btn)
     
+    local btn = display.newRect( midW+35, intH - 100, 280, 55 )
+	btn:setFillColor( 59/255, 89/255, 152/255 )
+    btn:addEventListener( "tap", loginFB )
+	bottomLogin:insert(btn)
+    
+    local iconFB = display.newImage("img/icon/iconFB.png")
+    iconFB:translate(midW - 140, intH - 100)
+    bottomLogin:insert( iconFB )
+    
     local lblBtn = display.newText( {
-        text = "CONECTARSE CON FACEBOOK",
-        x = midW, y = posYBg + 110,
+        text = "Ingresar con FACEBOOK",
+        x = midW + 35, y = intH - 100,
         font = fLatoBold,  
         fontSize = 20, align = "center"
     })
-	lblBtn:setFillColor( unpack(cWhite))
+	lblBtn:setFillColor( unpack(cWhite) )
     bottomLogin:insert(lblBtn)
     
     -- User / Email
-    local bgBtnUserName = display.newRect( 140, posYBg + 195, 160, 50 )
+    local bgBtnUserName = display.newRect( 140, intH - 30, 160, 50 )
 	bgBtnUserName:setFillColor( 1 )
     bgBtnUserName.alpha = .01
     bgBtnUserName:addEventListener( "tap", toLoginUserName )
@@ -226,20 +236,20 @@ function scene:create( event )
     
     local lblBottom = display.newText( {
         text = "INGRESA CON USERNAME Ó EMAIL",
-        x = 140, y = posYBg + 195,
+        x = 140, y = intH - 30,
         font = fLatoBold,  
         width = 160,
         fontSize = 14, align = "center"
     })
-    lblBottom:setFillColor( unpack(cGrayXH) )
+    lblBottom:setFillColor( unpack(cWhite) )
     bottomLogin:insert(lblBottom)
     
-    local lineSep = display.newRect( midW, posYBg + 195, 2, 20 )
+    local lineSep = display.newRect( midW, intH - 30, 2, 20 )
 	lineSep:setFillColor( .6 )
 	bottomLogin:insert(lineSep)
     
     -- Recorrido
-    local bgBtnFree = display.newRect( 340, posYBg + 195, 160, 50 )
+    local bgBtnFree = display.newRect( 340, intH - 30, 160, 50 )
 	bgBtnFree:setFillColor( 1 )
     bgBtnFree.alpha = .01
     bgBtnFree:addEventListener( "tap", toLoginFree )
@@ -247,12 +257,12 @@ function scene:create( event )
     
     local lblFree = display.newText( {
         text = "CONOCE MÁS DE LA APLICACIÓN",
-        x = 340, y = posYBg + 195,
+        x = 340, y = intH - 30,
         font = fLatoBold,  
         width = 160,
         fontSize = 14, align = "center"
     })
-    lblFree:setFillColor( unpack(cGrayXH) )
+    lblFree:setFillColor( unpack(cWhite) )
     bottomLogin:insert(lblFree)
     
     --

@@ -13,7 +13,7 @@ Tools = {}
 function Tools:new()
     -- Variables
     local self = display.newGroup()
-    local bgShadow, headLogo, grpLoading, filters, scrViewF
+    local bgShadow, headLogo, grpLoading, grpAnimate, filters, scrViewF
     local h = display.topStatusBarContentHeight
     local fxTap = audio.loadSound( "fx/click.wav")
     self.y = h
@@ -326,6 +326,42 @@ function Tools:new()
         arrayObj[1]:insert(titleLoading)
     end
     
+    -- Descargar Deal
+    function self:animate()
+        
+        if grpAnimate then
+            grpAnimate:removeSelf()
+            grpAnimate = nil
+        end
+        grpAnimate = display.newGroup()
+        self:insert(grpAnimate)
+        
+        function setDes(event)
+            return true
+        end
+        local bgShade = display.newRect( midW, midH, display.contentWidth, display.contentHeight )
+        bgShade:addEventListener( 'tap', setDes)
+        bgShade:setFillColor( 0, 0, 0, .5 )
+        grpAnimate:insert(bgShade)
+        
+        local bg = display.newRoundedRect( midW, midH, 300, 350, 10 )
+        bg:setFillColor( .3, .3, .3 )
+        grpAnimate:insert(bg)
+        
+        local iconAfilMax = display.newImage("img/icon/iconAfilMax.png")
+        iconAfilMax:translate( midW, midH - 50 )
+        grpAnimate:insert( iconAfilMax )
+        
+        local txt1 = display.newText( {
+            text = "Nuevas Recompensas Disponibles",
+            x = midW, y = midH + 125,
+			align = "center", width = 250,
+            font = "Lato-Heavy", fontSize = 24
+        })
+        grpAnimate:insert(txt1)
+        return true
+    end
+    
     -------------------------------------
     -- Muestra loading sprite
     -- @param isLoading activar/desactivar
@@ -527,7 +563,6 @@ function Tools:new()
             audio.play(fxTap)
             --t.alpha = 1
             --transition.to( t, { alpha = .01, time = 200, transition = easing.outExpo })
-            print("screen: "..t.screen)
             if  t.screen == "Partners" or t.screen == "Joined" or 
                 t.screen == "Favs" or t.screen == "Rewards"then
                 composer.removeScene( "src.Partners" )

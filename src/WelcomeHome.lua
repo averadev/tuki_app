@@ -120,7 +120,6 @@ function scene:create( event )
     })
     txtInter2:setFillColor( unpack(cWhite) )
     screen:insert( txtInter2 )
-    
 end	
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
@@ -131,8 +130,9 @@ end
 function scene:destroy( event )
 end
 
-scene:addEventListener("createScene", scene )
-scene:addEventListener("enterScene", scene )
-scene:addEventListener("exitScene", scene )
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+--scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
 return scene

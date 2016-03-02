@@ -7,8 +7,8 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    --local site = "http://192.168.1.70/tuki_ws/"
-    local site = "http://geekbucket.com.mx/unify/"
+    local site = "http://192.168.1.124/tuki_ws/"
+    --local site = "http://geekbucket.com.mx/unify/"
 	
 	function urlencode(str)
           if (str) then
@@ -28,8 +28,12 @@ local RestManager = {}
             buildCardsR(obj.items)
         elseif obj.name == "ListWelcome" then
             setListWelcome(obj.items)
+        elseif obj.name == "AccountCommerces" then
+            showAccountCom(obj.items)
         elseif obj.name == "Reward" then
             setReward(obj.items[1])
+        elseif obj.name == "RewardLogo" then
+            setRewardLogo(obj.items[1])
         elseif obj.name == "CommerceFlow" then
             getCoverFirstFlow(obj)
         elseif obj.name == "Commerces" then
@@ -43,6 +47,8 @@ local RestManager = {}
             setCommercePhotos(obj.items)
         elseif obj.name == "Wallet" then
             setListWallet(obj.items)
+        elseif obj.name == "Messages" then
+            setListMessages(obj.items)
         elseif obj.name == "Message" then
             setMessage(obj.items[1])
         end
@@ -55,28 +61,61 @@ local RestManager = {}
             -- Add to index
             obj.idx = obj.idx + 1
             -- Determinamos si la imagen existe
-            local img = obj.items[obj.idx].image
-            local path = system.pathForFile( img, system.TemporaryDirectory )
-            local fhd = io.open( path )
-            if fhd then
-                fhd:close()
-                loadImage(obj)
-            else
-                local function imageListener( event )
-                    if ( event.isError ) then
-                    else
-                        event.target:removeSelf()
-                        event.target = nil
-                        loadImage(obj)
+            if obj.items[obj.idx].image then
+                local img = obj.items[obj.idx].image
+                local path = system.pathForFile( img, system.TemporaryDirectory )
+                local fhd = io.open( path )
+                if fhd then
+                    fhd:close()
+                    loadImage(obj)
+                else
+                    local function imageListener( event )
+                        if ( event.isError ) then
+                        else
+                            event.target:removeSelf()
+                            event.target = nil
+                            loadImage(obj)
+                        end
                     end
+                    -- Descargamos de la nube
+                    display.loadRemoteImage( site..obj.path..img, "GET", imageListener, img, system.TemporaryDirectory ) 
                 end
-                -- Descargamos de la nube
-                print(site..obj.path..img)
-                display.loadRemoteImage( site..obj.path..img, "GET", imageListener, img, system.TemporaryDirectory ) 
+            else
+                loadImage(obj)
             end
         else
             -- Dirigimos al metodo pertinente
             goToMethod(obj)
+        end
+    end
+
+    -- Carga de la imagen del servidor o de TemporaryDirectory
+    function retriveImage(img, url, parent, x, y, w, h, isMenu)
+        -- Next Image
+        local path = system.pathForFile( img, system.TemporaryDirectory )
+        local fhd = io.open( path )
+        if fhd then
+            fhd:close()
+            local imagen = display.newImage( img, system.TemporaryDirectory )
+            parent:insert(imagen)
+            imagen.width = w
+            imagen.height = h
+            imagen:translate(x, y)
+            return true;
+        else
+            local function imageListener( event )
+                if ( event.isError ) then
+                else
+                    parent:insert(event.target)
+                    event.target.width = w
+                    event.target.height = h
+                    event.target:translate(x, y)
+                    if isMenu then getFrameFB(x, y) end
+                end
+            end
+            -- Descargamos de la nube
+            display.loadRemoteImage( url, "GET", imageListener, img, system.TemporaryDirectory ) 
+            return false;
         end
     end
 
@@ -103,6 +142,24 @@ local RestManager = {}
             -- Do request
             network.request( url, "GET", callback )
         end
+	end
+
+    RestManager.createUserFB = function(fbid, email, name)
+		local url = site.."api/createUserFB/format/json/fbid/"..fbid.."/email/"..email.."/name/"..name
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.success then
+                    DBManager.updateUser(data.user)
+                    toLoginFB()
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
 	end
 
     RestManager.createUser = function(fbid, email, name)
@@ -138,6 +195,22 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
+    RestManager.getAccount = function()
+		local url = site.."api/getAccount/format/json/idUser/"..dbConfig.id
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                showAccount(data.user)
+                loadImage({idx = 0, name = "AccountCommerces", path = "assets/img/api/commerce/", items = data.user.joined})
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
     RestManager.getPointsBar = function()
 		local url = site.."api/getPointsBar/format/json/idUser/"..dbConfig.id
         
@@ -155,7 +228,6 @@ local RestManager = {}
 
     RestManager.getCommercesByGPS = function(latitude, longitude)
 		local url = site.."api/getCommercesByGPS/format/json/latitude/"..latitude.."/longitude/"..longitude
-        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -308,6 +380,21 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
+    RestManager.setCommerceJoin = function(idCommerce)
+		local url = site.."api/getCommerceJoin/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                readyJoined(idCommerce)
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
     RestManager.getCommerce = function(idCommerce)
 		local url = site.."api/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
         
@@ -339,17 +426,18 @@ local RestManager = {}
 	end
 
     RestManager.getMessages = function()
-		local url = site.."api/getMessages/format/json/idUser/1"
+		local url = site.."api/getMessages/format/json/idUser/"..dbConfig.id
         
         local function callback(event)
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
-                setListMessages(data.items)
+                loadImage({idx = 0, name = "Messages", path = "assets/img/api/commerce/", items = data.items})
             end
             return true
         end
         -- Do request
+        print(url)
         network.request( url, "GET", callback )
 	end
 

@@ -27,6 +27,10 @@ settings =
         {
             publisherId = "com.coronalabs"
         },
+        ["CoronaProvider.native.popup.social"] =
+        {
+            publisherId = "com.coronalabs"
+        },
     },
 
 	--
@@ -131,6 +135,7 @@ settings =
 		usesPermissions =
 		{
 			"android.permission.INTERNET",
+            "android.permission.CALL_PHONE",
             "android.permission.ACCESS_FINE_LOCATION",
             "android.permission.ACCESS_COARSE_LOCATION",
 		},

@@ -159,21 +159,21 @@ function getRowRew(parent, reward, cpoints)
     bg2.idReward = reward.id
     bg2:addEventListener( 'tap', tapReward)
 
-    local bgFav = display.newRect(124, 0, 60, 64 )
+    local bgFav = display.newRect(42, 0, 60, 64 )
     bgFav:setFillColor( 236/255 )
     parent:insert( bgFav )
     bgFav.idReward = reward.id 
     bgFav:addEventListener( 'tap', tapFavRew)
-    local bgPoints = display.newRect(54, 0, 80, 64 )
+    local bgPoints = display.newRect(110, 0, 80, 64 )
     bgPoints:setFillColor( .21 )
     parent:insert( bgPoints ) 
 
     bgFav.iconHeart1 = display.newImage("img/icon/iconRewardHeart1.png")
-    bgFav.iconHeart1:translate( 124, 0 )
+    bgFav.iconHeart1:translate( 42, 0 )
     parent:insert( bgFav.iconHeart1 )
 
     bgFav.iconHeart2 = display.newImage("img/icon/iconRewardHeart2.png")
-    bgFav.iconHeart2:translate( 124, 0 )
+    bgFav.iconHeart2:translate( 42, 0 )
     parent:insert( bgFav.iconHeart2 )
 
     -- Fav actions
@@ -189,7 +189,7 @@ function getRowRew(parent, reward, cpoints)
     if reward.points == 0 or reward.points == "0" then
         local points = display.newText({
             text = "GRATIS", 
-            x = 54, y = 0,
+            x = 110, y = 0,
             font = fLatoBold,   
             fontSize = 20, align = "center"
         })
@@ -199,7 +199,7 @@ function getRowRew(parent, reward, cpoints)
     else
         local points = display.newText({
             text = reward.points, 
-            x = 54, y = -7,
+            x = 110, y = -7,
             font = fLatoBold,   
             fontSize = 26, align = "center"
         })
@@ -207,7 +207,7 @@ function getRowRew(parent, reward, cpoints)
         parent:insert( points )
         local points2 = display.newText({
             text = "TUKS", 
-            x = 54, y = 18,
+            x = 110, y = 18,
             font = fLatoBold,   
             fontSize = 16, align = "center"
         })

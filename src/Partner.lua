@@ -15,6 +15,7 @@ local composer = require( "composer" )
 local RestManager = require( "src.RestManager" )
 local fxTap = audio.loadSound( "fx/click.wav")
 local fxFav = audio.loadSound( "fx/fav.wav")
+local fxJoined = audio.loadSound( "fx/join.wav")
 
 -- Grupos y Contenedores
 local screen
@@ -28,47 +29,48 @@ local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight 
 local scrViewPa, tools
 local yPosc = 0
+local idxPartner, usrPoints
 
 -- Arrays
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------
--- Open url
-function openURL(event)
-    if event.target.url then
-        system.openURL( event.target.url )
-    end
-end
 
--- Tap reward event
+-------------------------------------
+-- Consultar comercio
+-- @param event objeto evento
+------------------------------------
 function tapReward(event)
     local t = event.target
     audio.play(fxTap)
     composer.removeScene( "src.Reward" )
     composer.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
-end
-
--- Tap toggle event
-function tapFavCom(event)
-    local t = event.target
-    audio.play( fxFav )
-    if t.iconHeart1.alpha == 0  then
-        t.iconHeart1.alpha = 1
-        t.iconHeart2.alpha = 0
-        t:setFillColor( 236/255 )
-        RestManager.setCommerceFav(t.idCommerce, 0)
-    else
-        t.iconHeart1.alpha = 0
-        t.iconHeart2.alpha = 1
-        t:setFillColor( 46/255, 190/255, 239/255 )
-        RestManager.setCommerceFav(t.idCommerce, 1)
-    end
     return true
 end
 
--- Tap toggle event
-function tapFavComRew(event)
+-------------------------------------
+-- Consultar comercio
+-- @param event objeto evento
+------------------------------------
+function readyJoined(idCommerce)
+    tools:animate()
+    timer.performWithDelay( 250, function() audio.play(fxJoined) end )
+    timer.performWithDelay( 3000, function() 
+        table.remove( Globals.scenes )
+        composer.removeScene( "src.Partner" )
+        composer.gotoScene("src.Partner", { params = { idCommerce = idxPartner } } )
+    end )
+    --composer.removeScene( "src.Reward" )
+    --composer.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
+    return true
+end
+
+-------------------------------------
+-- Fav a la recompensa
+-- @param event objeto evento
+------------------------------------
+function tapComRewFav(event)
     local t = event.target
     audio.play( fxFav )
     if t.iconHeart1.alpha == 0  then
@@ -85,105 +87,180 @@ function tapFavComRew(event)
     return true
 end
 
+-------------------------------------
+-- Abrimos URL
+-- @param event objeto evento
+------------------------------------
+function openUrl(event)
+    local t = event.target
+    audio.play(fxTap)
+    system.openURL( t.url )
+    return true
+end
 
+-------------------------------------
+-- Afiliacion del Comercio
+-- @param event objeto evento
+------------------------------------
+function setCommerceJoin(event)
+    local t = event.target
+    t:removeEventListener( 'tap', setCommerceJoin)
+    t.alpha = .9
+    RestManager.setCommerceJoin(idxPartner)
+    return true
+end
+
+-------------------------------------
+-- Mostramos informacion del comercio
+-- @param item comercio
+-- @param rewards recompensas
+------------------------------------
 function setCommerce(item, rewards)
     tools:setLoading(false)
     
-    local bg1 = display.newRect(midW, 80, 460, 140, 10 )
-    bg1:setFillColor( .91 )
-    scrViewPa:insert( bg1 )
-    
-    local bg2 = display.newRect(midW, 80, 456, 136, 10 )
-    bg2:setFillColor( 1 )
-    scrViewPa:insert( bg2 )
-    
-    local bgImg1 = display.newRect(80, 80, 140, 140, 10 )
-    bgImg1:setFillColor( tonumber(item.colorA1)/255, tonumber(item.colorA2)/255, tonumber(item.colorA3)/255 )
-    scrViewPa:insert( bgImg1 )
-    local bgImg2 = display.newRect(80, 80, 132, 132, 10 )
-    scrViewPa:insert( bgImg2 )
-    
+    yPosc = 20
+    idxPartner = item.id
+    if item.points then
+        usrPoints = tonumber(item.points)
+    end
+    local color = {tonumber(item.colorA1)/255, tonumber(item.colorA2)/255, tonumber(item.colorA3)/255}
+    local bgTop = display.newRoundedRect(midW, yPosc, 440, 80, 10 )
+    bgTop.anchorY = 0
+    bgTop:setFillColor( color[1], color[2], color[3] )
+    scrViewPa:insert( bgTop )
+    local banner = display.newImage( item.banner, system.TemporaryDirectory )
+    banner.anchorY = 0
+    banner.height = 280
+    banner.width = 440
+    banner:translate( midW, yPosc + 73 )
+    scrViewPa:insert( banner )
+    local bottomRounded = display.newImage("img/deco/bottomRounded.png")
+    bottomRounded:translate(midW, yPosc + 335)
+    scrViewPa:insert( bottomRounded )
+    local bgTCover1 = display.newRoundedRect(70, yPosc - 6, 110, 110, 10 )
+    bgTCover1.anchorY = 0
+    bgTCover1:setFillColor( color[1], color[2], color[3] )
+    scrViewPa:insert( bgTCover1 )
+    local bgTCover2 = display.newRoundedRect(70, yPosc - 2, 102, 102, 10 )
+    bgTCover2.anchorY = 0
+    bgTCover2:setFillColor( 1 )
+    scrViewPa:insert( bgTCover2 )
     local img = display.newImage( item.image, system.TemporaryDirectory )
-    img.height = 130
-    img.width = 130
-    img:translate( 80, 80 )
+    img.anchorY = 0
+    img.height = 100
+    img.width = 100
+    img:translate( 70, yPosc - 2 )
     scrViewPa:insert( img )
     
-    -- Textos informativos
-    local txtPName = display.newText({
-        text = item.name,     
-        x = 310, y = 35, width = 300,
-        font = native.systemFontBold,   
-        fontSize = 22, align = "left"
+    local txtCommerce = display.newText({
+        text = item.name,
+        y = yPosc + 27,
+        x = midW + 60, width = 340,
+        font = fLatoBold,   
+        fontSize = 30, align = "left"
     })
-    txtPName:setFillColor( .3 )
-    scrViewPa:insert(txtPName)
-
-    local  txtPAddress = display.newText({
-        text = item.address,     
-        x = 310, y = 70, width = 300,
-        font = native.systemFont,   
-        fontSize = 14, align = "left"
+    txtCommerce:setFillColor( unpack(cWhite) )
+    scrViewPa:insert(txtCommerce)
+    local txtCommerceDesc = display.newText({
+        text = item.description,
+        y = yPosc + 55,
+        x = midW + 63, width = 340,
+        font = fLatoItalic,   
+        fontSize = 18, align = "left"
     })
-    txtPAddress:setFillColor( .68 )
-    scrViewPa:insert(txtPAddress)
+    txtCommerceDesc:setFillColor( unpack(cWhite) )
+    scrViewPa:insert(txtCommerceDesc)
     
-    local bgBtn = display.newRect(310, 120, 310, 50, 40 )
-    bgBtn:setFillColor( 0 )
-    scrViewPa:insert( bgBtn )
-
-    local txtBtn = display.newText({
-        text = "AFILIATE",     
-        x = 310, y = 120, width = 300,
-        font = native.systemFontBold,
-        fontSize = 22, align = "center"
+    -- Contact Information
+    yPosc = yPosc + 385
+    local icoCom1 = display.newImage("img/icon/icoCom1.png")
+    icoCom1:translate(midW - 200, yPosc)
+    scrViewPa:insert( icoCom1 )
+    local txtContact1 = display.newText({
+        text = item.address,
+        y = yPosc,
+        x = midW + 25, width = 400,
+        font = fLatoBold,   
+        fontSize = 18, align = "left"
     })
-    txtBtn:setFillColor( 1 )
-    scrViewPa:insert(txtBtn)
-    
-    local bg3 = display.newRect( 125, 190, 230, 60, 10 )
-    bg3:setFillColor( .91 )
-    scrViewPa:insert( bg3 )
-    
-    local bgFav = display.newRect( 356, 190, 228, 60, 10 )
-    bgFav:setFillColor( .91 )
-    bgFav.idCommerce = item.id
-    bgFav:addEventListener( 'tap', tapFavCom)
-    scrViewPa:insert( bgFav )
-    
-    local iconMap = display.newImage("img/icon/iconMap.png")
-    iconMap:translate( 125, 190 )
-    scrViewPa:insert( iconMap )
-    
-    bgFav.iconHeart1 = display.newImage("img/icon/iconRewardHeart1.png")
-    bgFav.iconHeart1:translate( 356, 190 )
-    scrViewPa:insert( bgFav.iconHeart1 )
-
-    bgFav.iconHeart2 = display.newImage("img/icon/iconRewardHeart2.png")
-    bgFav.iconHeart2:translate( 356, 190 )
-    scrViewPa:insert( bgFav.iconHeart2 )
-
-    -- Fav actions
-    if item.id == item.fav  then
-        bgFav:setFillColor( 46/255, 190/255, 239/255 )
-        bgFav.iconHeart1.alpha = 0
-    else
-        bgFav.iconHeart2.alpha = 0
+    txtContact1:setFillColor( unpack(cGrayXH) )
+    scrViewPa:insert(txtContact1)
+    if txtContact1.height > 35 then
+        yPosc = yPosc + 13
+    end
+    if item.phone then
+        yPosc = yPosc + 35
+        local icoCom2 = display.newImage("img/icon/icoCom2.png")
+        icoCom2:translate(midW - 200, yPosc)
+        scrViewPa:insert( icoCom2 )
+        local txtContact2 = display.newText({
+            text = item.phone,
+            y = yPosc,
+            x = midW + 25, width = 400,
+            font = fLatoBold,   
+            fontSize = 18, align = "left"
+        })
+        txtContact2.url = "tel:"..item.phone
+        txtContact2:addEventListener( 'tap', openUrl)
+        txtContact2:setFillColor( unpack(cGrayXH) )
+        scrViewPa:insert(txtContact2)
+    end
+    if item.web then
+        yPosc = yPosc + 35
+        local icoCom3 = display.newImage("img/icon/icoCom3.png")
+        icoCom3:translate(midW - 200, yPosc + 3)
+        scrViewPa:insert( icoCom3 )
+        local txtContact3 = display.newText({
+            text = item.web,
+            y = yPosc,
+            x = midW + 25, width = 400,
+            font = fLatoBold,   
+            fontSize = 18, align = "left"
+        })
+        txtContact3.url = item.web
+        txtContact3:addEventListener( 'tap', openUrl)
+        txtContact3:setFillColor( unpack(cGrayXH) )
+        scrViewPa:insert(txtContact3)
     end
     
-    yPosc = 255
+    -- Afiliarse
+    if not(item.points) then
+        yPosc = yPosc + 60
+        local bgRedem = display.newRoundedRect( midW, yPosc, 440, 60, 10 )
+        bgRedem:setFillColor( unpack(cPurpleL) )
+        bgRedem:addEventListener( 'tap', setCommerceJoin)
+        scrViewPa:insert(bgRedem)
+        local bgRedemL1 = display.newRoundedRect( midW + 180, yPosc, 80, 60, 10 )
+        bgRedemL1:setFillColor( unpack(cPurple) )
+        scrViewPa:insert(bgRedemL1)
+        local bgRedemL2 = display.newRect( midW + 170, yPosc, 60, 60 )
+        bgRedemL2:setFillColor( unpack(cPurple) )
+        scrViewPa:insert(bgRedemL2)
+        local iconAfil = display.newImage("img/icon/iconAfil.png")
+        iconAfil:translate(midW + 180, yPosc)
+        scrViewPa:insert( iconAfil )
+        local lblRedem = display.newText({
+            text = "¡AFILIATE AHORA!", 
+            x = midW - 25, y = yPosc,
+            font = fLatoBold,
+            fontSize = 26, align = "center"
+        })
+        lblRedem:setFillColor( unpack(cWhite) )
+        scrViewPa:insert( lblRedem )
+    end
     
+    yPosc = yPosc + 50
     local bgTitle1 = display.newRect( midW, yPosc, intW, 30 )
-    bgTitle1:setFillColor( .91 )
+    bgTitle1:setFillColor( unpack(cBlueH) )
     scrViewPa:insert( bgTitle1 )
 
     local lblTitle1 = display.newText({
         text = "RECOMPENSAS DISPONIBLES",     
         x = midW, y = yPosc, width = 460,
         font = native.systemFont,
-        fontSize = 14, align = "left"
+        fontSize = 15, align = "left"
     })
-    lblTitle1:setFillColor( .3 )
+    lblTitle1:setFillColor( 1 )
     scrViewPa:insert(lblTitle1)
     
     yPosc = yPosc + 75
@@ -192,37 +269,6 @@ function setCommerce(item, rewards)
         yPosc = yPosc + 95
     end
     
-    -- Social Buttons
-    yPosc = yPosc - 10
-    
-    local bg5 = display.newRect( 125, yPosc, 230, 60, 10 )
-    bg5:setFillColor( .91 )
-    bg5.url = item.facebook
-    bg5:addEventListener( 'tap', openURL)
-    scrViewPa:insert( bg5 )
-    
-    local bg6 = display.newRect( 356, yPosc, 228, 60, 10 )
-    bg6:setFillColor( .91 )
-    bg6.url = item.twitter
-    bg6:addEventListener( 'tap', openURL)
-    scrViewPa:insert( bg6 )
-    
-    local iconFB = display.newImage("img/icon/iconFB.png")
-    iconFB:translate( 125, yPosc )
-    scrViewPa:insert( iconFB )
-    
-    local iconTW = display.newImage("img/icon/iconTW.png")
-    iconTW:translate( 356, yPosc )
-    scrViewPa:insert( iconTW )
-    
-    if item.facebook then
-        bg5:setFillColor( 59/255, 89/255, 152/255 )
-    end
-    if item.twitter then
-        bg6:setFillColor( 0, 172/255, 237/255 )
-    end
-    
-    yPosc = yPosc + 50
     -- Set new scroll position
     scrViewPa:setScrollHeight( yPosc )
 end
@@ -230,35 +276,35 @@ end
 -- Creamos lista de comercios
 function newReward(reward, lastYP, cpoints)
     
-    local parent = display.newContainer( 462, 95 )
-    parent:translate( midW, lastYP )
-    scrViewPa:insert( parent )
+    container = display.newContainer( 462, 95 )
+    container:translate( midW, lastYP )
+    scrViewPa:insert( container )
 
-    local bg1 = display.newRect(0, 0, intW - 20, 70 )
+    local bg1 = display.newRect(0, 0, intW - 20, 80 )
     bg1:setFillColor( 236/255 )
-    parent:insert( bg1 )
-    local bg2 = display.newRect(0, 0, intW - 24, 66 )
+    container:insert( bg1 )
+    local bg2 = display.newRect(0, 0, intW - 24, 76 )
     bg2:setFillColor( 1 )
-    parent:insert( bg2 )
+    container:insert( bg2 )
     bg2.idReward = reward.id
     bg2:addEventListener( 'tap', tapReward)
 
-    local bgFav = display.newRect(-116, 0, 60, 64 )
+    local bgFav = display.newRect(-196, 0, 60, 74 )
     bgFav:setFillColor( 236/255 )
-    parent:insert( bgFav )
-    bgFav.idReward = reward.id 
-    bgFav:addEventListener( 'tap', tapFavComRew)
-    local bgPoints = display.newRect(-186, 0, 80, 64 )
-    bgPoints:setFillColor( .21 )
-    parent:insert( bgPoints ) 
+    container:insert( bgFav )
+    bgFav.idReward = reward.id
+    bgFav:addEventListener( 'tap', tapComRewFav)
+    local bgPoints = display.newRect(-126, 0, 80, 74 )
+    bgPoints:setFillColor( unpack(cBlueH) )
+    container:insert( bgPoints )
 
     bgFav.iconHeart1 = display.newImage("img/icon/iconRewardHeart1.png")
-    bgFav.iconHeart1:translate( -116, 0 )
-    parent:insert( bgFav.iconHeart1 )
+    bgFav.iconHeart1:translate( -196, 0 )
+    container:insert( bgFav.iconHeart1 )
 
     bgFav.iconHeart2 = display.newImage("img/icon/iconRewardHeart2.png")
-    bgFav.iconHeart2:translate( -116, 0 )
-    parent:insert( bgFav.iconHeart2 )
+    bgFav.iconHeart2:translate( -196, 0 )
+    container:insert( bgFav.iconHeart2 )
 
     -- Fav actions
     if reward.id == reward.fav  then
@@ -268,48 +314,48 @@ function newReward(reward, lastYP, cpoints)
     else
         bgFav.iconHeart2.alpha = 0
     end
-    
+
     -- Textos y descripciones
     if reward.points == 0 or reward.points == "0" then
         local points = display.newText({
             text = "GRATIS", 
-            x = -186, y = 0,
-            font = fLatoBold,   
+            x = -127, y = 0,
+            font = native.systemFontBold,   
             fontSize = 20, align = "center"
         })
         points:rotate( -45 )
         points:setFillColor( 1 )
-        parent:insert( points )
+        container:insert( points )
     else
         local points = display.newText({
             text = reward.points, 
-            x = -186, y = -7,
-            font = fLatoBold,   
+            x = -126, y = -7,
+            font = native.systemFontBold,   
             fontSize = 26, align = "center"
         })
         points:setFillColor( 1 )
-        parent:insert( points )
+        container:insert( points )
         local points2 = display.newText({
-            text = "TUKS", 
-            x = -186, y = 18,
-            font = fLatoBold,   
-            fontSize = 16, align = "center"
+            text = "PUNTOS", 
+            x = -126, y = 18,
+            font = native.systemFontBold,   
+            fontSize = 14, align = "center"
         })
         points2:setFillColor( 1 )
-        parent:insert( points2 )
+        container:insert( points2 )
     end
 
     local name = display.newText({
         text = reward.name, 
         x = 70, y = 0, width = 280,
-        font = fLatoRegular,   
+        font = native.systemFont,   
         fontSize = 19, align = "left"
     })
     name:setFillColor( .3 )
-    parent:insert( name )
+    container:insert( name )
 
     -- Set value Progress Bar
-    if cpoints then
+    if usrPoints then
         -- Progress Bar
         local progressBar = display.newRect( 0, 0, 300, 5 )
         progressBar:setFillColor( {
@@ -319,22 +365,20 @@ function newReward(reward, lastYP, cpoints)
             direction = "bottom"
         } ) 
         progressBar:translate( 70, 30 )
-        parent:insert(progressBar)
+        container:insert(progressBar)
 
         local points = tonumber(reward.points)
-        local userPoints = tonumber(cpoints)
-
         -- Usuario con puntos
-        if userPoints > 0 or points == 0  then
+        if usrPoints > 0 or points == 0  then
             local porcentaje, color1, color2
 
             -- Todos los puntos                
-            if points <= userPoints  then
+            if points <= usrPoints  then
                 porcentaje = 1
                 color1 = { 157/255, 210/255, 25/255, 1 }
                 color2 = { 140/255, 242/255, 14/255, .3 }
             else
-                porcentaje  = userPoints/points
+                porcentaje  = usrPoints/points
                 -- Colores
                 if porcentaje <= .33 then
                     color1 = { 210/255, 70/255, 27/255, 1 }
@@ -357,9 +401,10 @@ function newReward(reward, lastYP, cpoints)
             } ) 
             progressBar2.anchorX = 0
             progressBar2:translate( -80, 30 )
-            parent:insert(progressBar2)
+            container:insert(progressBar2)
         end
     end
+    
 end
 
 function setCommercePhotos(photos)
@@ -376,6 +421,20 @@ function setCommercePhotos(photos)
             -- Set new scroll position
             scrViewPa:setScrollHeight( yPosc + 365 )
         else
+            yPosc = yPosc - 15
+            local bgTitle1 = display.newRect( midW, yPosc, intW, 30 )
+            bgTitle1:setFillColor( unpack(cBlueH) )
+            scrViewPa:insert( bgTitle1 )
+
+            local lblTitle1 = display.newText({
+                text = "GALERIA",     
+                x = midW, y = yPosc, width = 460,
+                font = native.systemFont,
+                fontSize = 15, align = "left"
+            })
+            lblTitle1:setFillColor( 1 )
+            scrViewPa:insert(lblTitle1)
+            yPosc = yPosc + 30
             scrViewPhotos = widget.newScrollView
             {
                 top = yPosc,

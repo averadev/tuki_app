@@ -10,6 +10,7 @@ h = display.topStatusBarContentHeight
 
 -- Colors
 cWhite = { 1 }
+cGrayXXL = { .96 }
 cGrayXL = { .9 }
 cGrayL = { .7 }
 cGrayM = { .63 }
@@ -22,6 +23,7 @@ cPurple = { .27, .11, .36  }
 cPurpleL = { .38, .17, .51  }
 cTurquesa = { .18, .74, .93  }
 cTurquesaL = { .49, .81, .96  }
+cTurquesaXL = { .96, .99, 1 }
 cFB = { 0, .42, .68 }
 
 -- Fonts

@@ -51,7 +51,7 @@ end
 
 -- Creamos lista de comercios
 function setListMessages(rewards)
-    lastYP = -50
+    lastYP = -57
     local isAvailable = true
     tools:setLoading(false)
     
@@ -72,7 +72,7 @@ function setListMessages(rewards)
     
     for z = 1, #rewards, 1 do 
         
-        -- Mostrar separadores
+        --[[ Mostrar separadores
         if z == 1 then
             if rewards[z].status == "1" then
                 setInfoBar(30, "Mensajes nuevos")
@@ -89,24 +89,54 @@ function setListMessages(rewards)
                 lastYP = lastYP + 40
             end
         end
+        ]]
+        
         
         -- Contenedor del Reward
-        rowReward[z] = display.newContainer( 462, 125 )
-        rowReward[z]:translate( midW, lastYP + (125*z) )
+        rowReward[z] = display.newContainer( intW, 125 )
+        rowReward[z]:translate( midW, lastYP + (115*z) )
         scrViewR:insert( rowReward[z] )
         
-        local bg1 = display.newRect(0, 0, intW - 20, 110 )
-        bg1:setFillColor( 236/255 )
-        rowReward[z]:insert( bg1 )
-        local bg2 = display.newRect(0, 0, intW - 24, 106 )
+        local bg2 = display.newRect(0, 0, intW, 111 )
         bg2:setFillColor( 1 )
         rowReward[z]:insert( bg2 )
         bg2.idMessage = rewards[z].id
         bg2:addEventListener( 'tap', tapMessage)
         
-        local img = display.newImage("img/icon/iconMail.png")
-        img:translate( -178, 0 )
-        rowReward[z]:insert( img )
+        local line = display.newRect(0, 56, 450, 3 )
+        line:setFillColor( 236/255 )
+        rowReward[z]:insert( line )
+        
+        --local img = display.newImage("img/icon/iconMail.png")
+        local bgImg0 = display.newRect( -178, 0, 84, 84 )
+        bgImg0:setFillColor( unpack(cGrayM) )
+        rowReward[z]:insert( bgImg0 )
+        local bgImg1 = display.newRect( -178, 0, 80, 80 )
+        bgImg1:setFillColor( unpack(cWhite) )
+        rowReward[z]:insert( bgImg1 )
+        
+        -- FB image
+        if rewards[z].user and rewards[z].fbid then
+            url = "http://graph.facebook.com/"..rewards[z].fbid.."/picture?large&width=80&height=80"
+            retriveImage(rewards[z].fbid.."fbmin", url, rowReward[z], -178, 0, 80, 80)
+        else
+            local img
+            if rewards[z].image then
+                -- Commerce
+                img = display.newImage( rewards[z].image, system.TemporaryDirectory )
+            elseif rewards[z].user then
+                -- User without FB
+                img = display.newImage("img/icon/userMessage.png")
+            else
+                -- Unify and Standar
+                img = display.newImage("img/icon/tukiIcon.png")
+            end
+            img:translate( -178, 0 )
+            img.width = 80
+            img.height = 80
+            rowReward[z]:insert( img )
+        end
+        
         
         local lblFecha = display.newText({
             text = rewards[z].fecha,     
@@ -114,7 +144,7 @@ function setListMessages(rewards)
             font = fLatoBold,   
             fontSize = 14, align = "right"
         })
-        lblFecha:setFillColor( .3 )
+        lblFecha:setFillColor( unpack(cTurquesa) )
         rowReward[z]:insert( lblFecha )
         
         local lblFrom = display.newText({
@@ -136,8 +166,8 @@ function setListMessages(rewards)
         rowReward[z]:insert( lblName )
         
         -- Diseño visto
-        if rewards[z].status == "2" then
-            rowReward[z].alpha = .8
+        if rewards[z].status == "1" then
+            bg2:setFillColor( unpack(cTurquesaXL) )
         end
         
     end

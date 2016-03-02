@@ -35,6 +35,14 @@ local dbManager = {}
 		return 1
 	end
 
+    -- Actualiza login
+    dbManager.updateUser = function(user)
+		openConnection( )
+        local query = "UPDATE config SET id = '"..user.id.."', fb = '"..user.fbid.."', name = '"..user.name
+        db:exec( query )
+		closeConnection( )
+	end
+
     -- deshabilita el welcome
     dbManager.disableWelcome = function()
 		openConnection( )
@@ -43,19 +51,11 @@ local dbManager = {}
 		closeConnection( )
 	end
 
-    -- deshabilita el welcome
-    dbManager.setLogin = function(user)
-		openConnection( )
-        local query = "UPDATE config SET id = '"..user.id.."', fb = '"..user.fbid.."', name = '"..user.name..", isNew = 0"
-        db:exec( query )
-		closeConnection( )
-	end
-
 	-- Setup squema if it doesn't exist
 	dbManager.setupSquema = function()
 		openConnection( )
 		
-		local query = "CREATE TABLE IF NOT EXISTS config (id TEXT PRIMARY KEY, fbid TEXT, name TEXT, isNew INTEGER);"
+		local query = "CREATE TABLE IF NOT EXISTS config (id TEXT PRIMARY KEY, fbid TEXT, name TEXT, city TEXT);"
 		db:exec( query )
 
         for row in db:nrows("SELECT * FROM config;") do
@@ -63,8 +63,8 @@ local dbManager = {}
 			do return end
 		end
 
-        --query = "INSERT INTO config VALUES ('', '', '', 1);"
-		query = "INSERT INTO config VALUES (1014858604001209, 1088621194484293, 'Alberto', 0);"
+        query = "INSERT INTO config VALUES ('', '', '', '');"
+		--query = "INSERT INTO config VALUES (1014858604001209, 10152713865899218, 'Alberto Vera', 'Cancún Quintana Roo');"
         
 		db:exec( query )
     

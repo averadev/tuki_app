@@ -59,8 +59,24 @@ function tapFavFavs(event)
     return true
 end
 
+-------------------------------------
+-- Filtrar registros
+-- @param txtFil array filters
+------------------------------------
 function doFilter(txtFil)
+    -- Clean Info
+    for z = 1, #rowReward, 1 do 
+        rowReward[z]:removeSelf()
+        rowReward[z] = nil
+    end
     
+    if txtFil == '' then
+        tools:setEmpty(rowReward, scrViewR)
+    else
+        lastYP = 80
+        tools:setLoading(true, scrViewR)
+        RestManager.getRewardFavs(txtFil)
+    end
 end
 
 -- Tap filter event
@@ -130,7 +146,7 @@ function setListReward(rewards)
         bgFav.idReward = rewards[z].id
         bgFav:addEventListener( 'tap', tapFavFavs)
         local bgPoints = display.newRect(-126, 0, 80, 74 )
-        bgPoints:setFillColor( .21 )
+        bgPoints:setFillColor( unpack(cBlueH) )
         rowReward[z]:insert( bgPoints )
         
         bgFav.iconHeart1 = display.newImage("img/icon/iconRewardHeart1.png")
@@ -261,8 +277,6 @@ function setListReward(rewards)
                 rowReward[z]:insert(progressBar2)
             end
         end
-        
-        
         
     end
     -- Set new scroll position
