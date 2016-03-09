@@ -16,6 +16,13 @@ function Menu:new()
     end
     
     -- Cambia pantalla
+    function closeSession(event)
+        DBManager.updateUser({id='', fbid='', name=''})
+        changeScreen(event)
+        return true
+    end
+    
+    -- Cambia pantalla
     function changeScreen(event)
         hideMenu()
         toScreen(event)
@@ -146,8 +153,8 @@ function Menu:new()
         grpOptions:insert(line3)
         
         -- Iconos
-        local bgMenuUser1 = display.newRect( 0, 120, 133, 80 )
-        bgMenuUser1.alpha = .01
+        local bgMenuUser1 = display.newRect( 0, 124, 133, 80 )
+        bgMenuUser1.alpha = .2
         bgMenuUser1.anchorX = 0
         bgMenuUser1.screen = ""
         bgMenuUser1:setFillColor( .7 )
@@ -163,8 +170,8 @@ function Menu:new()
         })
         txtCodigo:setFillColor( unpack(cWhite) )
         grpOptions:insert( txtCodigo )
-        local bgMenuUser2 = display.newRect( 134, 120, 133, 80 )
-        bgMenuUser2.alpha = .01
+        local bgMenuUser2 = display.newRect( 134, 124, 133, 80 )
+        bgMenuUser2.alpha = .2
         bgMenuUser2.anchorX = 0
         bgMenuUser2.screen = ""
         bgMenuUser2:setFillColor( .7 )
@@ -180,12 +187,12 @@ function Menu:new()
         })
         txtCCiudad:setFillColor( unpack(cWhite) )
         grpOptions:insert( txtCCiudad )
-        local bgMenuUser3 = display.newRect( 267, 120, 133, 80 )
+        local bgMenuUser3 = display.newRect( 267, 124, 133, 80 )
         bgMenuUser3.alpha = .01
         bgMenuUser3.anchorX = 0
-        bgMenuUser3.screen = ""
+        bgMenuUser3.screen = "Login"
         bgMenuUser3:setFillColor( .7 )
-        --bgMenuUser3:addEventListener( 'tap', changeScreen)
+        bgMenuUser3:addEventListener( 'tap', closeSession)
         grpOptions:insert(bgMenuUser3)
         local menuClose = display.newImage("img/icon/menuClose.png")
         menuClose:translate(332, 120)

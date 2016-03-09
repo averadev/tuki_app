@@ -15,6 +15,7 @@ local composer = require( "composer" )
 local RestManager = require( "src.RestManager" )
 local fxTap = audio.loadSound( "fx/click.wav")
 local fxFav = audio.loadSound( "fx/fav.wav")
+local fxJoined = audio.loadSound( "fx/join.wav")
 
 -- Grupos y Contenedores
 local screen, scrViewRe, tools
@@ -26,14 +27,53 @@ local intH = display.contentHeight
 local midW = display.contentWidth / 2
 local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight 
-
--- Arrays
+local idxReward
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+-------------------------------------
+-- Consultar comercio
+-- @param event objeto evento
+------------------------------------
+function readyJoined(idCommerce)
+    tools:animate()
+    timer.performWithDelay( 250, function() audio.play(fxJoined) end )
+    timer.performWithDelay( 3000, function() 
+        table.remove( Globals.scenes )
+        composer.removeScene( "src.Reward" )
+        composer.gotoScene("src.Reward", { params = { idReward = idxReward } } )
+    end )
+    return true
+end
+
+-------------------------------------
+-- Afiliacion del Comercio
+-- @param event objeto evento
+------------------------------------
+function setCommerceJoin(event)
+    local t = event.target
+    t:removeEventListener( 'tap', setCommerceJoin)
+    t.alpha = .9
+    RestManager.setCommerceJoin(t.idCommerce)
+    return true
+end
+
+-------------------------------------
+-- Consultar comercio
+-- @param event objeto evento
+------------------------------------
+function goToCheckReward(event)
+    composer.removeScene( "src.CheckReward" )
+    composer.gotoScene("src.CheckReward", { params = { idReward = idxReward } } )
+    return true
+end
+
+-------------------------------------
 -- Tap commerce event
+-- @param event objeto evento
+------------------------------------
 function tapCommerce(event)
     local t = event.target
     audio.play(fxTap)
@@ -42,7 +82,10 @@ function tapCommerce(event)
     return true
 end
 
+-------------------------------------
 -- Executed upon touching and releasing the button created below
+-- @param event objeto evento
+------------------------------------
 local function doShare( event )
     local serviceName = "share"
     local isAvailable = native.canShowPopup( "social", serviceName )
@@ -79,11 +122,14 @@ local function doShare( event )
     end
 end
 
+-------------------------------------
 -- Crea contenido del Reward
+-- @param item objeto reward
+------------------------------------
 function setReward(item)
     tools:setLoading(false)
-    
     local yPosc = 60
+    idxReward = item.id
     
     local color = {tonumber(item.colorA1)/255, tonumber(item.colorA2)/255, tonumber(item.colorA3)/255}
     local bgTop = display.newRoundedRect(midW, yPosc, 440, 80, 10 )
@@ -220,6 +266,17 @@ function setReward(item)
         local menuPoints = display.newImage( "img/icon/menuPoints.png" )
         menuPoints:translate( 420, yPosc )
         scrViewRe:insert( menuPoints )
+        
+        -- Validate points
+        if tonumber(item.userPoints) >= tonumber(item.points) then
+            bgRedem:addEventListener( 'tap', goToCheckReward)
+        else
+            local bgGray = display.newRoundedRect( midW, yPosc, 440, 60, 10 )
+            bgGray.alpha = .5
+            bgGray:setFillColor( 1 )
+            scrViewRe:insert(bgGray)
+        end
+        
     -- Comercio NO Afiliado
     else
         -- Fondos Puntos
@@ -262,6 +319,8 @@ function setReward(item)
         yPosc = yPosc + 70
         local bgRedem = display.newRoundedRect( midW, yPosc, 440, 60, 10 )
         bgRedem:setFillColor( unpack(cPurpleL) )
+        bgRedem.idCommerce = item.idCommerce
+        bgRedem:addEventListener( 'tap', setCommerceJoin)
         scrViewRe:insert(bgRedem)
         local lblRedem = display.newText({
             text = "¡AFILIATE AHORA!", 
@@ -272,7 +331,6 @@ function setReward(item)
         lblRedem:setFillColor( unpack(cWhite) )
         scrViewRe:insert( lblRedem )
     end
-    
     
     -- Comercio
     yPosc = yPosc + 70
@@ -380,8 +438,8 @@ end
 function setRewardLogo(item)
     local imgPBig = display.newImage(item.image, system.TemporaryDirectory)
     imgPBig:translate( 65, 60 )
-    imgPBig.width = 80
-    imgPBig.height = 80
+    imgPBig.width = 75
+    imgPBig.height = 75
     scrViewRe:insert( imgPBig )
 end
 

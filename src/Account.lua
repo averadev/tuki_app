@@ -66,7 +66,6 @@ function showAccount(usuario)
             scrViewA:insert( fbPhoto )
         else
             url = "http://graph.facebook.com/"..usuario.fbid.."/picture?large&width=150&height=150"
-            print(url)
             local isReady = retriveImage(usuario.fbid.."fbmax", url, scrViewA, 95, lastY + 100, 150, 150)
             local fbFrame = display.newImage("img/deco/fbFrame.png")
             fbFrame:translate(95, lastY + 100)
@@ -282,7 +281,7 @@ function showAccountCom(items)
                 xSpc = 117
             end
             local lblValue0 = display.newText({
-                text = items[z].rewards, 
+                text = items[z].avaliable, 
                 x = xSpc, y = -5, width = 150, 
                 font = fLatoBold,   
                 fontSize = 14, align = "right"
@@ -305,15 +304,16 @@ function showAccountCom(items)
             })
             lblValue2:setFillColor( unpack(cPurpleL) )
             container:insert( lblValue2 )
-            local lblValue3 = display.newText({
-                text = items[z].lastVisit, 
-                x = 140, y = 55, width = 150, 
-                font = fLatoBold,   
-                fontSize = 14, align = "right"
-            })
-            lblValue3:setFillColor( unpack(cPurpleL) )
-            container:insert( lblValue3 )
-            
+            if items[z].lastVisit then 
+                local lblValue3 = display.newText({
+                    text = items[z].lastVisit, 
+                    x = 140, y = 55, width = 150, 
+                    font = fLatoBold,   
+                    fontSize = 14, align = "right"
+                })
+                lblValue3:setFillColor( unpack(cPurpleL) )
+                container:insert( lblValue3 )
+            end
             lastY = lastY + 154
         end
     end

@@ -34,11 +34,11 @@ local myMap, tools, latitude, longitude
 local locationHandler = function( event )
 	-- Check for error (user may have turned off Location Services)
 	if event.errorCode then
-		print( "Location error: " .. tostring( event.errorMessage ) )
-        Runtime:removeEventListener( "location", locationHandler )
+		Runtime:removeEventListener( "location", locationHandler )
 	else
-        print("Is Location")
-        latitude, longitude = event.latitude, event.longitude
+        --latitude, longitude = event.latitude, event.longitude
+        latitude, longitude = 21.156956, -86.825280
+        
         myMap:setRegion( latitude, longitude, 0.02, 0.02 )
 		Runtime:removeEventListener( "location", locationHandler )
         

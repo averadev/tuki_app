@@ -34,8 +34,22 @@ local tools, scrViewWL, txtW2, txtW3, txtNumber, btnNearBg1, btnNearBg2
 ---------------------------------------------------------------------------------
 function goToEnd(event)
     if minNum > 2 then
+        -- Play Audio
         local t = event.target
         audio.play(fxTap)
+        -- Afiliar a Comercios
+        local idx = ""
+        for z = 1, #rowPartner, 1 do 
+            if rowPartner[z].bgActive.alpha == 1 then
+                if idx == "" then
+                    idx = rowPartner[z].bgActive.idCommerce
+                else
+                    idx = idx.."-"..rowPartner[z].bgActive.idCommerce
+                end
+            end
+        end
+        RestManager.multipleJoin(idx)
+        -- Change Screen
         composer.removeScene( "src.WelcomeEnd" )
         composer.gotoScene("src.WelcomeEnd", { time = 400, effect = "slideLeft" } )
     end
@@ -135,6 +149,7 @@ function setListWelcome(items)
         -- Boton Afiliar
         rowPartner[z].bgActive = display.newRect( 190, 0, 80, 80 )
         rowPartner[z].bgActive:setFillColor( unpack(cPurple) )
+        rowPartner[z].bgActive.idCommerce = items[z].id
         rowPartner[z].bgActive.alpha = 0
         rowPartner[z]:insert( rowPartner[z].bgActive )
         rowPartner[z].icoActive = display.newImage("img/icon/icoWCheck.png")

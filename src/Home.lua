@@ -430,9 +430,18 @@ function scene:create( event )
     initY  = h + 200 
     allH = intH - h
     wCmp, hCmp = 440, 330
-    wCTitle, rLRest, hHPoints, yHPoints, hHTuks = 0, 0, 0, 0, 0
-    print("allH: "..allH)
-    if allH <= 760 then
+    wCTitle, rLRest, hHPoints, yHPoints, hHTuks, xxLCircle = 0, 0, 0, 0, 0, 0
+    -- Footer
+    isFooter = true
+    if allH <= 750 then
+        isFooter = false
+    end
+    -- Resize Cmp
+    print(allH)
+    if allH <= 685 then
+        wCTitle, rLRest, hHPoints, yHPoints, hHTuks, xxLCircle = 100, 30, 15, 10, 8, 20
+        wCmp, hCmp, hHPoints = 320, 240, 20
+    elseif allH <= 780 then
         wCTitle, rLRest, hHPoints, yHPoints, hHTuks = 45, 20, 15, 10, 8
         wCmp, hCmp, hHPoints = 380, 285, 20
     end
@@ -486,8 +495,16 @@ function scene:create( event )
     
     -- Circle points
     local initY = initY + hCmp + 83
-    local xLCircle = 115
+    local xLCircle = 115 +xxLCircle
     local rLCircle = 80
+    
+    if not(isFooter) then
+        local bgBottom = display.newRect(midW, initY - 10, wCmp + 4, 60 )
+        bgBottom.anchorY = 1
+        bgBottom:setFillColor( 0 )
+        bgBottom.alpha = .5
+        workSite:insert( bgBottom )
+    end
     local cTuks1 = display.newCircle( xLCircle, initY - 45, rLCircle - rLRest )
     cTuks1:setFillColor( unpack(cWhite) )
     workSite:insert( cTuks1 )
@@ -519,24 +536,37 @@ function scene:create( event )
     workSite:insert(txtTuks)
     
     -- Bottom
-    local bgBottom = display.newRoundedRect(midW, initY, wCmp + 4, 80, 10 )
-    bgBottom.anchorY = 0
-    bgBottom:setFillColor( unpack(cBlueH) )
-    workSite:insert( bgBottom )
-    local bgBottomT = display.newRect(midW, initY, wCmp + 4, 20 )
-    bgBottomT.anchorY = 0
-    bgBottomT:setFillColor( unpack(cBlueH) )
-    workSite:insert( bgBottomT )
-    txtName = display.newText({
-        text = '',   
-        y = initY + 40,
-        x = midW, width = wCmp -30,
-        font = fLatoBold,   
-        fontSize = 25, align = "left"
-    })
-    txtName:setFillColor( unpack(cWhite) )
-    workSite:insert(txtName)
-    
+    if isFooter then
+        local bgBottom = display.newRoundedRect(midW, initY, wCmp + 4, 80, 10 )
+        bgBottom.anchorY = 0
+        bgBottom:setFillColor( unpack(cBlueH) )
+        workSite:insert( bgBottom )
+        local bgBottomT = display.newRect(midW, initY, wCmp + 4, 20 )
+        bgBottomT.anchorY = 0
+        bgBottomT:setFillColor( unpack(cBlueH) )
+        workSite:insert( bgBottomT )
+        txtName = display.newText({
+            text = '',   
+            y = initY + 40,
+            x = midW, width = wCmp -30,
+            font = fLatoBold,   
+            fontSize = 25, align = "left"
+        })
+        txtName:setFillColor( unpack(cWhite) )
+        workSite:insert(txtName)
+    else
+        bgLine.height = 30
+        
+        txtName = display.newText({
+            text = '',   
+            y = initY - 40,
+            x = midW + 60 - xxLCircle, width = wCmp - 150,
+            font = fLatoBold,   
+            fontSize = 18, align = "left"
+        })
+        txtName:setFillColor( unpack(cWhite) )
+        workSite:insert(txtName)
+    end
     -- Obtener imagen QR
     RestManager.getQR()
     

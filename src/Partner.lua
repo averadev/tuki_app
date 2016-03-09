@@ -61,8 +61,6 @@ function readyJoined(idCommerce)
         composer.removeScene( "src.Partner" )
         composer.gotoScene("src.Partner", { params = { idCommerce = idxPartner } } )
     end )
-    --composer.removeScene( "src.Reward" )
-    --composer.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
     return true
 end
 
@@ -147,9 +145,9 @@ function setCommerce(item, rewards)
     scrViewPa:insert( bgTCover2 )
     local img = display.newImage( item.image, system.TemporaryDirectory )
     img.anchorY = 0
-    img.height = 100
-    img.width = 100
-    img:translate( 70, yPosc - 2 )
+    img.height = 95
+    img.width = 95
+    img:translate( 70, yPosc + 2 )
     scrViewPa:insert( img )
     
     local txtCommerce = display.newText({
@@ -171,8 +169,133 @@ function setCommerce(item, rewards)
     txtCommerceDesc:setFillColor( unpack(cWhite) )
     scrViewPa:insert(txtCommerceDesc)
     
+    -- Detalle afiliado
+    yPosc = yPosc + 365
+    if item.points then
+        local container = display.newContainer( 440, 94 )
+        container.anchorY = 0
+        container:translate( midW, yPosc )
+        scrViewPa:insert( container )
+        
+        local bgCom1 = display.newRect(0, 0, intW - 40, 94 )
+        bgCom1:setFillColor( unpack(cGrayXL) )
+        container:insert(bgCom1)
+        local bgCom2 = display.newRect(0, 0, intW - 44, 90 )
+        bgCom2:setFillColor( 1 )
+        container:insert(bgCom2)
+
+        local bgTuks1 = display.newRect(-158, 0, 120, 90 )
+        bgTuks1:setFillColor( unpack(cTurquesa) )
+        container:insert(bgTuks1)
+        local bgTuks2 = display.newRect(-158, 0, 116, 86 )
+        bgTuks2:setFillColor( unpack(cBlueH) )
+        container:insert(bgTuks2)
+
+        local bgDesc1 = display.newRect(-86, -30, 313, 30 )
+        bgDesc1.anchorX = 0
+        bgDesc1:setFillColor( unpack(cGrayXXL) )
+        container:insert(bgDesc1)
+        local bgDesc2 = display.newRect(-86, 30, 313, 30 )
+        bgDesc2.anchorX = 0
+        bgDesc2:setFillColor( unpack(cGrayXXL) )
+        container:insert(bgDesc2)
+
+        -- Descripciones
+        local lblDescT = display.newText({
+            text = "TUKS", 
+            x = -158, y = 23, width = 70, 
+            font = fLatoBold,   
+            fontSize = 23, align = "center"
+        })
+        lblDescT:setFillColor( 1 )
+        container:insert( lblDescT )
+        local lblDesc1 = display.newText({
+            text = "Recompensas Disponibles", 
+            x = 60, y = -30, width = 200, 
+            font = fLatoRegular,   
+            fontSize = 14, align = "left"
+        })
+        lblDesc1:setFillColor( unpack(cGrayH) )
+        container:insert( lblDesc1 )
+        local lblDesc2 = display.newText({
+            text = "Visitas Realizadas", 
+            x = 60, y = 0, width = 200, 
+            font = fLatoRegular,   
+            fontSize = 14, align = "left"
+        })
+        lblDesc2:setFillColor( unpack(cGrayH) )
+        container:insert( lblDesc2 )
+        local lblDesc3 = display.newText({
+            text = "Ultima Visita", 
+            x = 60, y = 30, width = 200, 
+            font = fLatoRegular,   
+            fontSize = 14, align = "left"
+        })
+        lblDesc3:setFillColor( unpack(cGrayH) )
+        container:insert( lblDesc3 )
+        local Account01 = display.newImage("img/icon/Account01.png")
+        Account01:translate(-64, -30)
+        container:insert( Account01 )
+        local Account02 = display.newImage("img/icon/Account02.png")
+        Account02:translate(-64, 0)
+        container:insert( Account02 )
+        local Account03 = display.newImage("img/icon/Account03.png")
+        Account03:translate(-64, 30)
+        container:insert( Account03 )
+
+        --- Valores
+        local lblTuks = display.newText({
+            text = item.points, 
+            x = -158, y = -12, width = 70, 
+            font = fLatoBold,   
+            fontSize = 40, align = "center"
+        })
+        lblTuks:setFillColor( 1 )
+        container:insert( lblTuks )
+        local xSpc = 125
+        if tonumber(item.rewards) > 9 then
+            xSpc = 117
+        end
+        local lblValue0 = display.newText({
+            text = item.avaliable, 
+            x = xSpc, y = -30, width = 150, 
+            font = fLatoBold,   
+            fontSize = 14, align = "right"
+        })
+        lblValue0:setFillColor( unpack(cPurpleL) )
+        container:insert( lblValue0 )
+        local lblValue1 = display.newText({
+            text = "/"..item.rewards, 
+            x = 140, y = -30, width = 150, 
+            font = fLatoRegular,   
+            fontSize = 14, align = "right"
+        })
+        lblValue1:setFillColor( unpack(cGrayH) )
+        container:insert( lblValue1 )
+        local lblValue2 = display.newText({
+            text = item.visits, 
+            x = 140, y = 0, width = 150, 
+            font = fLatoBold,   
+            fontSize = 14, align = "right"
+        })
+        lblValue2:setFillColor( unpack(cPurpleL) )
+        container:insert( lblValue2 )
+        if item.lastVisit then 
+            local lblValue3 = display.newText({
+                text = item.lastVisit, 
+                x = 140, y = 30, width = 150, 
+                font = fLatoBold,   
+                fontSize = 14, align = "right"
+            })
+            lblValue3:setFillColor( unpack(cPurpleL) )
+            container:insert( lblValue3 )
+        end
+        yPosc = yPosc + 105
+    end
+    
+    
     -- Contact Information
-    yPosc = yPosc + 385
+    yPosc = yPosc + 20
     local icoCom1 = display.newImage("img/icon/icoCom1.png")
     icoCom1:translate(midW - 200, yPosc)
     scrViewPa:insert( icoCom1 )
@@ -411,6 +534,21 @@ function setCommercePhotos(photos)
     -- yPosc
     if #photos > 0 then
         if #photos == 1 then
+            yPosc = yPosc - 15
+            local bgTitle1 = display.newRect( midW, yPosc, intW, 30 )
+            bgTitle1:setFillColor( unpack(cBlueH) )
+            scrViewPa:insert( bgTitle1 )
+
+            local lblTitle1 = display.newText({
+                text = "GALERIA",     
+                x = midW, y = yPosc, width = 460,
+                font = native.systemFont,
+                fontSize = 15, align = "left"
+            })
+            lblTitle1:setFillColor( 1 )
+            scrViewPa:insert(lblTitle1)
+            yPosc = yPosc + 30
+            
             local img = display.newImage( photos[1].image, system.TemporaryDirectory )
             img.anchorY = 0
             img.height = 345

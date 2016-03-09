@@ -75,16 +75,16 @@ function setListWallet(rewards)
         -- Mostrar separadores
         if z == 1 then
             if rewards[z].status == "1" then
-                setInfoBar(30, "Recompensas obtenidas")
+                setInfoBar(30, "Regalos obtenidos")
                 lastYP = lastYP + 40
             else
-                setInfoBar(30, "Recompensas canjeadas")
+                setInfoBar(30, "Regalos canjeados")
                 isAvailable = false
                 lastYP = lastYP + 40
             end
         elseif isAvailable then
             if not (rewards[z-1].status == rewards[z].status) then
-                setInfoBar((125*z) - 50, "Recompensas canjeadas")
+                setInfoBar((125*z) - 50, "Regalos canjeados")
                 isAvailable = false
                 lastYP = lastYP + 40
             end

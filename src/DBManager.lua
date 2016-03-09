@@ -38,7 +38,8 @@ local dbManager = {}
     -- Actualiza login
     dbManager.updateUser = function(user)
 		openConnection( )
-        local query = "UPDATE config SET id = '"..user.id.."', fb = '"..user.fbid.."', name = '"..user.name
+        local query = "UPDATE config SET id = '"..user.id.."', fbid = '"..user.fbid.."', name = '"..user.name.."'"
+        print("query:"..query)
         db:exec( query )
 		closeConnection( )
 	end
@@ -63,7 +64,7 @@ local dbManager = {}
 			do return end
 		end
 
-        query = "INSERT INTO config VALUES ('', '', '', '');"
+        query = "INSERT INTO config VALUES ('', '', '', 'Cancún, Quintana Roo');"
 		--query = "INSERT INTO config VALUES (1014858604001209, 10152713865899218, 'Alberto Vera', 'Cancún Quintana Roo');"
         
 		db:exec( query )

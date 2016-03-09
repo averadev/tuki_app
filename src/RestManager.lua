@@ -7,8 +7,8 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    local site = "http://192.168.1.124/tuki_ws/"
-    --local site = "http://geekbucket.com.mx/unify/"
+    --local site = "http://192.168.1.82/tuki_ws/"
+    local site = "http://geekbucket.com.mx/unify/"
 	
 	function urlencode(str)
           if (str) then
@@ -18,6 +18,10 @@ local RestManager = {}
               str = string.gsub (str, " ", "%%20")
           end
           return str    
+    end
+
+    function reloadConfig()
+        dbConfig = DBManager.getSettings()
     end
 
     -- Envia al metodo
@@ -51,6 +55,13 @@ local RestManager = {}
             setListMessages(obj.items)
         elseif obj.name == "Message" then
             setMessage(obj.items[1])
+        elseif obj.name == "RetriveQR" then
+            local item = obj.items[1]
+            local imagen = display.newImage( item.image, system.TemporaryDirectory )
+            item.parent:insert(imagen)
+            imagen.width = item.w
+            imagen.height = item.h
+            imagen:translate(item.x, item.y)
         end
     end 
 
@@ -119,6 +130,39 @@ local RestManager = {}
         end
     end
 
+    RestManager.retriveQR = function(key, parent, x, y, w, h)
+        -- Verificamos si existe el codigo
+        local path = system.pathForFile( key..".png", system.TemporaryDirectory )
+        local fhd = io.open( path )
+        if fhd then
+            fhd:close()
+            local imagen = display.newImage( key..".png", system.TemporaryDirectory )
+            parent:insert(imagen)
+            imagen.width = w
+            imagen.height = h
+            imagen:translate(x, y)
+        else
+            -- Solicitamos el codigo
+            local url = site.."api/getQR/"..key
+            local function callback(event)
+                if ( event.isError ) then
+                else
+                    -- Almacenamos QR
+                    local data = {}
+                    data[1] = {
+                        image = key..".png",
+                        parent = parent,
+                        w = w, h = h, x = x, y = y
+                    }
+                    loadImage({idx = 0, name = "RetriveQR", path = "assets/img/api/qr/", items = data})
+                end
+                return true
+            end
+            -- Do request
+            network.request( url, "GET", callback )
+        end
+	end
+
     RestManager.getQR = function(key)
         -- Verificamos si existe el codigo
         local key = dbConfig.id
@@ -144,16 +188,20 @@ local RestManager = {}
         end
 	end
 
-    RestManager.createUserFB = function(fbid, email, name)
-		local url = site.."api/createUserFB/format/json/fbid/"..fbid.."/email/"..email.."/name/"..name
-        
+    RestManager.createUserFB = function(fbid, name, email )
+		local url = site.."api/createUserFB/format/json/fbid/"..fbid.."/email/"..urlencode(email).."/name/"..urlencode(name)
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
                 if data.success then
                     DBManager.updateUser(data.user)
-                    toLoginFB()
+                    if tonumber(data.user.totalCom) == 0 then
+                        toLoginFB(true)
+                    else
+                        toLoginFB(false)
+                    end
                 end
             end
             return true
@@ -340,6 +388,17 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
+    RestManager.multipleJoin = function(idx)
+        dbConfig = DBManager.getSettings()
+		local url = site.."api/multipleJoin/format/json/idUser/"..dbConfig.id.."/idComms/"..idx
+        
+        local function callback(event)
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
     RestManager.getJoined = function(filters)
 		local url = site.."api/getJoined/format/json/idUser/"..dbConfig.id.."/filters/"..filters
         
@@ -381,7 +440,7 @@ local RestManager = {}
 	end
 
     RestManager.setCommerceJoin = function(idCommerce)
-		local url = site.."api/getCommerceJoin/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
+		local url = site.."api/setCommerceJoin/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
         
         local function callback(event)
             if ( event.isError ) then
@@ -397,7 +456,7 @@ local RestManager = {}
 
     RestManager.getCommerce = function(idCommerce)
 		local url = site.."api/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
-        
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -411,7 +470,7 @@ local RestManager = {}
 	end
 
     RestManager.getWallet = function()
-		local url = site.."api/getWallet/format/json/idUser/1"
+		local url = site.."api/getWallet/format/json/idUser/"..dbConfig.id
         
         local function callback(event)
             if ( event.isError ) then
