@@ -309,15 +309,15 @@ function Tools:new()
     -- @param arrayObj lista
     -- @param parent objeto contenedor
     ------------------------------------
-    function self:setEmpty(arrayObj, parent)
+    function self:setEmpty(arrayObj, parent, info)
         arrayObj[1] = display.newGroup()
         parent:insert(arrayObj[1])
 
-        local empty = display.newImage("img/icon/empty.png")
+        local empty = display.newImage("img/deco/info.png")
         empty:translate( midW, (parent.height / 2) - 40 )
         arrayObj[1]:insert( empty )
         local titleLoading = display.newText({
-            text = "Intente con otra consulta", 
+            text = info, 
             x = midW, y = (parent.height / 2) + 40, width = intW,
             font = native.systemFontBold,   
             fontSize = 18, align = "center"

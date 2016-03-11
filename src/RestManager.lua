@@ -7,8 +7,8 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    --local site = "http://192.168.1.82/tuki_ws/"
-    local site = "http://geekbucket.com.mx/unify/"
+    local site = "http://192.168.1.82/tuki_ws/"
+    --local site = "http://geekbucket.com.mx/unify/"
 	
 	function urlencode(str)
           if (str) then
@@ -245,7 +245,7 @@ local RestManager = {}
 
     RestManager.getAccount = function()
 		local url = site.."api/getAccount/format/json/idUser/"..dbConfig.id
-        
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -486,7 +486,7 @@ local RestManager = {}
 
     RestManager.getMessages = function()
 		local url = site.."api/getMessages/format/json/idUser/"..dbConfig.id
-        
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else

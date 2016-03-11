@@ -108,7 +108,7 @@ function doFilter(txtFil)
     end
     
     if txtFil == '' then
-        tools:setEmpty(rowCom, scrViewR)
+        tools:setEmpty(rowCom, scrViewR, "No tenemos recompensas para el filtro seleccionado")
     else
         tools:setLoading(true, scrViewR)
         RestManager.getRewards(txtFil)
@@ -287,7 +287,7 @@ function setListReward(commerces)
     tools:setLoading(false)
     
     if #commerces == 0 then
-        tools:setEmpty(rowCom, scrViewR)
+        tools:setEmpty(rowCom, scrViewR, "No tenemos recompensas para el filtro seleccionado")
     else
         for z = 1, #commerces, 1 do 
 

@@ -78,7 +78,7 @@ function doFilter(txtFil)
     end
     
     if txtFil == '' then
-        tools:setEmpty(rowPartner, scrViewP)
+        tools:setEmpty(rowPartner, scrViewP, "No tenemos comercios cercanos para el filtro seleccionado")
     else
         lastYP = 80
         tools:setLoading(true, scrViewP)
@@ -260,7 +260,7 @@ end
 function setListCommerce(items)
     -- Valida registros vacios
     if #items == 0 then
-        tools:setEmpty(rowPartner, scrViewP)
+        tools:setEmpty(rowPartner, scrViewP, "No tenemos comercios cercanos para el filtro seleccionado")
     end
     -- Recorre registros y arma lista
     for z = 1, #items, 1 do 

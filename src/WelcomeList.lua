@@ -105,7 +105,7 @@ end
 function setListWelcome(items)
     -- Valida registros vacios
     if #items == 0 then
-        tools:setEmpty(rowPartner, scrViewWL)
+        tools:setEmpty(rowPartner, scrViewWL, "No existen comercios para los filtros seleccionados")
     end
     -- Recorre registros y arma lista
     local lastYP = -40
