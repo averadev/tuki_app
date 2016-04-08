@@ -24,6 +24,8 @@ end
 local dbConfig = DBManager.getSettings()
 if dbConfig.id == '' then
     composer.gotoScene("src.Login")
+elseif dbConfig.afiliated == 0 then
+    composer.gotoScene("src.WelcomeHome")
 else
     composer.gotoScene("src.Home")
     --composer.gotoScene("src.Rewards")

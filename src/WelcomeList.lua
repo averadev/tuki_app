@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------
--- Trippy Rex
+-- Tuki
 -- Alberto Vera Espitia
--- Parodiux Inc.
+-- GeekBucket 2016
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -27,13 +27,15 @@ local midW = display.contentWidth / 2
 local h = display.topStatusBarContentHeight 
 local minNum = 0
 local rowPartner = {}
+local bigList = true
+local readyNext = false
 local tools, scrViewWL, txtW2, txtW3, txtNumber, btnNearBg1, btnNearBg2
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 function goToEnd(event)
-    if minNum > 2 then
+    if readyNext then
         -- Play Audio
         local t = event.target
         audio.play(fxTap)
@@ -69,23 +71,37 @@ function wAfiliate(event)
         rowPartner[idx].icoActive.alpha = 0
     end
     
-    -- Actualizar Numero
-    if minNum == 0 then txtNumber.text = "3"
-    elseif minNum == 1 then txtNumber.text = "2"
-    elseif minNum == 2 then 
-        txtNumber.text = "1"
-        txtW2.text = "Para comenzar afiliate a minimo"
-        txtW3.text = "  de nuestros comercios inscritos."
-        btnNearBg1:setFillColor( unpack(cGrayM) )
-        btnNearBg2:setFillColor( unpack(cGrayM) )
-    else 
-        txtNumber.text = "" 
-        txtW2.text = "Mientras mas afiliaciones tengas"
-        txtW3.text = "mas recompensas podrás obtener."
-        btnNearBg1:setFillColor( unpack(cTurquesa) )
-        btnNearBg2:setFillColor( unpack(cBlue) )
+    if bigList then
+        -- Actualizar Numero
+        if minNum == 0 then txtNumber.text = "3"
+        elseif minNum == 1 then txtNumber.text = "2"
+        elseif minNum == 2 then 
+            txtNumber.text = "1"
+            txtW2.text = "Para comenzar afiliate a minimo"
+            txtW3.text = "  de nuestros comercios inscritos."
+            btnNearBg1:setFillColor( unpack(cGrayM) )
+            btnNearBg2:setFillColor( unpack(cGrayM) )
+            readyNext = false
+        else 
+            txtNumber.text = "" 
+            txtW2.text = "Mientras mas afiliaciones tengas"
+            txtW3.text = "mas recompensas podrás obtener."
+            btnNearBg1:setFillColor( unpack(cTurquesa) )
+            btnNearBg2:setFillColor( unpack(cBlue) )
+            readyNext = true
+        end
+    else
+        -- Activar boton next
+        if rowPartner[idx].bgActive.alpha == 1 then
+            btnNearBg1:setFillColor( unpack(cTurquesa) )
+            btnNearBg2:setFillColor( unpack(cBlue) )
+            readyNext = true
+        else
+            btnNearBg1:setFillColor( unpack(cGrayM) )
+            btnNearBg2:setFillColor( unpack(cGrayM) )
+            readyNext = false
+        end
     end
-    
     return true
 end
 
@@ -107,75 +123,88 @@ function setListWelcome(items)
     if #items == 0 then
         tools:setEmpty(rowPartner, scrViewWL, "No existen comercios para los filtros seleccionados")
     end
-    -- Recorre registros y arma lista
-    local lastYP = -40
-    for z = 1, #items, 1 do 
-        rowPartner[z] = display.newContainer( 480, 95 )
-        rowPartner[z]:translate( midW, lastYP + (95*z) )
-        scrViewWL:insert( rowPartner[z] )
+    
+    if #items == 0 then
+    else
+        if #items <= 3 then
+            bigList = false
+            txtNumber.text = ""
+            txtW2.text = "Para comenzar afiliate a alguno"
+            txtW3.text = "de nuestros comercios inscritos."
+        end
         
-        -- Fondo
-        local bg1 = display.newRect( 0, 0, 460, 80 )
-        bg1:setFillColor( unpack(cGrayXL) )
-        rowPartner[z]:insert( bg1 )
-        local bg2 = display.newRect( 0, 0, 456, 76 )
-        bg2:setFillColor( unpack(cWhite) )
-        bg2.partner = items[z]
-        rowPartner[z]:insert( bg2 )
-        
-        -- Imagen Comercio
-        local bgImg0 = display.newRect( -188, 0, 85, 85 )
-        bgImg0:setFillColor( unpack(cGrayH) )
-        rowPartner[z]:insert( bgImg0 )
-        local bgImg = display.newRect( -188, 0, 80, 80 )
-        bgImg:setFillColor( tonumber(items[z].colorA1)/255, tonumber(items[z].colorA2)/255, tonumber(items[z].colorA3)/255 )
-        rowPartner[z]:insert( bgImg )
-        local img = display.newImage( items[z].image, system.TemporaryDirectory )
-        img:translate( -188, 0 )
-        img.width = 70
-        img.height = 70
-        rowPartner[z]:insert( img )
-        
-        -- Boton Afiliar
-        local bgBtn1 = display.newRect( 190, 0, 80, 80 )
-        bgBtn1:setFillColor( unpack(cGrayXL) )
-        bgBtn1.idx = z
-        bgBtn1:addEventListener( 'tap', wAfiliate )
-        rowPartner[z]:insert( bgBtn1 )
-        local icoWPlus = display.newImage("img/icon/icoWPlus.png")
-        icoWPlus:translate( 190, 0 )
-        rowPartner[z]:insert( icoWPlus )
-        
-        -- Boton Afiliar
-        rowPartner[z].bgActive = display.newRect( 190, 0, 80, 80 )
-        rowPartner[z].bgActive:setFillColor( unpack(cPurple) )
-        rowPartner[z].bgActive.idCommerce = items[z].id
-        rowPartner[z].bgActive.alpha = 0
-        rowPartner[z]:insert( rowPartner[z].bgActive )
-        rowPartner[z].icoActive = display.newImage("img/icon/icoWCheck.png")
-        rowPartner[z].icoActive:translate( 190, 0 )
-        rowPartner[z].icoActive.alpha = 0
-        rowPartner[z]:insert( rowPartner[z].icoActive )
-        
-        -- Textos
-        local name = display.newText({
-            text = items[z].name,     
-            x = poscLabels, y = -15, width = 270, 
-            font = fLatoBold,   
-            fontSize = 22, align = "left"
-        })
-        name:setFillColor( unpack(cGrayXH) )
-        rowPartner[z]:insert( name )
-        local concept = display.newText({
-            text = items[z].description, 
-            x = poscLabels, y = 10, width = 270, 
-            font = fLatoRegular,   
-            fontSize = 16, align = "left"
-        })
-        concept:setFillColor( unpack(cGrayH) )
-        rowPartner[z]:insert( concept )
-        
+        -- Recorre registros y arma lista
+        local lastYP = -40
+        for z = 1, #items, 1 do 
+            rowPartner[z] = display.newContainer( 480, 95 )
+            rowPartner[z]:translate( midW, lastYP + (95*z) )
+            scrViewWL:insert( rowPartner[z] )
+
+            -- Fondo
+            local bg1 = display.newRect( 0, 0, 460, 80 )
+            bg1:setFillColor( unpack(cGrayXL) )
+            rowPartner[z]:insert( bg1 )
+            local bg2 = display.newRect( 0, 0, 456, 76 )
+            bg2:setFillColor( unpack(cWhite) )
+            bg2.partner = items[z]
+            rowPartner[z]:insert( bg2 )
+
+            -- Imagen Comercio
+            local bgImg0 = display.newRect( -188, 0, 85, 85 )
+            bgImg0:setFillColor( unpack(cGrayH) )
+            rowPartner[z]:insert( bgImg0 )
+            local bgImg = display.newRect( -188, 0, 80, 80 )
+            bgImg:setFillColor( tonumber(items[z].colorA1)/255, tonumber(items[z].colorA2)/255, tonumber(items[z].colorA3)/255 )
+            rowPartner[z]:insert( bgImg )
+            local img = display.newImage( items[z].image, system.TemporaryDirectory )
+            img:translate( -188, 0 )
+            img.width = 70
+            img.height = 70
+            rowPartner[z]:insert( img )
+
+            -- Boton Afiliar
+            local bgBtn1 = display.newRect( 190, 0, 80, 80 )
+            bgBtn1:setFillColor( unpack(cGrayXL) )
+            bgBtn1.idx = z
+            bgBtn1:addEventListener( 'tap', wAfiliate )
+            rowPartner[z]:insert( bgBtn1 )
+            local icoWPlus = display.newImage("img/icon/icoWPlus.png")
+            icoWPlus:translate( 190, 0 )
+            rowPartner[z]:insert( icoWPlus )
+
+            -- Boton Afiliar
+            rowPartner[z].bgActive = display.newRect( 190, 0, 80, 80 )
+            rowPartner[z].bgActive:setFillColor( unpack(cPurple) )
+            rowPartner[z].bgActive.idCommerce = items[z].id
+            rowPartner[z].bgActive.alpha = 0
+            rowPartner[z]:insert( rowPartner[z].bgActive )
+            rowPartner[z].icoActive = display.newImage("img/icon/icoWCheck.png")
+            rowPartner[z].icoActive:translate( 190, 0 )
+            rowPartner[z].icoActive.alpha = 0
+            rowPartner[z]:insert( rowPartner[z].icoActive )
+
+            -- Textos
+            local name = display.newText({
+                text = items[z].name,     
+                x = poscLabels, y = -15, width = 270, 
+                font = fLatoBold,   
+                fontSize = 22, align = "left"
+            })
+            name:setFillColor( unpack(cGrayXH) )
+            rowPartner[z]:insert( name )
+            local concept = display.newText({
+                text = items[z].description, 
+                x = poscLabels, y = 10, width = 270, 
+                font = fLatoRegular,   
+                fontSize = 16, align = "left"
+            })
+            concept:setFillColor( unpack(cGrayH) )
+            rowPartner[z]:insert( concept )
+
+        end
     end
+    
+    
     
     -- Quitar Loading
     tools:setLoading(false)
@@ -264,12 +293,14 @@ function scene:create( event )
 end	
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
-    -- Get by Location
-    if event.params.isLocation then
-        --Runtime:addEventListener( "location", locationHandler )
-        RestManager.getCommercesByGPS(21.163405, -86.815875)
-    else
-        RestManager.getCommercesWCat(event.params.filter)
+    if event.phase == "will" then 
+        -- Get by Location
+        if event.params.isLocation then
+            --Runtime:addEventListener( "location", locationHandler )
+            RestManager.getCommercesByGPS(21.163405, -86.815875)
+        else
+            RestManager.getCommercesWCat(event.params.filter)
+        end
     end
 end
 

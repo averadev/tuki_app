@@ -1,7 +1,9 @@
+---------------------------------------------------------------------------------
+-- Tuki
+-- Alberto Vera Espitia
+-- GeekBucket 2016
+---------------------------------------------------------------------------------
 
----------------------------------------------------------------------------------
--- Encabezao general
----------------------------------------------------------------------------------
 local composer = require( "composer" )
 local Sprites = require('src.Sprites')
 local Globals = require( "src.Globals" )
@@ -41,15 +43,7 @@ function Tools:new()
         headLogo = display.newGroup()
         self:insert( headLogo )
         
-        local circle1 = display.newCircle( midW, 55, 35 )
-        circle1:setFillColor( unpack(cWhite) )
-        headLogo:insert( circle1 )
-        
-        local circle2 = display.newCircle( midW, 55, 32 )
-        circle2:setFillColor( unpack(cPurpleL) )
-        headLogo:insert( circle2 )
-        
-        local iconLogo = display.newImage("img/icon/iconLogo.png")
+        local iconLogo = display.newImage("img/icon/iconHeader.png")
         iconLogo:translate( midW, 55 )
         headLogo:insert( iconLogo )
         
@@ -120,17 +114,18 @@ function Tools:new()
         section5:addEventListener( 'tap', toScreen)
         self:insert(section5)
         
-        local circle1 = display.newCircle( 245, intH - 65, 50 )
-        circle1:setFillColor( unpack(cWhite) )
-        self:insert( circle1 )
-        local circle2 = display.newCircle( 245, intH - 65, 46 )
-        circle2:setFillColor( unpack(cTurquesa) )
-        circle2.screen = 'CheckIn'
-        circle2:addEventListener( 'tap', toScreen)
-        self:insert( circle2 )
-        local iconLogo = display.newImage("img/icon/iconCheckIn.png")
-        iconLogo:translate(245, intH - 60 )
-        self:insert( iconLogo )
+        local iconCheckIn = display.newImage("img/icon/iconCheckIn.png")
+        iconCheckIn:translate(245, intH - 60 )
+        iconCheckIn.width = 95
+        iconCheckIn.height = 95
+        iconCheckIn:addEventListener( 'tap', toScreen)
+        self:insert( iconCheckIn )
+        -- Reduce Size
+        if composer.getSceneName( "current" ) == "src.Map" then
+            iconCheckIn.width = 80
+            iconCheckIn.height = 80
+            iconCheckIn.y = intH - 40
+        end
         
         local bottomWallet = display.newImage("img/icon/bottomWallet.png")
         bottomWallet:translate(43, intH - 40)
@@ -401,8 +396,10 @@ function Tools:new()
             titleLoading:setFillColor( .3, .3, .3 )
             grpLoading:insert(titleLoading)
         else
-            grpLoading:removeSelf()
-            grpLoading = nil 
+            if grpLoading then
+                grpLoading:removeSelf()
+                grpLoading = nil
+            end
         end
     end
     
@@ -559,10 +556,8 @@ function Tools:new()
     -- Cambia pantalla
     function toScreen(event)
         local t = event.target
-        if not ("src."..t.screen == composer.getSceneName()) then
+        if not ("src."..t.screen == composer.getSceneName( "current" )) then
             audio.play(fxTap)
-            --t.alpha = 1
-            --transition.to( t, { alpha = .01, time = 200, transition = easing.outExpo })
             if  t.screen == "Partners" or t.screen == "Joined" or 
                 t.screen == "Favs" or t.screen == "Rewards"then
                 composer.removeScene( "src.Partners" )

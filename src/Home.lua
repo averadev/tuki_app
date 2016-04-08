@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------
--- Trippy Rex
+-- Tuki
 -- Alberto Vera Espitia
--- Parodiux Inc.
+-- GeekBucket 2016
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ local isCard, doFlow, direction, detailBox
 local txtPoints, txtTuks, txtPoints2, txtName, txtCommerce, iconRewardBig, btnDetail
 local yItem, itemSize, itemCoverSize, cTuks1, cTuks2, scrViewCM
 local cards, idxA, favH, favOn, favOff
-local wCmp, hCmp, midSize
+local wCmp, hCmp, midSize, currentPH
 
 
 -- Arrays
@@ -93,7 +93,7 @@ function tapCommerce(event)
     audio.play(fxTap)
     print("Partner")
     composer.removeScene( "src.Partner" )
-    composer.gotoScene("src.Partner", { time = 400, effect = "slideLeft", params = { idCommerce = t.idCommerce } } )
+    composer.gotoScene("src.Partner", { time = 400, effect = "slideLeft", params = { idCommerce = comRews[currentPH].id } } )
     return true
 end
 
@@ -103,7 +103,8 @@ end
 ------------------------------------
 function getHPartner(event)
     if not(event.target.active) then
-        local idx = event.target.idx
+        idx = event.target.idx
+        currentPH = idx
         for z = 1, #comRews, 1 do 
             -- Deactivate
             if coverHComer[z].active then
@@ -116,10 +117,6 @@ function getHPartner(event)
         tools:setLoading(true, screen)
         coverHComer[idx].active = true
         coverHComer[idx].bgFP1:setFillColor( unpack(cTurquesa) )
-        --coverHComer[idx].bgFP2:setFillColor( 
-        --    tonumber(comRews[idx].colorA1)/255, 
-        --    tonumber(comRews[idx].colorA2)/255, 
-        --    tonumber(comRews[idx].colorA3)/255 )
         if curLogo then
             curLogo:removeSelf()
             curLogo = nil;
@@ -134,9 +131,7 @@ function getHPartner(event)
         bgTCover1:setFillColor( color[1], color[2], color[3] )
         bgTop:setFillColor( color[1], color[2], color[3] )
         txtCommerce.text = comRews[idx].name
-        --txtCommerce:setFillColor( colorL[1], colorL[2], colorL[3] )
         txtCommerceDesc.text = comRews[idx].description
-        --txtCommerceDesc:setFillColor( colorL[1], colorL[2], colorL[3] )
         loadImage({idx = 0, name = "HomeRewards", path = "assets/img/api/rewards/", items = comRews[idx].rewards})
     end
 end
@@ -174,8 +169,13 @@ function getCarCom(items)
     end
     -- Call first partner
     getHPartner({target = coverHComer[1]})
-    -- Set new scroll position
-    scrViewCM:setScrollWidth((94 * #comRews) - 5)
+    
+    if #comRews < 4 then
+        scrViewCM:setIsLocked( true )
+    else
+        -- Set new scroll position
+        scrViewCM:setScrollWidth((94 * #comRews) - 5)
+    end
 end
 
 -------------------------------------
@@ -392,7 +392,6 @@ function touchScreen(event)
             end
         end
         
-        
         showHElments(1)
         isCard = false
         direction = 0
@@ -454,6 +453,7 @@ function scene:create( event )
     local bgGrayT = display.newRoundedRect(midW, initY - 3, wCmp + 4, 100, 10 )
     bgGrayT.anchorY = 0
     bgGrayT:setFillColor( unpack(cGrayM) )
+    bgGrayT:addEventListener( 'tap', tapCommerce) 
     workSite:insert( bgGrayT )
     bgTop = display.newRoundedRect(midW, initY, wCmp, 100, 10 )
     bgTop.anchorY = 0
@@ -492,6 +492,19 @@ function scene:create( event )
     })
     txtCommerceDesc:setFillColor( unpack(cWhite) )
     workSite:insert(txtCommerceDesc)
+    
+    -- Favs
+    favH = display.newGroup()
+    favH:translate( midW + (hCmp/2), initY + 120 )
+    workSite:insert(favH)
+    local bgFav = display.newRect( 0, 0, 60, 60 )
+    bgFav.alpha = .01
+    bgFav:addEventListener( 'tap', tapFavHome) 
+    favH:insert( bgFav )
+    favOn = display.newImage("img/icon/iconRewardBig2.png")
+    favH:insert( favOn )
+    favOff = display.newImage("img/icon/iconRewardBig1.png")
+    favH:insert( favOff )
     
     -- Circle points
     local initY = initY + hCmp + 83

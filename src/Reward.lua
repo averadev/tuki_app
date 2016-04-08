@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------
--- Trippy Rex
+-- Tuki
 -- Alberto Vera Espitia
--- Parodiux Inc.
+-- GeekBucket 2016
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -75,6 +75,7 @@ end
 -- @param event objeto evento
 ------------------------------------
 function tapCommerce(event)
+    print("EVENTOOOO")
     local t = event.target
     audio.play(fxTap)
     composer.removeScene( "src.Partner" )
@@ -133,6 +134,8 @@ function setReward(item)
     
     local color = {tonumber(item.colorA1)/255, tonumber(item.colorA2)/255, tonumber(item.colorA3)/255}
     local bgTop = display.newRoundedRect(midW, yPosc, 440, 80, 10 )
+    bgTop.idCommerce = item.idCommerce
+    bgTop:addEventListener( 'tap', tapCommerce)
     bgTop:setFillColor( color[1], color[2], color[3] )
     scrViewRe:insert( bgTop )
     local bgTopB = display.newRect(midW, yPosc+30, 440, 20 )

@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------
--- Trippy Rex
+-- Tuki
 -- Alberto Vera Espitia
--- Parodiux Inc.
+-- GeekBucket 2016
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -262,6 +262,11 @@ function setListCommerce(items)
     if #items == 0 then
         tools:setEmpty(rowPartner, scrViewP, "No tenemos comercios cercanos para el filtro seleccionado")
     end
+    
+    if not(txtPName) and #items < 4 then
+        lastYP = 80
+    end
+    
     -- Recorre registros y arma lista
     for z = 1, #items, 1 do 
         rowPartner[z] = display.newContainer( 480, 95 )

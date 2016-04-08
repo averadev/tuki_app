@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------
--- Trippy Rex
+-- Tuki
 -- Alberto Vera Espitia
--- Parodiux Inc.
+-- GeekBucket 2016
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -100,10 +100,12 @@ function scene:create( event )
 end	
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
-    -- Deshabilitar welcome
-    DBManager.disableWelcome()
-    -- Obtener imagen QR
-    RestManager.getQR()
+    if event.phase == "will" then 
+        -- Deshabilitar welcome
+        DBManager.disableWelcome()
+        -- Obtener imagen QR
+        RestManager.getQR()
+    end
 end
 
 -- Remove Listener

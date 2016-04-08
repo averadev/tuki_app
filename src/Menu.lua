@@ -1,8 +1,15 @@
+---------------------------------------------------------------------------------
+-- Tuki
+-- Alberto Vera Espitia
+-- GeekBucket 2016
+---------------------------------------------------------------------------------
+
 Menu = {}
 function Menu:new()
     -- Variables
     local self = display.newGroup()
     local widget = require( "widget" )
+    local composer = require( "composer" )
     local DBManager = require('src.DBManager')
     local h = display.topStatusBarContentHeight
     local intW, intH  = display.contentWidth, display.contentHeight
@@ -40,11 +47,17 @@ function Menu:new()
     function hideMenu()
         transition.to( self, { x = -400, time = 400, transition = easing.outExpo })
         transition.to( bgGray, { alpha = 0, time = 400, transition = easing.outExpo })
+        if composer.getSceneName( "current" ) == "src.Map" then
+            moveMap(0)
+        end
         return true;
     end
     
     -- Obtenemos el Menu
     function self:getMenu()
+        if composer.getSceneName( "current" ) == "src.Map" then
+            moveMap(400)
+        end
         transition.to( self, { x = 0, time = 400, onComplete=function() 
             bgGray.alpha = .5
         end })
@@ -79,7 +92,7 @@ function Menu:new()
         self:insert(bgFB)
         
         -- Avatar
-        if dbConfig.fbid == 0 then
+        if dbConfig.fbid == nil or dbConfig.fbid == '' or dbConfig.fbid == 0 or dbConfig.fbid == '0' then
             local bgFB = display.newCircle( 200, minScr/2, 78 )
             bgFB:setFillColor( unpack(cTurquesa) )
             self:insert(bgFB)

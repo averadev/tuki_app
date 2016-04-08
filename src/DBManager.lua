@@ -1,3 +1,9 @@
+---------------------------------------------------------------------------------
+-- Tuki
+-- Alberto Vera Espitia
+-- GeekBucket 2016
+---------------------------------------------------------------------------------
+
 --Include sqlite
 local dbManager = {}
 
@@ -44,6 +50,14 @@ local dbManager = {}
 		closeConnection( )
 	end
 
+    -- Actualiza login
+    dbManager.updateAfiliated = function(afiliated)
+		openConnection( )
+        local query = "UPDATE config SET afiliated = "..afiliated
+        db:exec( query )
+		closeConnection( )
+	end
+
     -- deshabilita el welcome
     dbManager.disableWelcome = function()
 		openConnection( )
@@ -56,16 +70,17 @@ local dbManager = {}
 	dbManager.setupSquema = function()
 		openConnection( )
 		
-		local query = "CREATE TABLE IF NOT EXISTS config (id TEXT PRIMARY KEY, fbid TEXT, name TEXT, city TEXT);"
+		local query = "CREATE TABLE IF NOT EXISTS config (id TEXT PRIMARY KEY, fbid TEXT, name TEXT, city TEXT, afiliated INTEGER);"
 		db:exec( query )
 
         for row in db:nrows("SELECT * FROM config;") do
             closeConnection( )
 			do return end
 		end
-
-        query = "INSERT INTO config VALUES ('', '', '', 'Cancún, Quintana Roo');"
-		--query = "INSERT INTO config VALUES (1014858604001209, 10152713865899218, 'Alberto Vera', 'Cancún Quintana Roo');"
+    
+        query = "INSERT INTO config VALUES ('', '', '', 'Cancún, Quintana Roo', 0);"
+        --query = "INSERT INTO config VALUES ('1015173253001603', '', 'Alberto Vera', 'Cancún, Quintana Roo', 0);"
+		
         
 		db:exec( query )
     

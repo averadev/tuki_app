@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------
--- Trippy Rex
+-- Tuki
 -- Alberto Vera Espitia
--- Parodiux Inc.
+-- GeekBucket 2016
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -54,23 +54,21 @@ function showAccount(usuario)
     bgFB.anchorY = 0
     bgFB:setFillColor( .38 )
     scrViewA:insert(bgFB)
-
     
-    
-    if usuario.fbid == 0 then
-            local bgFB = display.newCircle( 95, lastY + 100, 78 )
-            bgFB:setFillColor( unpack(cTurquesa) )
-            scrViewA:insert(bgFB)
-            local fbPhoto = display.newImage("img/deco/fbPhoto.png")
-            fbPhoto:translate(95, lastY + 100)
-            scrViewA:insert( fbPhoto )
-        else
-            url = "http://graph.facebook.com/"..usuario.fbid.."/picture?large&width=150&height=150"
-            local isReady = retriveImage(usuario.fbid.."fbmax", url, scrViewA, 95, lastY + 100, 150, 150)
-            local fbFrame = display.newImage("img/deco/fbFrame.png")
-            fbFrame:translate(95, lastY + 100)
-            scrViewA:insert( fbFrame )
-        end
+    if usuario.fbid == nil or usuario.fbid == '' or usuario.fbid == 0 or usuario.fbid == '0' then
+        local bgFB = display.newCircle( 95, lastY + 100, 78 )
+        bgFB:setFillColor( unpack(cTurquesa) )
+        scrViewA:insert(bgFB)
+        local fbPhoto = display.newImage("img/deco/fbPhoto.png")
+        fbPhoto:translate(95, lastY + 100)
+        scrViewA:insert( fbPhoto )
+    else
+        url = "http://graph.facebook.com/"..usuario.fbid.."/picture?large&width=150&height=150"
+        local isReady = retriveImage(usuario.fbid.."fbmax", url, scrViewA, 95, lastY + 100, 150, 150)
+        local fbFrame = display.newImage("img/deco/fbFrame.png")
+        fbFrame:translate(95, lastY + 100)
+        scrViewA:insert( fbFrame )
+    end
 
     local txtNombre = display.newText({
         text = usuario.name, 

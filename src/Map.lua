@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------
--- Trippy Rex
+-- Tuki
 -- Alberto Vera Espitia
--- Parodiux Inc.
+-- GeekBucket 2016
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -25,6 +25,7 @@ local midW = display.contentWidth / 2
 local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight 
 local myMap, tools, latitude, longitude
+local isIcons = true
 
 -- Arrays
 
@@ -36,24 +37,25 @@ local locationHandler = function( event )
 	if event.errorCode then
 		Runtime:removeEventListener( "location", locationHandler )
 	else
-        --latitude, longitude = event.latitude, event.longitude
-        latitude, longitude = 21.156956, -86.825280
+        latitude, longitude = event.latitude, event.longitude
+        --latitude, longitude = 21.156956, -86.825280
         
         myMap:setRegion( latitude, longitude, 0.02, 0.02 )
 		Runtime:removeEventListener( "location", locationHandler )
         
-        local function listener( event )
-            tools:toFront()
-            RestManager.getCommercesByGPSLite(latitude, longitude)
+        if isIcons then
+            isIcons = false
+            local function listener( event )
+                tools:toFront()
+                RestManager.getCommercesByGPSLite(latitude, longitude)
+            end
+            timer.performWithDelay( 1500, listener )
         end
-        timer.performWithDelay( 1500, listener )
-        
 	end
 end
 
 -------------------------------------
 -- Genera los iconos para mostrarlos en el mapa
-
 -- @param items listado de comercios
 ------------------------------------
 function setIconMap(items)
@@ -67,6 +69,16 @@ function setIconMap(items)
             }
             myMap:addMarker( tonumber(items[y].lat), tonumber(items[y].long), options )
         end
+    end
+end
+
+-------------------------------------
+-- Mueve el mapa a una determinada direccion
+-- @param position nueva posicion del mapa
+------------------------------------
+function moveMap(position)
+    if myMap then
+        transition.to( myMap, { x = position, time = 400, transition = easing.outExpo })
     end
 end
 
@@ -87,6 +99,8 @@ function scene:create( event )
 	bg.anchorY = 0
 	bg:setFillColor( 245/255, 245/255, 245/255 )
 	screen:insert(bg)
+    
+    tools:toFront()
     
 end	
 -- Called immediately after scene has moved onscreen:

@@ -1,4 +1,8 @@
---Include sqlite
+---------------------------------------------------------------------------------
+-- Tuki
+-- Alberto Vera Espitia
+-- GeekBucket 2016
+---------------------------------------------------------------------------------
 
 -- Mediciones de pantalla
 intW = display.contentWidth

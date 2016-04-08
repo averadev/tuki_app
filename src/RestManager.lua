@@ -1,3 +1,9 @@
+---------------------------------------------------------------------------------
+-- Tuki
+-- Alberto Vera Espitia
+-- GeekBucket 2016
+---------------------------------------------------------------------------------
+
 --Include sqlite
 local RestManager = {}
 
@@ -7,7 +13,7 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    local site = "http://192.168.1.82/tuki_ws/"
+    local site = "http://192.168.1.121/tuki_ws/"
     --local site = "http://geekbucket.com.mx/unify/"
 	
 	function urlencode(str)
@@ -143,7 +149,7 @@ local RestManager = {}
             imagen:translate(x, y)
         else
             -- Solicitamos el codigo
-            local url = site.."api/getQR/"..key
+            local url = site.."mobile/getQR/"..key
             local function callback(event)
                 if ( event.isError ) then
                 else
@@ -172,7 +178,7 @@ local RestManager = {}
             fhd:close()
         else
             -- Solicitamos el codigo
-            local url = site.."api/getQR/"..key
+            local url = site.."mobile/getQR/"..key
             local function callback(event)
                 if ( event.isError ) then
                 else
@@ -188,8 +194,52 @@ local RestManager = {}
         end
 	end
 
+    RestManager.validateUser = function(email, pass)
+		local url = site.."mobile/validateUser/format/json/email/"..urlencode(email).."/password/"..urlencode(pass)
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.success then
+                    DBManager.updateUser(data.user)
+                    if tonumber(data.user.totalCom) == 0 then
+                        toLoginUser(true)
+                    else
+                        toLoginUser(false)
+                    end
+                else
+                    native.showAlert( "TUKI", 'El email y/o password es incorrecto.', { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
+    RestManager.createUser = function(email, pass)
+		local url = site.."mobile/createUser/format/json/email/"..urlencode(email).."/password/"..urlencode(pass)
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.success then
+                    DBManager.updateUser(data.user)
+                    toLoginUser(true)
+                else
+                    native.showAlert( "TUKI", 'El email ya se encuentra ligado a una cuenta.', { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
     RestManager.createUserFB = function(fbid, name, email )
-		local url = site.."api/createUserFB/format/json/fbid/"..fbid.."/email/"..urlencode(email).."/name/"..urlencode(name)
+		local url = site.."mobile/createUserFB/format/json/fbid/"..fbid.."/email/"..urlencode(email).."/name/"..urlencode(name)
         print(url)
         local function callback(event)
             if ( event.isError ) then
@@ -209,27 +259,9 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback )
 	end
-
-    RestManager.createUser = function(fbid, email, name)
-		local url = site.."api/insertUser/format/json/fbid/"..fbid.."/email/"..email.."/name/"..name
-        
-        local function callback(event)
-            if ( event.isError ) then
-            else
-                local data = json.decode(event.response)
-                if data.success then
-                    DBManager.createUser(data.user)
-                    gotoHomeL()
-                end
-            end
-            return true
-        end
-        -- Do request
-        network.request( url, "GET", callback )
-	end
 	
 	RestManager.getHomeRewards = function()
-		local url = site.."api/getHomeRewards/format/json/idUser/1"
+		local url = site.."mobile/getHomeRewards/format/json/idUser/1"
         
         local function callback(event)
             if ( event.isError ) then
@@ -244,7 +276,7 @@ local RestManager = {}
 	end
 
     RestManager.getAccount = function()
-		local url = site.."api/getAccount/format/json/idUser/"..dbConfig.id
+		local url = site.."mobile/getAccount/format/json/idUser/"..dbConfig.id
         print(url)
         local function callback(event)
             if ( event.isError ) then
@@ -260,7 +292,7 @@ local RestManager = {}
 	end
 
     RestManager.getPointsBar = function()
-		local url = site.."api/getPointsBar/format/json/idUser/"..dbConfig.id
+		local url = site.."mobile/getPointsBar/format/json/idUser/"..dbConfig.id
         
         local function callback(event)
             if ( event.isError ) then
@@ -275,7 +307,8 @@ local RestManager = {}
 	end
 
     RestManager.getCommercesByGPS = function(latitude, longitude)
-		local url = site.."api/getCommercesByGPS/format/json/latitude/"..latitude.."/longitude/"..longitude
+		local url = site.."mobile/getCommercesByGPS/format/json/latitude/"..latitude.."/longitude/"..longitude
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -289,7 +322,7 @@ local RestManager = {}
 	end
 
     RestManager.getCommercesByGPSLite = function(latitude, longitude)
-		local url = site.."api/getCommercesByGPSLite/format/json/latitude/"..latitude.."/longitude/"..longitude
+		local url = site.."mobile/getCommercesByGPSLite/format/json/latitude/"..latitude.."/longitude/"..longitude
         
         local function callback(event)
             if ( event.isError ) then
@@ -304,7 +337,7 @@ local RestManager = {}
 	end
     
     RestManager.getCommercesWCat = function(filters)
-		local url = site.."api/getCommercesWCat/format/json/filters/"..filters
+		local url = site.."mobile/getCommercesWCat/format/json/filters/"..filters
         
         local function callback(event)
             if ( event.isError ) then
@@ -319,7 +352,7 @@ local RestManager = {}
 	end
 
     RestManager.getRewards = function(filters)
-		local url = site.."api/getRewards/format/json/idUser/"..dbConfig.id.."/filters/"..filters
+		local url = site.."mobile/getRewards/format/json/idUser/"..dbConfig.id.."/filters/"..filters
         
         local function callback(event)
             if ( event.isError ) then
@@ -334,7 +367,7 @@ local RestManager = {}
 	end
 
     RestManager.setRewardFav = function(idReward, isFav)
-		local url = site.."api/setRewardFav/format/json/idUser/"..dbConfig.id.."/idReward/"..idReward.."/isFav/"..isFav
+		local url = site.."mobile/setRewardFav/format/json/idUser/"..dbConfig.id.."/idReward/"..idReward.."/isFav/"..isFav
         
         local function callback(event)
             return true
@@ -344,7 +377,7 @@ local RestManager = {}
 	end
     
     RestManager.getRewardFavs = function(filters)
-		local url = site.."api/getRewardFavs/format/json/idUser/"..dbConfig.id.."/filters/"..filters
+		local url = site.."mobile/getRewardFavs/format/json/idUser/"..dbConfig.id.."/filters/"..filters
         
         local function callback(event)
             if ( event.isError ) then
@@ -359,7 +392,7 @@ local RestManager = {}
 	end
 
     RestManager.getReward = function(idReward)
-		local url = site.."api/getReward/format/json/idUser/"..dbConfig.id.."/idReward/"..idReward
+		local url = site.."mobile/getReward/format/json/idUser/"..dbConfig.id.."/idReward/"..idReward
         
         local function callback(event)
             if ( event.isError ) then
@@ -374,7 +407,7 @@ local RestManager = {}
 	end
 
     RestManager.getCommerces = function(filters)
-		local url = site.."api/getCommerces/format/json/idUser/"..dbConfig.id.."/filters/"..filters
+		local url = site.."mobile/getCommerces/format/json/idUser/"..dbConfig.id.."/filters/"..filters
         
         local function callback(event)
             if ( event.isError ) then
@@ -390,9 +423,13 @@ local RestManager = {}
 
     RestManager.multipleJoin = function(idx)
         dbConfig = DBManager.getSettings()
-		local url = site.."api/multipleJoin/format/json/idUser/"..dbConfig.id.."/idComms/"..idx
+		local url = site.."mobile/multipleJoin/format/json/idUser/"..dbConfig.id.."/idComms/"..idx
         
         local function callback(event)
+            local data = json.decode(event.response)
+            if data.success then
+                DBManager.updateAfiliated(1)
+            end
             return true
         end
         -- Do request
@@ -400,7 +437,7 @@ local RestManager = {}
 	end
 
     RestManager.getJoined = function(filters)
-		local url = site.."api/getJoined/format/json/idUser/"..dbConfig.id.."/filters/"..filters
+		local url = site.."mobile/getJoined/format/json/idUser/"..dbConfig.id.."/filters/"..filters
         
         local function callback(event)
             if ( event.isError ) then
@@ -415,13 +452,15 @@ local RestManager = {}
 	end
 
     RestManager.getCommerceFlow = function()
-		local url = site.."api/getCommerceFlow/format/json/idUser/1"
+		local url = site.."mobile/getCommerceFlow/format/json/idUser/1"
         
         local function callback(event)
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
-                loadImage({idx = 0, name = "CommerceFlow", path = "assets/img/api/commerce/", items = data.items})
+                if #data.items > 3 then
+                    loadImage({idx = 0, name = "CommerceFlow", path = "assets/img/api/commerce/", items = data.items})
+                end
             end
             return true
         end
@@ -430,7 +469,7 @@ local RestManager = {}
 	end
 
     RestManager.setCommerceFav = function(idCommerce, isFav)
-		local url = site.."api/setCommerceFav/format/json/idUser/1/idCommerce/"..idCommerce.."/isFav/"..isFav
+		local url = site.."mobile/setCommerceFav/format/json/idUser/1/idCommerce/"..idCommerce.."/isFav/"..isFav
         
         local function callback(event)
             return true
@@ -440,7 +479,7 @@ local RestManager = {}
 	end
 
     RestManager.setCommerceJoin = function(idCommerce)
-		local url = site.."api/setCommerceJoin/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
+		local url = site.."mobile/setCommerceJoin/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
         
         local function callback(event)
             if ( event.isError ) then
@@ -455,7 +494,7 @@ local RestManager = {}
 	end
 
     RestManager.getCommerce = function(idCommerce)
-		local url = site.."api/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
+		local url = site.."mobile/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
         print(url)
         local function callback(event)
             if ( event.isError ) then
@@ -470,7 +509,7 @@ local RestManager = {}
 	end
 
     RestManager.getWallet = function()
-		local url = site.."api/getWallet/format/json/idUser/"..dbConfig.id
+		local url = site.."mobile/getWallet/format/json/idUser/"..dbConfig.id
         
         local function callback(event)
             if ( event.isError ) then
@@ -485,7 +524,7 @@ local RestManager = {}
 	end
 
     RestManager.getMessages = function()
-		local url = site.."api/getMessages/format/json/idUser/"..dbConfig.id
+		local url = site.."mobile/getMessages/format/json/idUser/"..dbConfig.id
         print(url)
         local function callback(event)
             if ( event.isError ) then
@@ -501,7 +540,7 @@ local RestManager = {}
 	end
 
     RestManager.getMessage = function(idMessage)
-		local url = site.."api/getMessage/format/json/idMessage/"..idMessage
+		local url = site.."mobile/getMessage/format/json/idMessage/"..idMessage
         
         local function callback(event)
             if ( event.isError ) then

@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------
--- Godeals App
--- Alberto Vera
--- GeekBucket Software Factory
+-- Tuki
+-- Alberto Vera Espitia
+-- GeekBucket 2016
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -42,8 +42,8 @@ end
 
 function toLoginUserName(event)
     Globals.isReadOnly = false
-    composer.removeScene( "src.Home" )
-    composer.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
+    composer.removeScene( "src.NewAccount" )
+    composer.gotoScene( "src.NewAccount", { time = 400, effect = "crossFade" })
 end
 
 function toLoginFree()
@@ -449,42 +449,23 @@ function scene:create( event )
     bottomLogin:insert(lblBtn)
     
     -- User / Email
-    local bgBtnUserName = display.newRect( 140, intH - 30, 160, 50 )
+    local bgBtnUserName = display.newRect( midW, intH - 30, 260, 50 )
 	bgBtnUserName:setFillColor( 1 )
     bgBtnUserName.alpha = .01
-    --bgBtnUserName:addEventListener( "tap", toLoginUserName )
+    bgBtnUserName:addEventListener( "tap", toLoginUserName )
 	bottomLogin:insert(bgBtnUserName)
     
     local lblBottom = display.newText( {
         text = "INGRESA CON USERNAME Ó EMAIL",
-        x = 140, y = intH - 30,
-        font = fLatoBold,  
-        width = 160,
+        x = midW, y = intH - 35, font = fLatoBold,
         fontSize = 14, align = "center"
     })
     lblBottom:setFillColor( unpack(cWhite) )
     bottomLogin:insert(lblBottom)
     
-    local lineSep = display.newRect( midW, intH - 30, 2, 20 )
+    local lineSep = display.newRect( midW, intH - 20, 260, 2 )
 	lineSep:setFillColor( .6 )
 	bottomLogin:insert(lineSep)
-    
-    -- Recorrido
-    local bgBtnFree = display.newRect( 340, intH - 30, 160, 50 )
-	bgBtnFree:setFillColor( 1 )
-    bgBtnFree.alpha = .01
-    --bgBtnFree:addEventListener( "tap", toLoginFree )
-	bottomLogin:insert(bgBtnFree)
-    
-    local lblFree = display.newText( {
-        text = "CONOCE MÁS DE LA APLICACIÓN",
-        x = 340, y = intH - 30,
-        font = fLatoBold,  
-        width = 160,
-        fontSize = 14, align = "center"
-    })
-    lblFree:setFillColor( unpack(cWhite) )
-    bottomLogin:insert(lblFree)
     
     --
     local sheet = graphics.newImageSheet(Sprites.loading.source, Sprites.loading.frames)
