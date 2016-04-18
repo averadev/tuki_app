@@ -13,7 +13,7 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    local site = "http://192.168.1.121/tuki_ws/"
+    local site = "http://localhost/tuki_ws/"
     --local site = "http://geekbucket.com.mx/unify/"
 	
 	function urlencode(str)
@@ -261,7 +261,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getHomeRewards = function()
-		local url = site.."mobile/getHomeRewards/format/json/idUser/1"
+		local url = site.."mobile/getHomeRewards/format/json/idUser/"..dbConfig.id
         
         local function callback(event)
             if ( event.isError ) then

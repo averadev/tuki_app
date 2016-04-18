@@ -57,13 +57,13 @@ function tapFavHome(event)
     local t = event.target
     audio.play( fxFav )
     if rewardsH[idxA].id == rewardsH[idxA].fav  then
-        favOff.alpha = 1
+        favOff.alpha = .7
         favOn.alpha = 0
         rewardsH[idxA].fav = nil
         RestManager.setRewardFav(rewardsH[idxA].id, 0)
     else
         favOff.alpha = 0
-        favOn.alpha = 1
+        favOn.alpha = .7
         rewardsH[idxA].fav = rewardsH[idxA].id
         RestManager.setRewardFav(rewardsH[idxA].id, 1)
     end
@@ -233,20 +233,18 @@ end
 function setRewardDetail(idx)
     txtPoints.text = rewardsH[idx].points
     txtName.text = rewardsH[idx].name
-    --[[
     -- Fav actions
     if rewardsH[idx].id == rewardsH[idx].fav  then
         favOff.alpha = 0 
         favOff.active = false
-        favOn.alpha = 1
+        favOn.alpha = .7
         favOn.active = true
     else
-        favOff.alpha = 1
+        favOff.alpha = .7
         favOff.active = true
         favOn.alpha = 0 
         favOn.active = false
     end
-    ]]
 end
 
 -------------------------------------
@@ -493,6 +491,7 @@ function scene:create( event )
     txtCommerceDesc:setFillColor( unpack(cWhite) )
     workSite:insert(txtCommerceDesc)
     
+    
     -- Favs
     favH = display.newGroup()
     favH:translate( midW + (hCmp/2), initY + 120 )
@@ -502,6 +501,7 @@ function scene:create( event )
     bgFav:addEventListener( 'tap', tapFavHome) 
     favH:insert( bgFav )
     favOn = display.newImage("img/icon/iconRewardBig2.png")
+    favOn.alpha = .4
     favH:insert( favOn )
     favOff = display.newImage("img/icon/iconRewardBig1.png")
     favH:insert( favOff )

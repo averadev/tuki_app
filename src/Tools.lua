@@ -118,6 +118,7 @@ function Tools:new()
         iconCheckIn:translate(245, intH - 60 )
         iconCheckIn.width = 95
         iconCheckIn.height = 95
+        iconCheckIn.screen = 'CheckIn'
         iconCheckIn:addEventListener( 'tap', toScreen)
         self:insert( iconCheckIn )
         -- Reduce Size
@@ -348,7 +349,7 @@ function Tools:new()
         grpAnimate:insert( iconAfilMax )
         
         local txt1 = display.newText( {
-            text = "Nuevas Recompensas Disponibles",
+            text = "Gracias por Afiliarte",
             x = midW, y = midH + 125,
 			align = "center", width = 250,
             font = "Lato-Heavy", fontSize = 24
