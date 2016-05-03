@@ -180,10 +180,10 @@ function getSplash(i, parent, posY, postFix)
         parent:insert(lbl1)
         
         local lbl2 = display.newText( {
-            text = "¡Donde podrás afiliarte a los programas de lealtad de tus",
+            text = "¡Los Programas de Lealtad de tus",
             x = midW, y = midH + posY[i][2],
             font = fLatoRegular,  width = 400,
-            fontSize = 30, align = "center"
+            fontSize = 34, align = "center"
         })
         lbl2:setFillColor( unpack(cBlueH) )
         parent:insert(lbl2)
