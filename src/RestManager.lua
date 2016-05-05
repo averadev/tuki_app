@@ -13,7 +13,7 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    local site = "http://localhost/tuki_ws/"
+    local site = "http://192.168.1.67/tuki_ws/"
     --local site = "http://geekbucket.com.mx/unify/"
 	
 	function urlencode(str)
@@ -235,12 +235,13 @@ local RestManager = {}
             return true
         end
         -- Do request
+        
         network.request( url, "GET", callback )
 	end
 
     RestManager.createUserFB = function(fbid, name, email )
 		local url = site.."mobile/createUserFB/format/json/fbid/"..fbid.."/email/"..urlencode(email).."/name/"..urlencode(name)
-        print(url)
+        
         local function callback(event)
             if ( event.isError ) then
             else

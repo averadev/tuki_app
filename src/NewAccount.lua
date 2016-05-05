@@ -46,16 +46,15 @@ function onTxtFocus(event)
     if ( "began" == event.phase ) then
         -- Interfaz Sign In
         if groupSign.x == 0 and groupSign.y == 0 then
-            transition.to( imgLogo, { y = 80 + h, time = 400, transition = easing.outExpo } )
-            transition.to( groupSign, { y = (-midH + 250) + h, time = 400, transition = easing.outExpo } )
+            transition.to( imgLogo, { y = 65 + h, width = 200, height = 74, time = 400, transition = easing.outExpo } )
+            transition.to( groupSign, { y = (-midH + 200) + h, time = 400, transition = easing.outExpo } )
         -- Interfaz Create
         elseif groupCreate.x == 0 and groupCreate.y == 0 then
-            transition.to( imgLogo, { y = 80 + h, time = 400, transition = easing.outExpo } )
-            transition.to( groupCreate, { y = (-midH + 275) + h, time = 400, transition = easing.outExpo } )
+            transition.to( imgLogo, { y = 65 + h, width = 200, height = 74, time = 400, transition = easing.outExpo } )
+            transition.to( groupCreate, { y = (-midH + 230) + h, time = 400, transition = easing.outExpo } )
         end
     elseif ( "submitted" == event.phase ) then
-        -- Hide Keyboard
-        native.setKeyboardFocus(nil)
+        backTxtPositions()
         if event.target.method == "create" then
             doCreate()
         else
@@ -65,6 +64,7 @@ function onTxtFocus(event)
 end
 
 function getReturnSplash(event)
+    backTxtPositions()
     composer.removeScene( "src.Login" )
     composer.gotoScene( "src.Login", { time = 400, effect = "crossFade" })
 end 
@@ -74,11 +74,11 @@ function backTxtPositions()
     native.setKeyboardFocus(nil)
     -- Interfaz Sign In
     if groupSign.x == 0 and groupSign.y < 0 then
-        transition.to( imgLogo, { y = midH / 2, time = 400, transition = easing.outExpo } )
+        transition.to( imgLogo, { y = midH / 2, width = 400, height = 147, time = 400, transition = easing.outExpo } )
         transition.to( groupSign, { y = 0, time = 400, transition = easing.outExpo } )
     -- Interfaz Create
     elseif groupCreate.x == 0 and groupCreate.y < 0 then
-        transition.to( imgLogo, { y = midH / 2, time = 400, transition = easing.outExpo } )
+        transition.to( imgLogo, { y = midH / 2, width = 400, height = 147, time = 400, transition = easing.outExpo } )
         transition.to( groupCreate, { y = 0, time = 400, transition = easing.outExpo } )
     end
 end
@@ -101,6 +101,7 @@ function doCreate()
     elseif not (txtCreatePass.text == txtCreateRePass.text) then
         native.showAlert( "TUKI", 'Los paswords no coinciden.', { "OK"})
     else
+        backTxtPositions()
         RestManager.createUser(txtCreateEmail.text, txtCreatePass.text)
     end
 end
@@ -109,6 +110,7 @@ function doSignIn()
     if txtSignEmail.text == '' or txtSignPass.text == '' then
         native.showAlert( "TUKI", 'El email y password son necesarios.', { "OK"})
     else
+        backTxtPositions()
         RestManager.validateUser(txtSignEmail.text, txtSignPass.text)
     end 
 end

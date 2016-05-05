@@ -476,6 +476,12 @@ function scene:create( event )
     loadLogin:setSequence("play")
     loadLogin.alpha = 0
     
+    -- Clear Menu
+    if Globals.menu then
+        Globals.menu:removeSelf()
+        Globals.menu = nil
+    end
+    
     -- Touch Listener
     screen:addEventListener( "touch", touchScreen )
 end

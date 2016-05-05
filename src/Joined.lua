@@ -115,10 +115,10 @@ function setListCommerce(items)
 
             -- Imagen Comercio
             local bgImg0 = display.newRect( -188, 0, 85, 85 )
-            bgImg0:setFillColor( unpack(cGrayH) )
+            bgImg0:setFillColor( tonumber(items[z].colorA1)/255, tonumber(items[z].colorA2)/255, tonumber(items[z].colorA3)/255 )
             rowPartner[z]:insert( bgImg0 )
             local bgImg = display.newRect( -188, 0, 75, 75 )
-            bgImg:setFillColor( tonumber(items[z].colorA1)/255, tonumber(items[z].colorA2)/255, tonumber(items[z].colorA3)/255 )
+            bgImg:setFillColor( 1 )
             rowPartner[z]:insert( bgImg )
             local img = display.newImage( items[z].image, system.TemporaryDirectory )
             img:translate( -188, 0 )

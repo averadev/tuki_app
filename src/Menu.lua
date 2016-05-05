@@ -167,17 +167,17 @@ function Menu:new()
         
         -- Iconos
         local bgMenuUser1 = display.newRect( 0, 124, 133, 80 )
-        bgMenuUser1.alpha = .2
+        bgMenuUser1.alpha = .01
         bgMenuUser1.anchorX = 0
-        bgMenuUser1.screen = ""
+        bgMenuUser1.screen = "CardLink"
         bgMenuUser1:setFillColor( .7 )
-        --bgMenuUser1:addEventListener( 'tap', changeScreen)
+        bgMenuUser1:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenuUser1)
-        local menuUser = display.newImage("img/icon/menuProgramas.png")
+        local menuUser = display.newImage("img/icon/menuCard.png")
         menuUser:translate(66, 120)
         grpOptions:insert( menuUser )
         local txtCodigo = display.newText({
-            text = "Código de Regalo", 
+            text = "Ligar Tarjeta", 
             x = 66, y = 150, width = 120,
              font = fLatoBold, fontSize = 14, align = "center"
         })
