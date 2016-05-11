@@ -15,7 +15,7 @@ function Menu:new()
     local intW, intH  = display.contentWidth, display.contentHeight
     local midW, midH  = intW / 2, intH / 2
     local fxTap = audio.loadSound( "fx/click.wav")
-    local Menu, bgGray
+    local Menu, bgGray, bgMenuUser1, txtLCard
     
     -- Bloquea cierre de menu
     function blockTap()
@@ -24,7 +24,7 @@ function Menu:new()
     
     -- Cambia pantalla
     function closeSession(event)
-        DBManager.updateUser({id='', fbid='', name=''})
+        DBManager.updateUser({id='', fbid='', name='', idCard=''})
         changeScreen(event)
         return true
     end
@@ -61,6 +61,13 @@ function Menu:new()
         transition.to( self, { x = 0, time = 400, onComplete=function() 
             bgGray.alpha = .5
         end })
+    end
+    
+    -- Deshabilitamos CardLink
+    function disabledLink()
+        txtLCard.text = 'Tarjeta Vinculada'
+        bgMenuUser1.alpha = .2
+        bgMenuUser1:removeEventListener( 'tap', changeScreen)
     end
     
     -- Creamos la pantalla del menu
@@ -166,23 +173,22 @@ function Menu:new()
         grpOptions:insert(line3)
         
         -- Iconos
-        local bgMenuUser1 = display.newRect( 0, 124, 133, 80 )
-        bgMenuUser1.alpha = .01
+        bgMenuUser1 = display.newRect( 0, 124, 133, 80 )
+        bgMenuUser1.alpha = .2
         bgMenuUser1.anchorX = 0
         bgMenuUser1.screen = "CardLink"
         bgMenuUser1:setFillColor( .7 )
-        bgMenuUser1:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenuUser1)
         local menuUser = display.newImage("img/icon/menuCard.png")
         menuUser:translate(66, 120)
         grpOptions:insert( menuUser )
-        local txtCodigo = display.newText({
-            text = "Ligar Tarjeta", 
+        txtLCard = display.newText({
+            text = "Tarjeta Vinculada", 
             x = 66, y = 150, width = 120,
              font = fLatoBold, fontSize = 14, align = "center"
         })
-        txtCodigo:setFillColor( unpack(cWhite) )
-        grpOptions:insert( txtCodigo )
+        txtLCard:setFillColor( unpack(cWhite) )
+        grpOptions:insert( txtLCard )
         local bgMenuUser2 = display.newRect( 134, 124, 133, 80 )
         bgMenuUser2.alpha = .2
         bgMenuUser2.anchorX = 0
@@ -217,6 +223,12 @@ function Menu:new()
         })
         txtCSession:setFillColor( unpack(cWhite) )
         grpOptions:insert( txtCSession )
+        
+        if dbConfig.idCard == nil or dbConfig.idCard == '' then
+            txtLCard.text = 'Ligar Tarjeta'
+            bgMenuUser1.alpha = .01
+            bgMenuUser1:addEventListener( 'tap', changeScreen)
+        end
         
         -- Menu vertical
         local line1 = display.newLine(0, 310, 400, 310)

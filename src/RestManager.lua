@@ -14,7 +14,7 @@ local RestManager = {}
     local dbConfig = DBManager.getSettings()
 
     local site = "http://192.168.1.67/tuki_ws/"
-    --local site = "http://geekbucket.com.mx/unify/"
+    --local site = "http://geekbucket.com.mx/mobile/"
 	
 	function urlencode(str)
           if (str) then
@@ -559,7 +559,33 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
     
-
+    RestManager.cardLink = function(idCard)
+		local url = site.."mobile/cardLink/format/json/idUser/"..dbConfig.id.."/idCard/"..idCard
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.success then
+                    DBManager.updateIdCard(data.idCard)
+                    if data.message and data.message == 'NewCard' then
+                        showMess(true, 'Tarjeta vincula, ahora podras usar tambien tu tarjeta para acumular puntos')
+                    else
+                        showMess(true, 'Se han acumulado tus puntos, podras usar seguir usando tu tarjeta para acumular mas puntos')
+                    end
+                else
+                    if data.message == 'UserExist' then
+                        showMess(false, 'Ya existe una tarjeta registrada a tu cuenta')
+                    elseif data.message == 'CardExist' then
+                        showMess(false, 'La tarjeta ya fue asignada a otra cuenta')
+                    end
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
 	
 	
 return RestManager

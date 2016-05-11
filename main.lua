@@ -27,7 +27,7 @@ if dbConfig.id == '' then
 elseif dbConfig.afiliated == 0 then
     composer.gotoScene("src.WelcomeHome")
 else
-    composer.gotoScene("src.CardLink")
+    composer.gotoScene("src.Home")
     --composer.gotoScene("src.Rewards")
     --composer.gotoScene("src.Reward", { params = { idReward = 18 } } )
     --composer.gotoScene("src.Partner", { params = { idCommerce = 1 } } )

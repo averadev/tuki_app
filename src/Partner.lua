@@ -294,8 +294,21 @@ function setCommerce(item, rewards)
     end
     
     
+    -- Description
+    yPosc = yPosc
+    local txtCommerceDetail = display.newText({
+        text = item.detail,
+        y = yPosc + 10,
+        x = midW, width = 420,
+        font = fLatoItalic,   
+        fontSize = 18, align = "left"
+    })
+    txtCommerceDetail.anchorY = 0
+    txtCommerceDetail:setFillColor( unpack(cGrayXH) )
+    scrViewPa:insert(txtCommerceDetail)
+    
     -- Contact Information
-    yPosc = yPosc + 20
+    yPosc = yPosc + txtCommerceDetail.height + 50
     local icoCom1 = display.newImage("img/icon/icoCom1.png")
     icoCom1:translate(midW - 200, yPosc)
     scrViewPa:insert( icoCom1 )
