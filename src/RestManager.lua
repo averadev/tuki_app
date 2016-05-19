@@ -14,7 +14,7 @@ local RestManager = {}
     local dbConfig = DBManager.getSettings()
 
     local site = "http://192.168.1.67/tuki_ws/"
-    --local site = "http://geekbucket.com.mx/mobile/"
+    --local site = "http://mytuki.com/api/"
 	
 	function urlencode(str)
           if (str) then
@@ -263,7 +263,7 @@ local RestManager = {}
 	
 	RestManager.getHomeRewards = function()
 		local url = site.."mobile/getHomeRewards/format/json/idUser/"..dbConfig.id
-        
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -289,6 +289,7 @@ local RestManager = {}
             return true
         end
         -- Do request
+        print(url)
         network.request( url, "GET", callback )
 	end
 
