@@ -13,7 +13,7 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    local site = "http://192.168.1.67/tuki_ws/"
+    local site = "http://192.168.1.68/tuki_ws/"
     --local site = "http://mytuki.com/api/"
 	
 	function urlencode(str)
@@ -220,6 +220,8 @@ local RestManager = {}
 
     RestManager.createUser = function(email, pass)
 		local url = site.."mobile/createUser/format/json/email/"..urlencode(email).."/password/"..urlencode(pass)
+        local deviceID = system.getInfo( "deviceID" )
+        url = url.."/deviceID/"..urlencode(deviceID)
         
         local function callback(event)
             if ( event.isError ) then
@@ -241,7 +243,9 @@ local RestManager = {}
 
     RestManager.createUserFB = function(fbid, name, email )
 		local url = site.."mobile/createUserFB/format/json/fbid/"..fbid.."/email/"..urlencode(email).."/name/"..urlencode(name)
-        
+        local deviceID = system.getInfo( "deviceID" )
+        url = url.."/deviceID/"..urlencode(deviceID)
+    
         local function callback(event)
             if ( event.isError ) then
             else
@@ -496,7 +500,7 @@ local RestManager = {}
 	end
 
     RestManager.getCommerce = function(idCommerce)
-		local url = site.."mobile/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
+		local url = site.."mobile/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce.."/idCity/1"
         print(url)
         local function callback(event)
             if ( event.isError ) then

@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------
--- Trippy Rex
+-- Tuki
 -- Alberto Vera Espitia
--- Parodiux Inc.
+-- GeekBucket 2016
 ---------------------------------------------------------------------------------
 
 display.setStatusBar( display.DarkStatusBar )
@@ -9,6 +9,7 @@ display.setDefault( "background", 1, 1, 1 )
 
 local composer = require( "composer" )
 local DBManager = require('src.DBManager')
+local OneSignal = require("plugin.OneSignal")
 DBManager.setupSquema() 
 
 
@@ -20,6 +21,22 @@ for file in lfs.dir(doc_path) do
     os.remove( system.pathForFile( file, system.TemporaryDirectory  ) ) 
 end
 ]]
+
+-- This function gets called when the user opens a notification or one is received when the app is open and active.
+function DidReceiveRemoteNotification(message, data, isActive)
+    if (data) then
+        if (isActive) then
+            -- native.showAlert( "Discount!", message, { "OK" } )
+        elseif (additionalData.actionSelected) then -- Interactive notification button pressed
+            -- native.showAlert("Button Pressed!", "ButtonID:" .. additionalData.actionSelected, { "OK"} )
+        end
+    else
+        native.showAlert("OneSignal Message", message, { "OK" } )
+    end
+end
+OneSignal.Init("774cd845-e756-4081-b185-c51855beb9cc", "############", DidReceiveRemoteNotification)
+
+
 
 local dbConfig = DBManager.getSettings()
 if dbConfig.id == '' then

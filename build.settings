@@ -1,7 +1,8 @@
---
--- For more information on build.settings see the Corona SDK Build Guide at:
--- http://docs.coronalabs.com/guide/distribution/buildSettings/index.html
---
+---------------------------------------------------------------------------------
+-- Tuki
+-- Alberto Vera Espitia
+-- GeekBucket 2016
+---------------------------------------------------------------------------------
 
 settings =
 {
@@ -34,7 +35,16 @@ settings =
         ["plugin.qrscanner"] = 
         {
             publisherId = 'com.spiralcodestudio'
-        }
+        },
+        ["plugin.OneSignal"] =
+        {
+            publisherId = "com.onesignal",
+        },
+        ["plugin.google.play.services"] =
+        {
+            publisherId = "com.coronalabs",
+            supportedPlatforms = { android=true, ["android-kindle"]=true },
+        },
     },
 
 	--
@@ -46,8 +56,7 @@ settings =
 		{
 			UIStatusBarHidden = false,
 			UIPrerenderedIcon = true, -- set to false for "shine" overlay
-			--UIApplicationExitsOnSuspend = true, -- uncomment to quit app on suspend
-            
+            UIBackgroundModes = {"remote-notification"},
             UIApplicationExitsOnSuspend = false,
             FacebookAppID = "1091330010907264",  --replace XXXXXXXXXX with your Facebook App ID
             CFBundleURLTypes =
