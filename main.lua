@@ -34,7 +34,7 @@ function DidReceiveRemoteNotification(message, data, isActive)
         native.showAlert("OneSignal Message", message, { "OK" } )
     end
 end
-OneSignal.Init("774cd845-e756-4081-b185-c51855beb9cc", "############", DidReceiveRemoteNotification)
+OneSignal.Init("774cd845-e756-4081-b185-c51855beb9cc", "7592263599", DidReceiveRemoteNotification)
 
 
 
