@@ -13,7 +13,7 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    local site = "http://192.168.1.68/tuki_ws/"
+    local site = "http://192.168.1.67/tuki_ws/"
     --local site = "http://mytuki.com/api/"
 	
 	function urlencode(str)
@@ -267,11 +267,15 @@ local RestManager = {}
 	
 	RestManager.getHomeRewards = function()
 		local url = site.."mobile/getHomeRewards/format/json/idUser/"..dbConfig.id
-        print(url)
+        
         local function callback(event)
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
+                local wallet = tonumber(data.wallet)
+                if wallet > 0 then
+                    showB(wallet)
+                end
                 loadImage({idx = 0, name = "HomeCommerces", path = "assets/img/api/commerce/", items = data.items})
             end
             return true
@@ -282,7 +286,7 @@ local RestManager = {}
 
     RestManager.getAccount = function()
 		local url = site.."mobile/getAccount/format/json/idUser/"..dbConfig.id
-        print(url)
+        
         local function callback(event)
             if ( event.isError ) then
             else
@@ -293,7 +297,7 @@ local RestManager = {}
             return true
         end
         -- Do request
-        print(url)
+        
         network.request( url, "GET", callback )
 	end
 
@@ -314,7 +318,7 @@ local RestManager = {}
 
     RestManager.getCommercesByGPS = function(latitude, longitude)
 		local url = site.."mobile/getCommercesByGPS/format/json/latitude/"..latitude.."/longitude/"..longitude
-        print(url)
+        
         local function callback(event)
             if ( event.isError ) then
             else
@@ -430,6 +434,8 @@ local RestManager = {}
     RestManager.multipleJoin = function(idx)
         dbConfig = DBManager.getSettings()
 		local url = site.."mobile/multipleJoin/format/json/idUser/"..dbConfig.id.."/idComms/"..idx
+        local deviceID = system.getInfo( "deviceID" )
+        url = url.."/deviceID/"..urlencode(deviceID)
         
         local function callback(event)
             local data = json.decode(event.response)
@@ -486,11 +492,17 @@ local RestManager = {}
 
     RestManager.setCommerceJoin = function(idCommerce)
 		local url = site.."mobile/setCommerceJoin/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce
+        local deviceID = system.getInfo( "deviceID" )
+        url = url.."/deviceID/"..urlencode(deviceID)
         
         local function callback(event)
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
+                local gift = tonumber(data.gift)
+                if gift > 0 then
+                    addB(gift)
+                end
                 readyJoined(idCommerce)
             end
             return true
@@ -501,7 +513,7 @@ local RestManager = {}
 
     RestManager.getCommerce = function(idCommerce)
 		local url = site.."mobile/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce.."/idCity/1"
-        print(url)
+        
         local function callback(event)
             if ( event.isError ) then
             else
@@ -529,9 +541,23 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
+    RestManager.setReadGift = function(idReward)
+		local url = site.."mobile/setReadGift/format/json/idUser/"..dbConfig.id.."/idReward/"..idReward
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
     RestManager.getMessages = function()
 		local url = site.."mobile/getMessages/format/json/idUser/"..dbConfig.id
-        print(url)
+        
         local function callback(event)
             if ( event.isError ) then
             else
@@ -541,7 +567,7 @@ local RestManager = {}
             return true
         end
         -- Do request
-        print(url)
+        
         network.request( url, "GET", callback )
 	end
 
@@ -566,7 +592,9 @@ local RestManager = {}
     
     RestManager.cardLink = function(idCard)
 		local url = site.."mobile/cardLink/format/json/idUser/"..dbConfig.id.."/idCard/"..idCard
-        
+        local deviceID = system.getInfo( "deviceID" )
+        url = url.."/deviceID/"..urlencode(deviceID)
+    
         local function callback(event)
             if ( event.isError ) then
             else
@@ -574,8 +602,14 @@ local RestManager = {}
                 if data.success then
                     DBManager.updateIdCard(data.idCard)
                     if data.message and data.message == 'NewCard' then
-                        showMess(true, 'Tarjeta vincula, ahora podras usar tambien tu tarjeta para acumular puntos')
+                        showMess(true, 'Tarjeta vinculada, ahora podras usar tambien tu tarjeta para acumular puntos')
                     else
+                        if data.gift then
+                            local gift = tonumber(data.gift)
+                            if gift > 0 then
+                                addB(gift)
+                            end
+                        end
                         showMess(true, 'Se han acumulado tus puntos, podras usar seguir usando tu tarjeta para acumular mas puntos')
                     end
                 else

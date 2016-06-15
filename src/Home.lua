@@ -217,13 +217,15 @@ function showHElments(vAlpha)
     txtPoints.alpha = vAlpha
     txtTuks.alpha = vAlpha
     txtName.alpha = vAlpha
-    --[[
-    if favOn.active then
-        favOn.alpha = vAlpha
-    elseif favOff.active then
-        favOff.alpha = vAlpha
-    end
-    ]]
+end
+
+-------------------------------------
+-- Muestra el bubble de wallet
+-- @param wallet number
+------------------------------------
+function showB(wallet)
+    myWallet = wallet
+    tools:showBubble(true)
 end
 
 -------------------------------------
@@ -593,6 +595,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
     if event.phase == "will" then 
+        tools:showBubble(false)
         Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
     end
 end

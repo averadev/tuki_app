@@ -16,7 +16,7 @@ function Tools:new()
     -- Variables
     local self = display.newGroup()
     local bgShadow, headLogo, grpLoading, grpAnimate, filters, scrViewF
-    local h = display.topStatusBarContentHeight
+    local h = display.topStatusBarContentHeight, grpBubble
     local fxTap = audio.loadSound( "fx/click.wav")
     self.y = h
     
@@ -143,23 +143,48 @@ function Tools:new()
     end
     
     -------------------------------------
-    -- Creamos la barra de puntos
+    -- Muestra el bubble
     ------------------------------------ 
-    function self:buildPointsBar()
-        
-        local toolbar = display.newRect( 0, 80, display.contentWidth, 80 )
-        toolbar.anchorX = 0
-        toolbar.anchorY = 0
-        toolbar:setFillColor( .85 )
-        self:insert(toolbar)
-        
-        local line1 = display.newLine(0, 160, display.contentWidth, 160)
-        line1:setStrokeColor( .58, .3 )
-        line1.strokeWidth = 1
-        self:insert(line1)
-        
-        headLogo:toFront()
+    function self:showBubble(animate)
+        if myWallet > 0 then 
+            if grpBubble then
+                grpBubble:removeSelf()
+                grpBubble = nil
+            end 
+
+            grpBubble = display.newGroup()
+            self:insert(grpBubble)
+            grpBubble.alpha = 0
+
+            local myCircle1 = display.newCircle( 63, intH - 80, 12 )
+            myCircle1:setFillColor( 1 )
+            grpBubble:insert(myCircle1)
+
+            local myCircle2 = display.newCircle( 63, intH - 80, 10 )
+            myCircle2:setFillColor( 1, .3, .3 )
+            grpBubble:insert(myCircle2)
+
+            local txt = display.newText({
+                text = myWallet,     
+                x = 63, y = intH - 81, width = 30,
+                font = fLatoBold, fontSize = 14, align = "center"
+            })
+            txt:setFillColor( 1 )
+            grpBubble:insert(txt)
+
+            if animate then
+                transition.to( grpBubble, { alpha = 1, time = 600})
+            else
+                grpBubble.alpha = 1
+            end
+        else
+            if grpBubble then
+                grpBubble:removeSelf()
+                grpBubble = nil
+            end 
+        end
     end
+    
     
     -------------------------------------
     -- Asignamos valores a la barra de puntos

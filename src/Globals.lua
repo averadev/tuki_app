@@ -37,6 +37,7 @@ fLatoRegular = 'Lato-Regular'
 
 -- Otras
 myTuks = ''
+myWallet = 0
 local Globals = {}
 Globals.filtros = {
     {"TODO", "iconFilterA"}, 

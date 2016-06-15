@@ -106,6 +106,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
     if event.phase == "will" then 
+        tools:showBubble(false)
         Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
         
         myMap = native.newMapView( 0, h + 140, display.contentWidth, intH - h - 220 )

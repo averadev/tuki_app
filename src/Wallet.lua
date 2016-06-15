@@ -45,6 +45,17 @@ local txtBg, txtFiltro, fpRows = {}, {}, {}
 function tapReward(event)
     local t = event.target
     audio.play(fxTap)
+    if t.status == "1" then
+        t.status = "2"
+        myWallet = myWallet -1
+        
+        if t.border then
+            t.border:removeSelf()
+            t.border = nil
+        end
+        RestManager.setReadGift(t.idReward)
+    end
+    
     composer.removeScene( "src.Reward" )
     composer.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
 end
@@ -77,7 +88,7 @@ function setListWallet(rewards)
 
             -- Mostrar separadores
             if z == 1 then
-                if rewards[z].status == "1" then
+                if rewards[z].status == "1" or rewards[z].status == "2" then
                     setInfoBar(30, "Regalos obtenidos")
                     lastYP = lastYP + 40
                 else
@@ -86,7 +97,7 @@ function setListWallet(rewards)
                     lastYP = lastYP + 40
                 end
             elseif isAvailable then
-                if not (rewards[z-1].status == rewards[z].status) then
+                if not (rewards[z-1].status == rewards[z].status) and rewards[z].status == "3" then
                     setInfoBar((125*z) - 50, "Regalos canjeados")
                     isAvailable = false
                     lastYP = lastYP + 40
@@ -105,17 +116,39 @@ function setListWallet(rewards)
             bg2:setFillColor( 1 )
             rowReward[z]:insert( bg2 )
             bg2.idReward = rewards[z].id
+            bg2.status = rewards[z].status
             bg2:addEventListener( 'tap', tapReward)
+            
+            -- Border Right
+            if rewards[z].status == "1" then
+                bg2.border = display.newRect( midW - 14, 0, 6, 110 )
+                bg2.border:setFillColor( {
+                    type = 'gradient',
+                    color1 = { .49, .81, .96, .7 }, 
+                    color2 = { .96, .99, 1, .2 },
+                    direction = "left"
+                } ) 
+                rowReward[z]:insert(bg2.border)
+            end
 
             local img = display.newImage( rewards[z].image, system.TemporaryDirectory )
-            img:translate( -180, 0 )
-            img.width = 110
-            img.height = 110
+            img:translate( -165, 0 )
+            img.width = 140
+            img.height = 105
             rowReward[z]:insert( img )
+
+            local lblFecha = display.newText({
+                text = rewards[z].fecha,     
+                x = 120, y = -40, width = 200, 
+                font = fLatoRegular,   
+                fontSize = 14, align = "right"
+            })
+            lblFecha:setFillColor( .6 )
+            rowReward[z]:insert( lblFecha )
 
             local lblCommerce = display.newText({
                 text = rewards[z].commerce,     
-                x = 50, y = -15, width = 300, 
+                x = 65, y = -15, width = 300, 
                 font = fLatoBold,   
                 fontSize = 17, align = "left"
             })
@@ -124,26 +157,13 @@ function setListWallet(rewards)
 
             local lblName = display.newText({
                 text = rewards[z].name, 
-                x = 50, y = 15, width = 300,
+                x = 65, y = 15, width = 300,
                 font = fLatoRegular,   
                 fontSize = 19, align = "left"
             })
             lblName:setFillColor( .3 )
             rowReward[z]:insert( lblName )
-
-            -- Diseño en redimido
-            if rewards[z].status == "2" then
-                rowReward[z].alpha = .8
-
-                local lblFecha = display.newText({
-                    text = rewards[z].fecha,     
-                    x = 120, y = -40, width = 200, 
-                    font = fLatoBold,   
-                    fontSize = 14, align = "right"
-                })
-                lblFecha:setFillColor( .3 )
-                rowReward[z]:insert( lblFecha )
-            end
+            
 
         end
         -- Set new scroll position
@@ -187,6 +207,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
     if event.phase == "will" then 
+        tools:showBubble(false)
         Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
     end
 end

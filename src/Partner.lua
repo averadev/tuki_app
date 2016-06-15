@@ -109,6 +109,15 @@ function setCommerceJoin(event)
 end
 
 -------------------------------------
+-- Muestra el bubble de wallet
+-- @param wallet number
+------------------------------------
+function addB(gift)
+    myWallet = myWallet + gift
+    tools:showBubble(true)
+end
+
+-------------------------------------
 -- Mostramos informacion del comercio
 -- @param item comercio
 -- @param rewards recompensas
@@ -647,6 +656,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
     if event.phase == "will" then 
+        tools:showBubble(false)
         Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
     end
 end
