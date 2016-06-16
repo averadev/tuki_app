@@ -45,6 +45,7 @@ local txtBg, txtFiltro, fpRows = {}, {}, {}
 function tapReward(event)
     local t = event.target
     audio.play(fxTap)
+    local isReden = false
     if t.status == "1" then
         t.status = "2"
         myWallet = myWallet -1
@@ -54,10 +55,12 @@ function tapReward(event)
             t.border = nil
         end
         RestManager.setReadGift(t.idReward)
+    elseif t.status == "3" then
+        isReden = true
     end
     
     composer.removeScene( "src.Reward" )
-    composer.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward } } )
+    composer.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward, giftReden = isReden } } )
 end
 
 -- Creamos lista de comercios

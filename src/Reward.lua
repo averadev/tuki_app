@@ -28,6 +28,7 @@ local midW = display.contentWidth / 2
 local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight 
 local idxReward
+local giftReden = false
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
@@ -239,56 +240,67 @@ function setReward(item)
         txtPoints1B:setFillColor( unpack(cWhite) )
         scrViewRe:insert( txtPoints1B )
         -- Puntos
-        local txtPoints2A = display.newText({
-            text = item.points, 
-            x = 360, y = yPosc-7,
-            font = fLatoBold,
-            fontSize = 32, align = "center"
-        })
-        txtPoints2A:setFillColor( unpack(cWhite) )
-        scrViewRe:insert( txtPoints2A )
-        local txtPoints2B = display.newText({
-            text = "TUKS", 
-            x = 360, y = yPosc+15,
-            font = fLatoRegular,
-            fontSize = 12, align = "center"
-        })
-        txtPoints2B:setFillColor( unpack(cWhite) )
-        scrViewRe:insert( txtPoints2B )
-
-        -- Comprar
-        yPosc = yPosc + 70
-        local bgRedem = display.newRoundedRect( midW, yPosc, 440, 60, 10 )
-        bgRedem:setFillColor( unpack(cPurpleL) )
-        scrViewRe:insert(bgRedem)
-        local bgRedemR1 = display.newRoundedRect( 420, yPosc, 80, 60, 10 )
-        bgRedemR1:setFillColor( unpack(cPurple) )
-        scrViewRe:insert(bgRedemR1)
-        local bgRedemR2 = display.newRect( 400, yPosc, 40, 60 )
-        bgRedemR2:setFillColor( unpack(cPurple) )
-        scrViewRe:insert(bgRedemR2)
-        local lblRedem = display.newText({
-            text = "COMPRAR", 
-            x = midW, y = yPosc,
-            font = fLatoBold,
-            fontSize = 26, align = "center"
-        })
-        lblRedem:setFillColor( unpack(cWhite) )
-        scrViewRe:insert( lblRedem )
-        local menuPoints = display.newImage( "img/icon/menuPoints.png" )
-        menuPoints:translate( 420, yPosc )
-        scrViewRe:insert( menuPoints )
-        
-        -- Validate points
-        if tonumber(item.userPoints) >= tonumber(item.points) then
-            bgRedem:addEventListener( 'tap', goToCheckReward)
+        if item.points == "0" then
+            local txtPoints2A = display.newText({
+                text = "GRATIS", 
+                x = 360, y = yPosc,
+                font = fLatoBold,
+                fontSize = 32, align = "center"
+            })
+            txtPoints2A:setFillColor( unpack(cWhite) )
+            scrViewRe:insert( txtPoints2A )
         else
-            local bgGray = display.newRoundedRect( midW, yPosc, 440, 60, 10 )
-            bgGray.alpha = .5
-            bgGray:setFillColor( 1 )
-            scrViewRe:insert(bgGray)
+            local txtPoints2A = display.newText({
+                text = item.points, 
+                x = 360, y = yPosc-7,
+                font = fLatoBold,
+                fontSize = 32, align = "center"
+            })
+            txtPoints2A:setFillColor( unpack(cWhite) )
+            scrViewRe:insert( txtPoints2A )
+            local txtPoints2B = display.newText({
+                text = "TUKS", 
+                x = 360, y = yPosc+15,
+                font = fLatoRegular,
+                fontSize = 12, align = "center"
+            })
+            txtPoints2B:setFillColor( unpack(cWhite) )
+            scrViewRe:insert( txtPoints2B )
         end
-        
+        -- Comprar
+        if not(giftReden) then
+            yPosc = yPosc + 70
+            local bgRedem = display.newRoundedRect( midW, yPosc, 440, 60, 10 )
+            bgRedem:setFillColor( unpack(cPurpleL) )
+            scrViewRe:insert(bgRedem)
+            local bgRedemR1 = display.newRoundedRect( 420, yPosc, 80, 60, 10 )
+            bgRedemR1:setFillColor( unpack(cPurple) )
+            scrViewRe:insert(bgRedemR1)
+            local bgRedemR2 = display.newRect( 400, yPosc, 40, 60 )
+            bgRedemR2:setFillColor( unpack(cPurple) )
+            scrViewRe:insert(bgRedemR2)
+            local lblRedem = display.newText({
+                text = "COMPRAR", 
+                x = midW, y = yPosc,
+                font = fLatoBold,
+                fontSize = 26, align = "center"
+            })
+            lblRedem:setFillColor( unpack(cWhite) )
+            scrViewRe:insert( lblRedem )
+            local menuPoints = display.newImage( "img/icon/menuPoints.png" )
+            menuPoints:translate( 420, yPosc )
+            scrViewRe:insert( menuPoints )
+
+            -- Validate points
+            if tonumber(item.userPoints) >= tonumber(item.points) then
+                bgRedem:addEventListener( 'tap', goToCheckReward)
+            else
+                local bgGray = display.newRoundedRect( midW, yPosc, 440, 60, 10 )
+                bgGray.alpha = .5
+                bgGray:setFillColor( 1 )
+                scrViewRe:insert(bgGray)
+            end
+        end
     -- Comercio NO Afiliado
     else
         -- Fondos Puntos
@@ -366,6 +378,7 @@ function setReward(item)
     line1:setStrokeColor( .58, .2 )
     line1.strokeWidth = 2
     scrViewRe:insert(line1)
+    
     -- Compartir
     local bgShare = display.newRect( midW + 120, yPosc, 200, 60 )
     bgShare.item = item
@@ -461,6 +474,11 @@ end
 function scene:create( event )
 	screen = self.view
     local idReward = event.params.idReward
+    giftReden = false
+    if event.params.giftReden then
+        print("giftReden")
+        giftReden = true
+    end
     
 	tools = Tools:new()
     tools:buildHeader()

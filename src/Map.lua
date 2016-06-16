@@ -35,10 +35,13 @@ local isIcons = true
 local locationHandler = function( event )
 	-- Check for error (user may have turned off Location Services)
 	if event.errorCode then
+        print(event.errorCode)
 		Runtime:removeEventListener( "location", locationHandler )
 	else
         latitude, longitude = event.latitude, event.longitude
-        --latitude, longitude = 21.156956, -86.825280
+        print("latitude: "..latitude)
+        print("longitude: "..longitude)
+        
         
         myMap:setRegion( latitude, longitude, 0.02, 0.02 )
 		Runtime:removeEventListener( "location", locationHandler )
@@ -108,13 +111,15 @@ function scene:show( event )
     if event.phase == "will" then 
         tools:showBubble(false)
         Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
-        
+        print("Mapa")
         myMap = native.newMapView( 0, h + 140, display.contentWidth, intH - h - 220 )
         if myMap then
             myMap.anchorX = 0
             myMap.anchorY = 0
             tools:toFront()
             Runtime:addEventListener( "location", locationHandler )
+        else
+            print("Not Map")
         end
         
     end

@@ -33,6 +33,8 @@ function toLoginFB(isWelcome)
     local scrLogin = "src.Home"
     if isWelcome then
         scrLogin = "src.WelcomeHome"
+    else
+        DBManager.disableWelcome()
     end
     Globals.isReadOnly = true
     reloadConfig()
