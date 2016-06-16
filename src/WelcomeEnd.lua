@@ -101,8 +101,6 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
     if event.phase == "will" then 
-        -- Deshabilitar welcome
-        DBManager.disableWelcome()
         -- Obtener imagen QR
         RestManager.getQR()
     end
