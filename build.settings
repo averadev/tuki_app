@@ -70,7 +70,8 @@ settings =
                 NSAllowsArbitraryLoads = true
             },
             
-            NSLocationWhenInUseUsageDescription = "Get commerce by location.",
+            UIRequiredDeviceCapabilities = {"location-services", "gps" },
+		 	NSLocationWhenInUseUsageDescription = "Get commerce by location.",
 
             -- Whitelist Facebook Apps
             LSApplicationQueriesSchemes = 
@@ -133,5 +134,10 @@ settings =
             "android.permission.ACCESS_FINE_LOCATION",
             "android.permission.ACCESS_COARSE_LOCATION",
 		},
+        usesFeatures =
+        {
+            { name="android.hardware.location", required=false },
+            { name="android.hardware.location.gps", required=false },
+        }
 	},
 }
