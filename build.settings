@@ -133,11 +133,6 @@ settings =
             "android.permission.CALL_PHONE",
             "android.permission.ACCESS_FINE_LOCATION",
             "android.permission.ACCESS_COARSE_LOCATION",
-		},
-        usesFeatures =
-        {
-            { name="android.hardware.location", required=false },
-            { name="android.hardware.location.gps", required=false },
-        }
+		}
 	},
 }
