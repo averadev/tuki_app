@@ -67,29 +67,7 @@ settings =
             -- Whitelist Facebook Servers for Network Requests
             NSAppTransportSecurity = 
             {
-                NSExceptionDomains = 
-                {
-                    ["mytuki.com"] = 
-                    {
-                        NSIncludesSubdomains = true,
-                        NSExceptionRequiresForwardSecrecy = false,
-                    },
-                    ["fbcdn.net"] = 
-                    {
-                        NSIncludesSubdomains = true,
-                        NSExceptionRequiresForwardSecrecy = false,
-                    },
-                    ["facebook.com"] = 
-                    {
-                        NSIncludesSubdomains = true,
-                        NSExceptionRequiresForwardSecrecy = false,
-                    },
-                    ["akamaihd.net"] = 
-                    {
-                        NSIncludesSubdomains = true,
-                        NSExceptionRequiresForwardSecrecy = false,
-                    },
-                },
+                NSAllowsArbitraryLoads = true
             },
 
             -- Whitelist Facebook Apps
