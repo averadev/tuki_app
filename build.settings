@@ -69,6 +69,8 @@ settings =
             {
                 NSAllowsArbitraryLoads = true
             },
+            
+            NSLocationWhenInUseUsageDescription = "Get commerce by location.",
 
             -- Whitelist Facebook Apps
             LSApplicationQueriesSchemes = 
