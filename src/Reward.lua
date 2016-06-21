@@ -98,7 +98,7 @@ end
 -- @param event objeto evento
 ------------------------------------
 local function doShare( event )
-    local serviceName = "share"
+    local serviceName = "facebook"
     local isAvailable = native.canShowPopup( "social", serviceName )
  
     -- If it is possible to show the popup
@@ -125,10 +125,7 @@ local function doShare( event )
         })
     else
         if isSimulator then
-            native.showAlert( "Build for device", "This plugin is not supported on the Corona Simulator, please build for an iOS/Android device or the Xcode simulator", { "OK" } )
         else
-            -- Popup isn't available.. Show error message
-            native.showAlert( "Cannot send " .. serviceName .. " message.", "Please setup your " .. serviceName .. " account or check your network connection (on android this means that the package/app (ie Twitter) is not installed on the device)", { "OK" } )
         end
     end
 end
