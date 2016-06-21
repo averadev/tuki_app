@@ -34,27 +34,20 @@ local isIcons = true
 ---------------------------------------------------------------------------------
 local locationHandler = function( event )
 	-- Check for error (user may have turned off Location Services)
-	if event.errorCode then
-        print(event.errorCode)
-		Runtime:removeEventListener( "location", locationHandler )
-	else
-        latitude, longitude = event.latitude, event.longitude
-        print("latitude: "..latitude)
-        print("longitude: "..longitude)
-        
-        
-        myMap:setRegion( latitude, longitude, 0.02, 0.02 )
-		Runtime:removeEventListener( "location", locationHandler )
-        
-        if isIcons then
+    Runtime:removeEventListener( "location", locationHandler )
+    if isIcons then
+        if event.errorCode then
+        else
+            latitude, longitude = event.latitude, event.longitude
+            myMap:setRegion( latitude, longitude, 0.02, 0.02 )
             isIcons = false
             local function listener( event )
                 tools:toFront()
                 RestManager.getCommercesByGPSLite(latitude, longitude)
             end
-            timer.performWithDelay( 1500, listener )
+            timer.performWithDelay( 1500, listener, 1 )
         end
-	end
+    end
 end
 
 -------------------------------------
@@ -109,6 +102,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
     if event.phase == "will" then 
+        isIcons = true
         tools:showBubble(false)
         Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
         print("Mapa")
@@ -128,6 +122,7 @@ end
 -- Remove Listener
 function scene:hide( event )
 	if myMap then
+        Runtime:removeEventListener( "location", locationHandler )
         myMap:removeSelf()
         myMap = nil
     end
@@ -136,6 +131,7 @@ end
 -- Remove Listener
 function scene:destroy( event )
 	if myMap then
+        Runtime:removeEventListener( "location", locationHandler )
         myMap:removeSelf()
         myMap = nil
     end
