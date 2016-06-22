@@ -38,14 +38,16 @@ local locationHandler = function( event )
     if isIcons then
         if event.errorCode then
         else
-            latitude, longitude = event.latitude, event.longitude
-            myMap:setRegion( latitude, longitude, 0.02, 0.02 )
-            isIcons = false
-            local function listener( event )
-                tools:toFront()
-                RestManager.getCommercesByGPSLite(latitude, longitude)
-            end
-            timer.performWithDelay( 1500, listener, 1 )
+            if myMap then
+                latitude, longitude = event.latitude, event.longitude
+                myMap:setRegion( latitude, longitude, 0.02, 0.02 )
+                isIcons = false
+                local function listener( event )
+                    tools:toFront()
+                    RestManager.getCommercesByGPSLite(latitude, longitude)
+                end
+                timer.performWithDelay( 1500, listener, 1 )
+            then
         end
     end
 end
@@ -143,4 +145,4 @@ scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
 
-return scene
+return scenes
