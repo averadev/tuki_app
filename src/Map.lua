@@ -47,7 +47,7 @@ local locationHandler = function( event )
                     RestManager.getCommercesByGPSLite(latitude, longitude)
                 end
                 timer.performWithDelay( 1500, listener, 1 )
-            then
+            end
         end
     end
 end
