@@ -34,7 +34,6 @@ local isIcons = true
 ---------------------------------------------------------------------------------
 local locationHandler = function( event )
 	-- Check for error (user may have turned off Location Services)
-<<<<<<< Updated upstream
     Runtime:removeEventListener( "location", locationHandler )
     if isIcons then
         if event.errorCode then
@@ -47,25 +46,6 @@ local locationHandler = function( event )
                 RestManager.getCommercesByGPSLite(latitude, longitude)
             end
             timer.performWithDelay( 1500, listener, 1 )
-=======
-	if event.errorCode then
-        print(event.errorCode)
-		Runtime:removeEventListener( "location", locationHandler )
-	else
-        
-        Runtime:removeEventListener( "location", locationHandler )
-        if myMap then
-            latitude, longitude = event.latitude, event.longitude
-            myMap:setRegion( latitude, longitude, 0.02, 0.02 )
-            if isIcons then
-                isIcons = false
-                local function listener( event )
-                    tools:toFront()
-                    RestManager.getCommercesByGPSLite(latitude, longitude)
-                end
-                timer.performWithDelay( 1500, listener )
-            end
->>>>>>> Stashed changes
         end
     end
 end
