@@ -13,8 +13,8 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    local site = "http://tukicard.com/tuki_ws/"
-    --local site = "http://mytuki.com/api/"
+    --local site = "http://tukicard.com/tuki_ws/"
+    local site = "http://mytuki.com/api/"
 	
 	function urlencode(str)
           if (str) then
