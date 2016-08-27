@@ -230,69 +230,100 @@ function Menu:new()
             bgMenuUser1:addEventListener( 'tap', changeScreen)
         end
         
+        scrMMain = widget.newScrollView
+        {
+            top = 165,
+            left = 0,
+            width = 400,
+            height = intH - (minScr+235),
+            horizontalScrollDisabled = true,
+            isBounceEnabled = false,
+            hideBackground = true
+        }
+        grpOptions:insert(scrMMain)
+        
         -- Menu vertical
-        local line1 = display.newLine(0, 310, 400, 310)
+        local line1 = display.newLine(0, 80, 400, 80)
         line1:setStrokeColor( 1, .3 )
         line1.strokeWidth = 2
-        grpOptions:insert(line1)
-        local bgMenu1 = display.newRect( 200, 280, 400, 60 )
+        scrMMain:insert(line1)
+        local bgMenu1 = display.newRect( 200, 40, 400, 60 )
         bgMenu1.alpha = .01
         bgMenu1.screen = "Joined"
         bgMenu1:setFillColor( .7 )
         bgMenu1:addEventListener( 'tap', changeScreen)
-        grpOptions:insert(bgMenu1)
+        scrMMain:insert(bgMenu1)
         local menuComercios = display.newImage("img/icon/menuComercios.png")
-        menuComercios:translate(66, 280)
-        grpOptions:insert( menuComercios )
+        menuComercios:translate(66, 40)
+        scrMMain:insert( menuComercios )
         local txtTitle1 = display.newText({
             text = "Mis programas de lealtad", 
-            x = 260, y = 280, width = 300,
+            x = 260, y = 40, width = 300,
             font = fLatoBold, fontSize = 20, align = "left"
         })
         txtTitle1:setFillColor( 1 )
-        grpOptions:insert(txtTitle1)
+        scrMMain:insert(txtTitle1)
         
-        local line2 = display.newLine(0, 240, 400, 240)
+        local line2 = display.newLine(0, 160, 400, 160)
         line2:setStrokeColor( 1, .3 )
         line2.strokeWidth = 2
-        grpOptions:insert(line2)
-        local bgMenu2 = display.newRect( 200, 210, 400, 60 )
+        scrMMain:insert(line2)
+        local bgMenu2 = display.newRect( 200, 120, 400, 60 )
         bgMenu2.alpha = .01
         bgMenu2.screen = "Partners"
         bgMenu2:setFillColor( .7 )
         bgMenu2:addEventListener( 'tap', changeScreen)
-        grpOptions:insert(bgMenu2)
+        scrMMain:insert(bgMenu2)
         local menuComercios = display.newImage("img/icon/menuAfiliado.png")
-        menuComercios:translate(66, 210)
-        grpOptions:insert( menuComercios )
+        menuComercios:translate(66, 120)
+        scrMMain:insert( menuComercios )
         local txtTitle2 = display.newText({
             text = "Comercios Afiliados", 
-            x = 260, y = 210, width = 300,
+            x = 260, y = 120, width = 300,
             font = fLatoBold, fontSize = 20, align = "left"
         })
         txtTitle2:setFillColor( 1 )
-        grpOptions:insert(txtTitle2)
+        scrMMain:insert(txtTitle2)
         
-        local line3 = display.newLine(0, 380, 400, 380)
+        local line3 = display.newLine(0, 240, 400, 240)
         line3:setStrokeColor( 1, .3 )
         line3.strokeWidth = 2
-        grpOptions:insert(line3)
-        local bgMenu3 = display.newRect( 200, 350, 400, 60 )
+        scrMMain:insert(line3)
+        local bgMenu3 = display.newRect( 200, 200, 400, 60 )
         bgMenu3.alpha = .01
         bgMenu3.screen = "Rewards"
         bgMenu3:setFillColor( .7 )
         bgMenu3:addEventListener( 'tap', changeScreen)
-        grpOptions:insert(bgMenu3)
+        scrMMain:insert(bgMenu3)
         local menuComercios = display.newImage("img/icon/menuProgramas.png")
-        menuComercios:translate(66, 350)
-        grpOptions:insert( menuComercios )
+        menuComercios:translate(66, 200)
+        scrMMain:insert( menuComercios )
         local txtTitle3 = display.newText({
             text = "Recompensas Disponibles", 
-            x = 260, y = 350, width = 300,
+            x = 260, y = 200, width = 300,
             font = fLatoBold, fontSize = 20, align = "left"
         })
         txtTitle3:setFillColor( 1 )
-        grpOptions:insert(txtTitle3)
+        scrMMain:insert(txtTitle3)
+        
+        local bgMenu4 = display.newRect( 200, 280, 400, 60 )
+        bgMenu4.alpha = .01
+        bgMenu4.screen = "Cities"
+        bgMenu4:setFillColor( .7 )
+        bgMenu4:addEventListener( 'tap', changeScreen)
+        scrMMain:insert(bgMenu4)
+        local menuCiudades = display.newImage("img/icon/menuCity.png")
+        menuCiudades:translate(66, 275)
+        scrMMain:insert( menuCiudades )
+        local txtTitle4 = display.newText({
+            text = "Cambiar Mi Ciudad", 
+            x = 260, y = 280, width = 300,
+            font = fLatoBold, fontSize = 20, align = "left"
+        })
+        txtTitle4:setFillColor( 1 )
+        scrMMain:insert(txtTitle4)
+        
+        scrMMain:setScrollHeight(310)
         
         -- Border Right
         local borderRight = display.newRect( 398, midH, 4, intH )

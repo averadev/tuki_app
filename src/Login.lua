@@ -66,29 +66,81 @@ function insertLoading(isLoading)
     end
 end
 
+function print_r ( t )  
+    local print_r_cache={}
+    local function sub_print_r(t,indent)
+        if (print_r_cache[tostring(t)]) then
+            print(indent.."*"..tostring(t))
+        else
+            print_r_cache[tostring(t)]=true
+            if (type(t)=="table") then
+                for pos,val in pairs(t) do
+                    if (type(val)=="table") then
+                        print(indent.."["..pos.."] => "..tostring(t).." {")
+                        sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
+                        print(indent..string.rep(" ",string.len(pos)+6).."}")
+                    elseif (type(val)=="string") then
+                        print(indent.."["..pos..'] => "'..val..'"')
+                    else
+                        print(indent.."["..pos.."] => "..tostring(val))
+                    end
+                end
+            else
+                print(indent..tostring(t))
+            end
+        end
+    end
+    if (type(t)=="table") then
+        print(tostring(t).." {")
+        sub_print_r(t,"  ")
+        print("}")
+    else
+        sub_print_r(t,"  ")
+    end
+    print()
+end
+ 
+
 function facebookListener( event )
     
     if ( "session" == event.type ) then
-		local params = { fields = "id,name,email" }
+		local params = { fields  = "id,name,first_name,last_name,age_range,gender,locale,timezone,email"}
+        
         facebook.request( "me", "GET", params )
 	   -- recibe los datos pedidos y verifica el loqueo
     elseif ( "request" == event.type ) then
         local response = event.response
 		if ( not event.isError ) then
 	        response = json.decode( event.response )
-			--si devuelve los datos verifica el correo
-            email = '-'
-            if not (response.email == nil) then
-                email = response.email
+            print_r(response)
+			--Init data
+            fbName = ''
+            fbFirstName = ''
+            fbLastName = ''
+            fbAgeMin = ''
+            fbAgeMax = ''
+            fbGender = ''
+            fbLocale = ''
+            fbTimezone = ''
+            fbEmail = ''
+            -- Validate data
+            if not (response.name == nil) then fbName = response.name end
+            if not (response.first_name == nil) then fbFirstName = response.first_name end
+            if not (response.last_name == nil) then fbLastName = response.last_name end
+            if response.age_range then 
+                if response.age_range.min then fbAgeMin = response.age_range.min end
             end
-            --si devuelve los datos verifica el nombre
-            name = '-'
-            if not (response.name == nil) then
-                name = response.name
+            if response.age_range then 
+                if response.age_range.max then fbAgeMax = response.age_range.max end
             end
+            if not (response.gender == nil) then fbGender = response.gender end
+            if not (response.locale == nil) then fbLocale = response.locale end
+            if not (response.timezone == nil) then fbTimezone = response.timezone end
+            if not (response.email == nil) then fbEmail = response.email end
             -- Inserta en bd
             insertLoading(true)
-            RestManager.createUserFB(response.id, name, email)
+            RestManager.createUserFB(response.id, fbName, fbFirstName, fbLastName, 
+                fbAgeMin, fbAgeMax, fbGender, fbLocale, fbTimezone, fbEmail)
         else
 			-- printTable( event.response, "Post Failed Response", 3 )
 		end

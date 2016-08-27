@@ -13,8 +13,8 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    --local site = "http://192.168.1.102/tuki_ws/"
-    local site = "http://mytuki.com/api/"
+    local site = "http://tukicard.com/tuki_ws/"
+    --local site = "http://mytuki.com/api/"
 	
 	function urlencode(str)
           if (str) then
@@ -241,8 +241,19 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
-    RestManager.createUserFB = function(fbid, name, email )
-		local url = site.."mobile/createUserFB/format/json/fbid/"..fbid.."/email/"..urlencode(email).."/name/"..urlencode(name)
+    RestManager.createUserFB = function(fbid, fbName, fbFirstName, fbLastName, 
+                fbAgeMin, fbAgeMax, fbGender, fbLocale, fbTimezone, fbEmail )
+		local url = site.."mobile/createUserFB/format/json/fbid/"..fbid
+        if not(fbName == '') then url = url.."/name/"..urlencode(fbName) end
+        if not(fbFirstName == '') then url = url.."/firstName/"..urlencode(fbFirstName) end
+        if not(fbLastName == '') then url = url.."/lastName/"..urlencode(fbLastName) end
+        if not(fbAgeMin == '') then url = url.."/ageMin/"..urlencode(fbAgeMin) end
+        if not(fbAgeMax == '') then url = url.."/ageMax/"..urlencode(fbAgeMax) end
+        if not(fbGender == '') then url = url.."/gender/"..urlencode(fbGender) end
+        if not(fbLocale == '') then  url = url.."/locale/"..fbLocale end
+        if not(fbTimezone == '') then url = url.."/timezone/"..urlencode(fbTimezone) end
+        if not(fbEmail == '') then url = url.."/email/"..urlencode(fbEmail) end
+        
         local deviceID = system.getInfo( "deviceID" )
         url = url.."/deviceID/"..urlencode(deviceID)
     
@@ -552,6 +563,34 @@ local RestManager = {}
             return true
         end
         -- Do request
+        network.request( url, "GET", callback )
+	end
+
+    RestManager.setCity = function(idCity)
+		local url = site.."mobile/setCity/format/json/idUser/"..dbConfig.id.."/idCity/"..idCity
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
+    RestManager.getCities = function(search)
+		local url = site.."mobile/getCities/format/json/idUser/"..dbConfig.id.."/data/"..search
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                showCities(data.items)
+            end
+            return true
+        end
+        -- Do request
+        print(url)
         network.request( url, "GET", callback )
 	end
 
