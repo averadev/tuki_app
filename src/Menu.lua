@@ -190,13 +190,13 @@ function Menu:new()
         txtLCard:setFillColor( unpack(cWhite) )
         grpOptions:insert( txtLCard )
         local bgMenuUser2 = display.newRect( 134, 124, 133, 80 )
-        bgMenuUser2.alpha = .2
+        bgMenuUser2.alpha = .01
         bgMenuUser2.anchorX = 0
-        bgMenuUser2.screen = ""
+        bgMenuUser2.screen = "Cities"
         bgMenuUser2:setFillColor( .7 )
-        --bgMenuUser2:addEventListener( 'tap', changeScreen)
+        bgMenuUser2:addEventListener( 'tap', changeScreen)
         grpOptions:insert(bgMenuUser2)
-        local menuReload = display.newImage("img/icon/menuReload.png")
+        local menuReload = display.newImage("img/icon/menuCity.png")
         menuReload:translate(199, 120)
         grpOptions:insert( menuReload )
         local txtCCiudad = display.newText({
@@ -285,10 +285,6 @@ function Menu:new()
         txtTitle2:setFillColor( 1 )
         scrMMain:insert(txtTitle2)
         
-        local line3 = display.newLine(0, 240, 400, 240)
-        line3:setStrokeColor( 1, .3 )
-        line3.strokeWidth = 2
-        scrMMain:insert(line3)
         local bgMenu3 = display.newRect( 200, 200, 400, 60 )
         bgMenu3.alpha = .01
         bgMenu3.screen = "Rewards"
@@ -306,24 +302,7 @@ function Menu:new()
         txtTitle3:setFillColor( 1 )
         scrMMain:insert(txtTitle3)
         
-        local bgMenu4 = display.newRect( 200, 280, 400, 60 )
-        bgMenu4.alpha = .01
-        bgMenu4.screen = "Cities"
-        bgMenu4:setFillColor( .7 )
-        bgMenu4:addEventListener( 'tap', changeScreen)
-        scrMMain:insert(bgMenu4)
-        local menuCiudades = display.newImage("img/icon/menuCity.png")
-        menuCiudades:translate(66, 275)
-        scrMMain:insert( menuCiudades )
-        local txtTitle4 = display.newText({
-            text = "Cambiar Mi Ciudad", 
-            x = 260, y = 280, width = 300,
-            font = fLatoBold, fontSize = 20, align = "left"
-        })
-        txtTitle4:setFillColor( 1 )
-        scrMMain:insert(txtTitle4)
-        
-        scrMMain:setScrollHeight(310)
+        scrMMain:setScrollHeight(250)
         
         -- Border Right
         local borderRight = display.newRect( 398, midH, 4, intH )

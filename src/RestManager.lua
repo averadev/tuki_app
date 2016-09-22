@@ -13,8 +13,8 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    --local site = "http://tukicard.com/tuki_ws/"
-    local site = "http://mytuki.com/api/"
+    local site = "http://tukicard.com/tuki_ws/"
+    --local site = "http://mytuki.com/api/"
 	
 	function urlencode(str)
           if (str) then
@@ -427,6 +427,23 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
+    RestManager.isGiftRedem = function(idReward)
+		local url = site.."mobile/isGiftRedem/format/json/idUser/"..dbConfig.id.."/idReward/"..idReward
+        print(url)
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.success then
+                    isRedem()
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
     RestManager.getCommerces = function(filters)
 		local url = site.."mobile/getCommerces/format/json/idUser/"..dbConfig.id.."/filters/"..filters
         
@@ -475,7 +492,7 @@ local RestManager = {}
 	end
 
     RestManager.getCommerceFlow = function()
-		local url = site.."mobile/getCommerceFlow/format/json/idUser/1"
+		local url = site.."mobile/getCommerceFlow/format/json/idUser/"..dbConfig.id
         
         local function callback(event)
             if ( event.isError ) then
@@ -524,7 +541,7 @@ local RestManager = {}
 
     RestManager.getCommerce = function(idCommerce)
 		local url = site.."mobile/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce.."/idCity/1"
-        
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -590,7 +607,7 @@ local RestManager = {}
             return true
         end
         -- Do request
-        print(url)
+        
         network.request( url, "GET", callback )
 	end
 
@@ -622,6 +639,45 @@ local RestManager = {}
                     path = "assets/img/api/rewards/"
                 end
                 loadImage({idx = 0, name = "Message", path = path, items = data.items})
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+    
+    RestManager.getLocationCity = function(lat, long)
+		local url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="..lat..","..long.."&result_type=locality|country&key=AIzaSyCS_rZYTdUyi7w0rleSWpXU_cUpfdebpYY"
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                if data.results then
+                    if #data.results > 1 then
+                        if data.results[1].formatted_address then
+                            print(data.results[1].formatted_address)
+                            RestManager.getIdCity(data.results[1].formatted_address)
+                        end
+                    end
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
+
+    
+    RestManager.getIdCity = function(address)
+		local url = site.."mobile/getIdCity/format/json/address/"..urlencode(address)
+        print(url)
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                locIdCity = data.idCity
             end
             return true
         end

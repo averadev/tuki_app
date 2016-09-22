@@ -57,6 +57,8 @@ function setCity(event)
     iconCheck = display.newImage("img/icon/iconCheck.png")
     iconCheck:translate( -180, 0)
     t:insert( iconCheck )
+    -- Clear Home Memory
+    composer.removeScene( "src.Home" )
 end 
 
 function showCities(items)

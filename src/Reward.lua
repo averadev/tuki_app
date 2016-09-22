@@ -29,6 +29,7 @@ local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight 
 local idxReward
 local giftReden = false
+local isGift = false
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
@@ -138,6 +139,9 @@ function setReward(item)
     tools:setLoading(false)
     local yPosc = 60
     idxReward = item.id
+    if item.status == "-1" then
+        isGift = true
+    end
     
     local color = {tonumber(item.colorA1)/255, tonumber(item.colorA2)/255, tonumber(item.colorA3)/255}
     local bgTop = display.newRoundedRect(midW, yPosc, 440, 80, 10 )
@@ -465,6 +469,31 @@ function setRewardLogo(item)
     scrViewRe:insert( imgPBig )
 end
 
+function isRedem()
+    local grpIsRedem = display.newGroup()
+    grpIsRedem.alpha = 0
+    scrViewRe:insert( grpIsRedem )
+    
+    function setDesR(event)
+        return true
+    end
+    local bgRedem = display.newRoundedRect( midW, 590, 440, 60, 10 )
+    bgRedem:setFillColor( unpack(cGrayM) )
+    bgRedem:addEventListener( 'tap', setDesR)
+    grpIsRedem:insert(bgRedem)
+    
+    local lblRedem = display.newText({
+        text = "ESTE ARTICULO YA FUE CANJEADO", 
+        x = midW, y = 590,
+        font = fLatoBold,
+        fontSize = 24, align = "center"
+    })
+    lblRedem:setFillColor( unpack(cWhite) )
+    grpIsRedem:insert( lblRedem )
+    
+    transition.to( grpIsRedem, { alpha = 1, time = 1000 })
+end
+
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
@@ -473,7 +502,6 @@ function scene:create( event )
     local idReward = event.params.idReward
     giftReden = false
     if event.params.giftReden then
-        print("giftReden")
         giftReden = true
     end
     
@@ -507,6 +535,11 @@ function scene:show( event )
     if event.phase == "will" then 
         tools:showBubble(false)
         Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
+        -- Verificar regalos
+        --isGift = false
+        if isGift and not(giftReden) then
+            RestManager.isGiftRedem(idxReward)
+        end
     end
 end
 

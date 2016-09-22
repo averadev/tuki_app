@@ -32,7 +32,14 @@ local bottomLogin, loadLogin
 function toLoginFB(isWelcome)
     local scrLogin = "src.Home"
     if isWelcome then
-        scrLogin = "src.WelcomeHome"
+        if locIdCity == 0 or locIdCity == '0' then
+            scrLogin = "src."
+        else
+            RestManager.setCity(locIdCity)
+            scrLogin = "src.WelcomeHome"
+        end
+            
+        --
     else
         DBManager.updateAfiliated(1)
     end
@@ -112,7 +119,6 @@ function facebookListener( event )
         local response = event.response
 		if ( not event.isError ) then
 	        response = json.decode( event.response )
-            print_r(response)
 			--Init data
             fbName = ''
             fbFirstName = ''
@@ -414,6 +420,21 @@ function getSplash(i, parent, posY, postFix)
     end
 end
 
+local cityHandler = function( event )
+
+    -- Check for error (user may have turned off location services)
+    if ( event.errorCode ) then
+        native.showAlert( "GPS Location Error", event.errorMessage, {"OK"} )
+        print( "Location error: " .. tostring( event.errorMessage ) )
+    else
+        print("latitude "..event.latitude)
+        print("longitude "..event.longitude)
+        
+		Runtime:removeEventListener( "location", locationHandler )
+        RestManager.getLocationCity(event.latitude, event.longitude)
+    end
+end
+
 
 ---------------------------------------------------------------------------------
 -- OVERRIDING SCENES METHODS
@@ -538,6 +559,7 @@ function scene:create( event )
     
     -- Touch Listener
     screen:addEventListener( "touch", touchScreen )
+    Runtime:addEventListener( "location", cityHandler )
 end
 
 -- Called immediately after scene has moved onscreen:
@@ -546,6 +568,7 @@ end
 
 -- Remove Listener
 function scene:destroy( event )
+    Runtime:removeEventListener( "location", cityHandler )
     screen:removeEventListener( "touch", touchScreen )
 end
 
