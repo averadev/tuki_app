@@ -162,7 +162,7 @@ function setReward(item)
     local txtInfo1 = display.newText({
         text = item.name, 
         x = midW + 40, y = yPosc - 15, width = 320, 
-        font = fLatoBold,
+        font = fontBold,
         fontSize = 21, align = "left"
     })
     txtInfo1:setFillColor( unpack(cWhite) )
@@ -170,7 +170,7 @@ function setReward(item)
     local name = display.newText({
         text = item.commerce,     
         x = midW + 40, y = yPosc + 15, width = 320, 
-        font = fLatoRegular,
+        font = fontRegular,
         fontSize = 18, align = "left"
     })
     name:setFillColor( unpack(cWhite) )
@@ -180,7 +180,7 @@ function setReward(item)
     local txtInfo2 = display.newText({
         text = item.description, 
         x = midW, y = yPosc, width = 440, 
-        font = fLatoRegular,
+        font = fontRegular,
         fontSize = 16, align = "left"
     })
     txtInfo2:setFillColor( unpack(cGrayH) )
@@ -227,7 +227,7 @@ function setReward(item)
         local txtPoints1A = display.newText({
             text = item.userPoints, 
             x = 120, y = yPosc-7,
-            font = fLatoBold,
+            font = fontBold,
             fontSize = 32, align = "center"
         })
         txtPoints1A:setFillColor( unpack(cWhite) )
@@ -235,7 +235,7 @@ function setReward(item)
         local txtPoints1B = display.newText({
             text = "MIS PUNTOS", 
             x = 120, y = yPosc+15,
-            font = fLatoRegular,
+            font = fontRegular,
             fontSize = 12, align = "center"
         })
         txtPoints1B:setFillColor( unpack(cWhite) )
@@ -245,7 +245,7 @@ function setReward(item)
             local txtPoints2A = display.newText({
                 text = "GRATIS", 
                 x = 360, y = yPosc,
-                font = fLatoBold,
+                font = fontBold,
                 fontSize = 32, align = "center"
             })
             txtPoints2A:setFillColor( unpack(cWhite) )
@@ -254,7 +254,7 @@ function setReward(item)
             local txtPoints2A = display.newText({
                 text = item.points, 
                 x = 360, y = yPosc-7,
-                font = fLatoBold,
+                font = fontBold,
                 fontSize = 32, align = "center"
             })
             txtPoints2A:setFillColor( unpack(cWhite) )
@@ -262,7 +262,7 @@ function setReward(item)
             local txtPoints2B = display.newText({
                 text = "TUKS", 
                 x = 360, y = yPosc+15,
-                font = fLatoRegular,
+                font = fontRegular,
                 fontSize = 12, align = "center"
             })
             txtPoints2B:setFillColor( unpack(cWhite) )
@@ -283,7 +283,7 @@ function setReward(item)
             local lblRedem = display.newText({
                 text = "COMPRAR", 
                 x = midW, y = yPosc,
-                font = fLatoBold,
+                font = fontBold,
                 fontSize = 26, align = "center"
             })
             lblRedem:setFillColor( unpack(cWhite) )
@@ -318,7 +318,7 @@ function setReward(item)
         local txtPoints1A = display.newText({
             text = item.points, 
             x = 100, y = yPosc-7,
-            font = fLatoBold,
+            font = fontBold,
             fontSize = 32, align = "center"
         })
         txtPoints1A:setFillColor( unpack(cWhite) )
@@ -326,7 +326,7 @@ function setReward(item)
         local txtPoints1B = display.newText({
             text = "TUKS", 
             x = 100, y = yPosc+15,
-            font = fLatoRegular,
+            font = fontRegular,
             fontSize = 12, align = "center"
         })
         txtPoints1B:setFillColor( unpack(cWhite) )
@@ -334,7 +334,7 @@ function setReward(item)
         local txtJoinMessage = display.newText({
             text = "AÚN NO ESTAS AFILIADO A ESTE COMERCIO", 
             x = midW + 80, y = yPosc,
-            width = 200, font = fLatoBold,
+            width = 200, font = fontBold,
             fontSize = 16, align = "center"
         })
         txtJoinMessage:setFillColor( unpack(cGrayH) )
@@ -350,7 +350,7 @@ function setReward(item)
         local lblRedem = display.newText({
             text = "¡AFILIATE AHORA!", 
             x = midW, y = yPosc,
-            font = fLatoBold,
+            font = fontBold,
             fontSize = 26, align = "center"
         })
         lblRedem:setFillColor( unpack(cWhite) )
@@ -366,7 +366,7 @@ function setReward(item)
     local txtCommerce = display.newText({
         text = "IR A COMERCIO", 
         x = midW - 140, y = yPosc,
-        font = fLatoBold,
+        font = fontBold,
         fontSize = 16, align = "center"
     })
     txtCommerce:setFillColor( unpack(cGrayXH) )
@@ -388,7 +388,7 @@ function setReward(item)
     local txtShare = display.newText({
         text = "COMPARTIR", 
         x = midW + 90, y = yPosc,
-        font = fLatoBold,
+        font = fontBold,
         fontSize = 16, align = "center"
     })
     txtShare:setFillColor( unpack(cGrayXH) )
@@ -416,7 +416,7 @@ function setReward(item)
     local txtVigencia1 = display.newText({
         text = "Vigencia:", 
         x = 160, y = yPosc, width = 150, 
-        font = native.systemFont,
+        font = fontRegular,
         fontSize = 18, align = "left"
     })
     txtVigencia1:setFillColor( .3 )
@@ -424,7 +424,7 @@ function setReward(item)
     local txtVigencia2 = display.newText({
         text = item.vigencia, 
         x = 315, y = yPosc, width = 300, 
-        font = native.systemFontBold,
+        font = fontBold,
         fontSize = 18, align = "left"
     })
     txtVigencia2:setFillColor( .3 )
@@ -435,7 +435,7 @@ function setReward(item)
     local txtTerminos1 = display.newText({
         text = "Terminos y Condiciones:", 
         x = 240, y = yPosc, width = 400, 
-        font = native.systemFont,
+        font = fontRegular,
         fontSize = 18, align = "left"
     })
     txtTerminos1:setFillColor( .3 )
@@ -443,7 +443,7 @@ function setReward(item)
     local txtTerminos2 = display.newText({
         text = item.terms, 
         x = 240, y = yPosc + 15, width = 400, 
-        font = native.systemFont,
+        font = fontRegular,
         fontSize = 14, align = "left"
     })
     txtTerminos2.anchorY = 0
@@ -485,7 +485,7 @@ function isRedem()
     local lblRedem = display.newText({
         text = "ESTE ARTICULO YA FUE CANJEADO", 
         x = midW, y = 590,
-        font = fLatoBold,
+        font = fontBold,
         fontSize = 24, align = "center"
     })
     lblRedem:setFillColor( unpack(cWhite) )

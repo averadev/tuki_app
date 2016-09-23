@@ -187,7 +187,7 @@ function setListWelcome(items)
             local name = display.newText({
                 text = items[z].name,     
                 x = poscLabels, y = -15, width = 270, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 22, align = "left"
             })
             name:setFillColor( unpack(cGrayXH) )
@@ -195,7 +195,7 @@ function setListWelcome(items)
             local concept = display.newText({
                 text = items[z].description, 
                 x = poscLabels, y = 10, width = 270, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 16, align = "left"
             })
             concept:setFillColor( unpack(cGrayH) )
@@ -225,7 +225,7 @@ function scene:create( event )
     local txt1 = display.newText({
         text = "¡AFILIATE!",
         x = midW, y = h + 25,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 30, align = "center"
     })
     txt1:setFillColor( unpack(cGrayXH) )
@@ -234,7 +234,7 @@ function scene:create( event )
     txtW2 = display.newText({
         text = "Para comenzar afiliate a minimo",
         x = midW, y = h + 60,
-        font = fLatoItalic,   
+        font = fontLight,   
         fontSize = 20, align = "center"
     })
     txtW2:setFillColor( unpack(cGrayXH) )
@@ -243,7 +243,7 @@ function scene:create( event )
     txtNumber = display.newText({
         text = "3",
         x = midW - 148, y = h + 84,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 25, align = "center"
     })
     txtNumber:setFillColor( unpack(cGrayXH) )
@@ -252,7 +252,7 @@ function scene:create( event )
     txtW3 = display.newText({
         text = "  de nuestros comercios inscritos.",
         x = midW, y = h + 85,
-        font = fLatoItalic,   
+        font = fontLight,   
         fontSize = 20, align = "center"
     })
     txtW3:setFillColor( unpack(cGrayXH) )
@@ -282,7 +282,7 @@ function scene:create( event )
     local txtNear2 = display.newText({
         text = "CONTINUAR",
         x = midW + 35, y = intH - 45,
-        font = fLatoBold, width = 250,  
+        font = fontBold, width = 250,  
         fontSize = 20, align = "left"
     })
     txtNear2:setFillColor( unpack(cWhite) )

@@ -52,7 +52,7 @@ function scene:create( event )
     local txt1 = display.newText({
         text = "¡LISTO!",
         x = midW, y = midH - 50,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 30, align = "center"
     })
     txt1:setFillColor( unpack(cGrayXH) )
@@ -61,7 +61,7 @@ function scene:create( event )
     local txt2 = display.newText({
         text = "Ahora puedes comenzar",
         x = midW, y = midH-15,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 23, align = "center"
     })
     txt2:setFillColor( unpack(cGrayXH) )
@@ -70,7 +70,7 @@ function scene:create( event )
     local txt3 = display.newText({
         text = "a ganar recompensas por tus visitas",
         x = midW, y = midH+15,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 23, align = "center"
     })
     txt3:setFillColor( unpack(cGrayXH) )
@@ -90,7 +90,7 @@ function scene:create( event )
     local txtInter2 = display.newText({
         text = "ENTRAR",
         x = midW - 50, y = midH + 120,
-        font = fLatoBold, width = 150,
+        font = fontBold, width = 150,
         fontSize = 20, align = "right"
     })
     txtInter2:setFillColor( unpack(cWhite) )

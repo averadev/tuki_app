@@ -478,7 +478,7 @@ function scene:create( event )
         text = '',
         y = initY + 30,
         x = midW + 50, width = 350 - wCTitle,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 35, align = "left"
     })
     txtCommerce:setFillColor( unpack(cWhite) )
@@ -487,7 +487,7 @@ function scene:create( event )
         text = '',
         y = initY + 60,
         x = midW + 53, width = 350 - wCTitle,
-        font = fLatoItalic,   
+        font = fontLight,   
         fontSize = 18, align = "left"
     })
     txtCommerceDesc:setFillColor( unpack(cWhite) )
@@ -534,7 +534,7 @@ function scene:create( event )
         text = '',     
         y = initY - 70 + yHPoints,
         x = xLCircle, width = 150,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 70 - hHPoints, align = "center"
     })
     txtPoints:setFillColor( unpack(cWhite) )
@@ -543,7 +543,7 @@ function scene:create( event )
         text = 'TUKS', 
         y = initY - 25,
         x = xLCircle, width = 150,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 30 - hHTuks, align = "center"
     })
     txtTuks.alpha = .7
@@ -564,7 +564,7 @@ function scene:create( event )
             text = '',   
             y = initY + 40,
             x = midW, width = wCmp -30,
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 25, align = "left"
         })
         txtName:setFillColor( unpack(cWhite) )
@@ -576,7 +576,7 @@ function scene:create( event )
             text = '',   
             y = initY - 40,
             x = midW + 60 - xxLCircle, width = wCmp - 150,
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 18, align = "left"
         })
         txtName:setFillColor( unpack(cWhite) )

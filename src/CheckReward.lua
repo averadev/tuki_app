@@ -63,7 +63,7 @@ function scene:create( event )
     local lbl2 = display.newText({
         text = "Muestra este codigó en tu próxima visita",
         x = midW, y = xTopCode - 45, width = 400, 
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 20, align = "center"
     })
     lbl2:setFillColor( unpack(cWhite) )
@@ -72,7 +72,7 @@ function scene:create( event )
     local lbl3 = display.newText({
         text = "Canjealo con la Tablet-Tuki y obtén tu recompensa",
         x = midW, y = xBottomCode + 30, width = 400, 
-        font = fLatoRegular,   
+        font = fontRegular,   
         fontSize = 18, align = "center"
     })
     lbl3:setFillColor( unpack(cWhite) )

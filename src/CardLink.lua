@@ -76,7 +76,7 @@ function showMess(isLink, message)
     local titleLoading = display.newText({
         text = message,     
         x = midW, y = midH + 30, width = 380,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 25, align = "center"
     })
     titleLoading:setFillColor( .9 )
@@ -111,7 +111,7 @@ function scene:create( event )
     local lblTitle = display.newText({
         text = "¡Liga una tarjeta TUKI a tu cuenta y LLEVALA SIEMPRE CONTIGO!", 
         x = midW, y = midH - 100, width = 440, 
-        font = fLatoBold, fontSize = 26, align = "center"
+        font = fontBold, fontSize = 26, align = "center"
     })
     lblTitle:setFillColor( unpack(cBlueH) )
     screen:insert( lblTitle )
@@ -122,14 +122,14 @@ function scene:create( event )
     local lblDesc1 = display.newText({
         text = txtDesc1, 
         x = midW, y = midH - 20, width = 400, 
-        font = fLatoRegular, fontSize = 18
+        font = fontRegular, fontSize = 18
     })
     lblDesc1:setFillColor( unpack(cBlueH) )
     screen:insert( lblDesc1 )
     local lblDesc2 = display.newText({
         text = txtDesc2, 
         x = midW, y = midH + 20, width = 400, 
-        font = fLatoBold, fontSize = 18
+        font = fontBold, fontSize = 18
     })
     lblDesc2:setFillColor( unpack(cBlueH) )
     screen:insert( lblDesc2 )
@@ -147,7 +147,7 @@ function scene:create( event )
     local lblRedem = display.newText({
         text = "LIGAR TARJETA", 
         x = midW, y = midH + 100,
-        font = fLatoBold,
+        font = fontBold,
         fontSize = 26, align = "center"
     })
     lblRedem:setFillColor( unpack(cWhite) )

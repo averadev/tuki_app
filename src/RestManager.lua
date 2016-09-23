@@ -63,8 +63,10 @@ local RestManager = {}
             setMessage(obj.items[1])
         elseif obj.name == "RetriveQR" then
             local item = obj.items[1]
+            local mask = graphics.newMask( "img/deco/qrMask.jpg" )
             local imagen = display.newImage( item.image, system.TemporaryDirectory )
             item.parent:insert(imagen)
+            item:setMask( mask )
             imagen.width = item.w
             imagen.height = item.h
             imagen:translate(item.x, item.y)
@@ -142,8 +144,10 @@ local RestManager = {}
         local fhd = io.open( path )
         if fhd then
             fhd:close()
+            local mask = graphics.newMask( "img/deco/qrMask.jpg" )
             local imagen = display.newImage( key..".png", system.TemporaryDirectory )
             parent:insert(imagen)
+            imagen:setMask( mask )
             imagen.width = w
             imagen.height = h
             imagen:translate(x, y)

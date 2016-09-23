@@ -66,7 +66,7 @@ function setListMessages(rewards)
             local lblInfo = display.newText({
                 text = txtInfo,     
                 x = 180, y = yPosc, width = 300, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 17, align = "left"
             })
             lblInfo:setFillColor( unpack(cWhite) )
@@ -124,7 +124,7 @@ function setListMessages(rewards)
             local lblFecha = display.newText({
                 text = rewards[z].fecha,     
                 x = 120, y = -40, width = 200, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 14, align = "right"
             })
             lblFecha:setFillColor( unpack(cTurquesa) )
@@ -133,7 +133,7 @@ function setListMessages(rewards)
             local lblFrom = display.newText({
                 text = "De: "..rewards[z].from,     
                 x = 50, y = -15, width = 350, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 17, align = "left"
             })
             lblFrom:setFillColor( .6 )
@@ -142,7 +142,7 @@ function setListMessages(rewards)
             local lblName = display.newText({
                 text = rewards[z].name, 
                 x = 50, y = 15, width = 350,
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 19, align = "left"
             })
             lblName:setFillColor( .3 )

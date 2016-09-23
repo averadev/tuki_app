@@ -34,10 +34,10 @@ function Tools:new()
         bgShadow:setFillColor( 0 )
         self:insert(bgShadow)
         
-        local toolbar = display.newRect( 0, 0, display.contentWidth, 80 )
+        local toolbar = display.newRect( 0, 59, display.contentWidth, 2 )
         toolbar.anchorX = 0
         toolbar.anchorY = 0
-        toolbar:setFillColor( .21 )
+        toolbar:setFillColor( unpack(cBTur) )
         self:insert(toolbar)
         
         headLogo = display.newGroup()
@@ -48,16 +48,9 @@ function Tools:new()
         headLogo:insert( iconLogo )
         
         if not isWelcome then
-
-            local btnMenu = display.newRect( 0, 0, 80, 80 )
-            btnMenu.anchorX = 0
-            btnMenu.anchorY = 0
-            btnMenu:setFillColor( unpack(cGrayXH) )
-            btnMenu:addEventListener( 'tap', showMenu)
-            self:insert(btnMenu)
-
             local headMenu = display.newImage("img/icon/headMenu.png")
-            headMenu:translate(40, 40)
+            headMenu:translate(40, 30)
+            headMenu:addEventListener( 'tap', showMenu)
             self:insert( headMenu )
             
              -- Get Menu
@@ -69,55 +62,84 @@ function Tools:new()
     end
     
     -------------------------------------
+    -- Creamos la barra de navegacion
+    -- @param scrView objeto contenedor
+    ------------------------------------ 
+    function self:buildNavBar(scrView)
+        
+        local grpNavBar = display.newGroup()
+        self:insert(grpNavBar)
+        
+        local btnBack = display.newRect( 120, 85, 240, 50 )
+        btnBack:setFillColor( unpack(cBPur) )
+        btnBack:addEventListener( 'tap', backScreen)
+        grpNavBar:insert(btnBack)
+        local txtBack = display.newText({
+            text = "REGRESAR",     
+            x = 120, y = 85, width = 240,
+            font = fontSemiBold,   
+            fontSize = 16, align = "center"
+        })
+        grpNavBar:insert(txtBack)
+        
+        local btnHome = display.newRect( 360, 85, 240, 50 )
+        btnHome:setFillColor( unpack(cBTur) )
+        btnHome:addEventListener( 'tap', toHome)
+        grpNavBar:insert(btnHome)
+        local txtBack = display.newText({
+            text = "VOLVER AL INICIO",     
+            x = 360, y = 85, width = 240,
+            font = fontSemiBold,   
+            fontSize = 16, align = "center"
+        })
+        grpNavBar:insert(txtBack)
+        
+        grpNavBar:toBack()
+    end
+    
+    -------------------------------------
     -- Creamos el bottom bar
     ------------------------------------ 
     function self:buildBottomBar()
         local intH = display.contentHeight - h
         
-        local toolbar = display.newRect( 0, intH - 80, display.contentWidth, 80 )
+        local toolbar = display.newRect( 0, intH - 60, display.contentWidth, 60 )
         toolbar.anchorX = 0
         toolbar.anchorY = 0
         toolbar:setFillColor( 0 )
         self:insert(toolbar)
         
-        local section1 = display.newRect( 0, intH - 80, 96, 80 )
+        local section1 = display.newRect( 0, intH - 60, 96, 60 )
         section1.anchorX = 0
         section1.anchorY = 0
-        section1:setFillColor( .24 )
         section1.screen = 'Wallet'
         section1:addEventListener( 'tap', toScreen)
         self:insert(section1)
-        local section2 = display.newRect( 96, intH - 80, 96, 80 )
+        local section2 = display.newRect( 96, intH - 60, 96, 60 )
         section2.anchorX = 0
         section2.anchorY = 0
-        section2:setFillColor( .21 )
         section2.screen = 'Messages'
         section2:addEventListener( 'tap', toScreen)
         self:insert(section2)
-        local section3 = display.newRect( 192, intH - 80, 96, 80 )
+        local section3 = display.newRect( 192, intH - 60, 96, 60 )
         section3.anchorX = 0
         section3.anchorY = 0
-        section3:setFillColor( .21 )
         self:insert(section3)
-        local section4 = display.newRect( 288, intH - 80, 96, 80 )
+        local section4 = display.newRect( 288, intH - 60, 96, 60 )
         section4.anchorX = 0
         section4.anchorY = 0
-        section4:setFillColor( .21 )
         section4.screen = 'Map'
         section4:addEventListener( 'tap', toScreen)
         self:insert(section4)
-        local section5 = display.newRect( display.contentWidth - 96, intH - 80, 96, 80 )
+        local section5 = display.newRect( display.contentWidth - 96, intH - 60, 96, 60 )
         section5.anchorX = 0
         section5.anchorY = 0
-        section5:setFillColor( .24 )
         section5.screen = 'Favs'
         section5:addEventListener( 'tap', toScreen)
         self:insert(section5)
         
         local iconCheckIn = display.newImage("img/icon/iconCheckIn.png")
-        iconCheckIn:translate(245, intH - 60 )
-        iconCheckIn.width = 95
-        iconCheckIn.height = 95
+        iconCheckIn:translate(245, intH - 53 )
         iconCheckIn.screen = 'CheckIn'
         iconCheckIn:addEventListener( 'tap', toScreen)
         self:insert( iconCheckIn )
@@ -129,16 +151,16 @@ function Tools:new()
         end
         
         local bottomWallet = display.newImage("img/icon/bottomWallet.png")
-        bottomWallet:translate(43, intH - 40)
+        bottomWallet:translate(43, intH - 30)
         self:insert( bottomWallet )
         local bottomMail = display.newImage("img/icon/bottomMail.png")
-        bottomMail:translate(150, intH - 40)
+        bottomMail:translate(150, intH - 30)
         self:insert( bottomMail )
         local bottomMap = display.newImage("img/icon/bottomMap.png")
-        bottomMap:translate(333, intH - 40)
+        bottomMap:translate(333, intH - 30)
         self:insert( bottomMap )
         local bottomFav = display.newImage("img/icon/bottomFav.png")
-        bottomFav:translate(435, intH - 40)
+        bottomFav:translate(435, intH - 30)
         self:insert( bottomFav )
     end
     
@@ -167,7 +189,7 @@ function Tools:new()
             local txt = display.newText({
                 text = myWallet,     
                 x = 63, y = intH - 81, width = 30,
-                font = fLatoBold, fontSize = 14, align = "center"
+                font = fontBold, fontSize = 14, align = "center"
             })
             txt:setFillColor( 1 )
             grpBubble:insert(txt)
@@ -185,146 +207,6 @@ function Tools:new()
         end
     end
     
-    
-    -------------------------------------
-    -- Asignamos valores a la barra de puntos
-    -- @param data valores
-    ------------------------------------ 
-    function self:setPointsBar(data)
-        
-        local bg = display.newRect( 52, 120, 105, 80 )
-        bg:setFillColor( .7 )
-        bg.alpha = .01
-        bg.screen = 'Points'
-        bg:addEventListener( 'tap', toScreen)
-        self:insert(bg)
-        
-        Globals.menu:updateTuks(data.total)
-        local txtTitle = display.newText({
-            text = data.total,     
-            x = 55, y = 115,
-            font = native.systemFontBold,   
-            fontSize = 24, align = "center"
-        })
-        txtTitle:setFillColor( 0 )
-        self:insert(txtTitle)
-        local txtSubTitle = display.newText({
-            text = "Mis Puntos",     
-            x = 55, y = 137,
-            font = native.systemFont,   
-            fontSize = 12, align = "center"
-        })
-        txtSubTitle:setFillColor( .3 )
-        self:insert(txtSubTitle)
-        
-        for z = 1, #data.items, 1 do 
-            local xPosc = z * 105
-            
-            local bgCommerce = display.newRect( 52 + xPosc, 120, 105, 80 )
-            bgCommerce:setFillColor( .7 )
-            bgCommerce.alpha = .01
-            bgCommerce.idCommerce = data.items[z].idCommerce
-            bgCommerce.screen = 'Partner'
-            bgCommerce:addEventListener( 'tap', tapCommerce)
-            self:insert(bgCommerce)
-            
-            local txtTitle = display.newText({
-                text = data.items[z].points,     
-                x = xPosc + 55, y = 115,
-                font = native.systemFontBold,   
-                fontSize = 24, align = "center"
-            })
-            txtTitle:setFillColor( 0 )
-            self:insert(txtTitle)
-            local txtSubTitle = display.newText({
-                text = data.items[z].name,     
-                x = xPosc + 55, y = 137,
-                font = native.systemFont,   
-                fontSize = 12, align = "center"
-            })
-            txtSubTitle:setFillColor( .3 )
-            self:insert(txtSubTitle)
-            
-            local line = display.newLine(xPosc, 80, xPosc, 160)
-            line:setStrokeColor( .58, .1 )
-            line.strokeWidth = 2
-            self:insert(line)
-        end
-        
-        local line = display.newLine(420, 80, 420, 160)
-        line:setStrokeColor( .58, .1 )
-        line.strokeWidth = 2
-        self:insert(line)
-        
-        local bg = display.newRect( 450, 120, 60, 80 )
-        bg:setFillColor( .7 )
-        bg.alpha = .01
-        bg.screen = 'Joined'
-        bg:addEventListener( 'tap', toScreen)
-        self:insert(bg)
-        
-        local headMore = display.newImage("img/icon/headMore.png")
-        headMore:translate(display.contentWidth - 30, 120)
-        self:insert( headMore )
-        
-        headLogo:toFront()
-    end
-    
-    -------------------------------------
-    -- Creamos la barra de navegacion
-    -- @param scrView objeto contenedor
-    ------------------------------------ 
-    function self:buildNavBar(scrView)
-        
-        local grpNavBar = display.newGroup()
-        self:insert(grpNavBar)
-        
-        local toolbar = display.newRect( 0, 80, 480, 60, 10 )
-        toolbar.anchorX = 0
-        toolbar.anchorY = 0
-        toolbar:setFillColor( .7 )
-        grpNavBar:insert(toolbar)
-        
-        local btnBack = display.newRect( 120, 110, 240, 60 )
-        btnBack:setFillColor( .91 )
-        btnBack:addEventListener( 'tap', backScreen)
-        grpNavBar:insert(btnBack)
-        local navBack = display.newImage("img/icon/navBack.png")
-        navBack:translate( 60, 110 )
-        grpNavBar:insert( navBack )
-        local txtBack = display.newText({
-            text = "REGRESAR",     
-            x = 180, y = 110, width = 150,
-            font = native.systemFont,   
-            fontSize = 14, align = "left"
-        })
-        txtBack:setFillColor( .68 )
-        grpNavBar:insert(txtBack)
-        
-        local btnHome = display.newRect( 360, 110, 240, 60 )
-        btnHome:setFillColor( .91 )
-        btnHome:addEventListener( 'tap', toHome)
-        grpNavBar:insert(btnHome)
-        local navHome = display.newImage("img/icon/navHome.png")
-        navHome:translate( 435, 105 )
-        grpNavBar:insert( navHome )
-        local txtBack = display.newText({
-            text = "VOLVER AL INICIO",     
-            x = 330, y = 110, width = 150,
-            font = native.systemFont,   
-            fontSize = 14, align = "right"
-        })
-        txtBack:setFillColor( .68 )
-        grpNavBar:insert(txtBack)
-        
-        local line = display.newLine(240, 80, 240, 140)
-        line:setStrokeColor( .78, .3 )
-        line.strokeWidth = 2
-        grpNavBar:insert(line)
-        
-        grpNavBar:toBack()
-    end
-    
     -------------------------------------
     -- Muestra loading sprite
     -- @param arrayObj lista
@@ -340,7 +222,7 @@ function Tools:new()
         local titleLoading = display.newText({
             text = info, 
             x = midW, y = (parent.height / 2) + 40, width = intW,
-            font = native.systemFontBold,   
+            font = fontSemiBold,   
             fontSize = 18, align = "center"
         })
         titleLoading:setFillColor( .3, .3, .3 )
@@ -416,7 +298,7 @@ function Tools:new()
             local titleLoading = display.newText({
                 text = "Loading...",     
                 x = (display.contentWidth / 2) + 5, y = (parent.height / 2) + 60, width = intW,
-                font = native.systemFontBold,   
+                font = fontSemiBold,   
                 fontSize = 18, align = "center"
             })
             titleLoading:setFillColor( .3, .3, .3 )
@@ -552,7 +434,7 @@ function Tools:new()
             filters[z].txt = display.newText({
                 text = Globals.filtros[z][1], 
                 x = xPosc, y = 90, width = 85,
-                font = native.systemFontBold,   
+                font = fontSemiBold,   
                 fontSize = 10, align = "center"
             })
             filters[z].txt:setFillColor( .5 )

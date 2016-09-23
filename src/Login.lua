@@ -233,7 +233,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl1 = display.newText( {
             text = "BIENVENIDO A:",
             x = midW, y = midH + posY[i][1],
-            font = fLatoBold,
+            font = fontBold,
             fontSize = 55, align = "center"
         })
         lbl1:setFillColor( unpack(cPurpleL) )
@@ -242,7 +242,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl2 = display.newText( {
             text = "¡Los Programas de Lealtad de tus",
             x = midW, y = midH + posY[i][2],
-            font = fLatoRegular,  width = 400,
+            font = fontRegular,  width = 400,
             fontSize = 34, align = "center"
         })
         lbl2:setFillColor( unpack(cBlueH) )
@@ -251,7 +251,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl3 = display.newText( {
             text = "COMERCIOS FAVORITOS!",
             x = midW, y = midH + posY[i][3],
-            font = fLatoBold,  
+            font = fontBold,  
             fontSize = 35, align = "center"
         })
         lbl3:setFillColor( unpack(cBlueH) )
@@ -265,7 +265,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl1 = display.newText( {
             text = "Afíliate",
             x = midW, y = intH - posY[i][1],
-            font = fLatoBold,  
+            font = fontBold,  
             fontSize = 60, align = "center"
         })
         lbl1:setFillColor( unpack(cPurpleL) )
@@ -274,7 +274,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl2 = display.newText( {
             text = "A tus COMERCIOS FAVORITOS",
             x = midW, y = intH - posY[i][2],
-            font = fLatoBold, 
+            font = fontBold, 
             fontSize = 28, align = "center"
         })
         lbl2:setFillColor( unpack(cBlueH) )
@@ -299,7 +299,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl1 = display.newText( {
             text = "VISITA",
             x = 350, y = intH - posY[i][3],
-            font = fLatoBold,  
+            font = fontBold,  
             fontSize = 50, align = "center"
         })
         lbl1:setFillColor( unpack(cPurpleL) )
@@ -308,7 +308,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl2 = display.newText( {
             text = "Comercios Afiliados",
             x = 350, y = intH - posY[i][4],
-            font = fLatoBold, 
+            font = fontBold, 
             fontSize = 26, align = "center"
         })
         lbl2:setFillColor( unpack(cTurquesa) )
@@ -317,7 +317,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl3 = display.newText( {
             text = "REALIZA",
             x = 350, y = intH - posY[i][5],
-            font = fLatoBold,  
+            font = fontBold,  
             fontSize = 30, align = "center"
         })
         lbl3:setFillColor( unpack(cPurpleL) )
@@ -326,7 +326,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl4 = display.newText( {
             text = "CHECK IN",
             x = 350, y = intH - posY[i][6],
-            font = fLatoBold, 
+            font = fontBold, 
             fontSize = 50, align = "center"
         })
         lbl4:setFillColor( unpack(cWhite) )
@@ -335,7 +335,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl5 = display.newText( {
             text = "SUMA",
             x = 350, y = intH - posY[i][7],
-            font = fLatoBold, 
+            font = fontBold, 
             fontSize = 65, align = "center"
         })
         lbl5:setFillColor( unpack(cWhite) )
@@ -344,7 +344,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl6 = display.newText( {
             text = "PUNTOS",
             x = 350, y = intH - posY[i][8],
-            font = fLatoBold, 
+            font = fontBold, 
             fontSize = 48, align = "center"
         })
         lbl6:setFillColor( unpack(cWhite) )
@@ -376,7 +376,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl1 = display.newText( {
             text = "CANJEA",
             x = 120, y = midH + posY[i][3],
-            font = fLatoBold,  
+            font = fontBold,  
             fontSize = 50, align = "center"
         })
         lbl1:setFillColor( unpack(cWhite) )
@@ -385,7 +385,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl2 = display.newText( {
             text = "PUNTOS",
             x = 120, y = midH + posY[i][4],
-            font = fLatoBold, 
+            font = fontBold, 
             fontSize = 47, align = "center"
         })
         lbl2:setFillColor( unpack(cWhite) )
@@ -394,7 +394,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl3 = display.newText( {
             text = "¡Por",
             x = 370, y = midH + posY[i][5],
-            font = fLatoBold, width = 250,
+            font = fontBold, width = 250,
             fontSize = 25, align = "left"
         })
         lbl3:setFillColor( unpack(cWhite) )
@@ -403,7 +403,7 @@ function getSplash(i, parent, posY, postFix)
         local lbl4 = display.newText( {
             text = "Recompensas!",
             x = 370, y = midH + posY[i][6],
-            font = fLatoBold, width = 250,
+            font = fontBold, width = 250,
             fontSize = 35, align = "left"
         })
         lbl4:setFillColor( unpack(cWhite) )
@@ -517,7 +517,7 @@ function scene:create( event )
     local lblBtn = display.newText( {
         text = "Ingresar con FACEBOOK",
         x = midW + 35, y = intH - 100,
-        font = fLatoBold,  
+        font = fontBold,  
         fontSize = 20, align = "center"
     })
 	lblBtn:setFillColor( unpack(cWhite) )
@@ -532,7 +532,7 @@ function scene:create( event )
     
     local lblBottom = display.newText( {
         text = "INGRESA CON USERNAME Ó EMAIL",
-        x = midW, y = intH - 35, font = fLatoBold,
+        x = midW, y = intH - 35, font = fontBold,
         fontSize = 14, align = "center"
     })
     lblBottom:setFillColor( unpack(cWhite) )

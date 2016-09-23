@@ -163,7 +163,7 @@ function setCommerce(item, rewards)
         text = item.name,
         y = yPosc + 27,
         x = midW + 60, width = 340,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 30, align = "left"
     })
     txtCommerce:setFillColor( unpack(cWhite) )
@@ -172,7 +172,7 @@ function setCommerce(item, rewards)
         text = item.description,
         y = yPosc + 55,
         x = midW + 63, width = 340,
-        font = fLatoItalic,   
+        font = fontLight,   
         fontSize = 18, align = "left"
     })
     txtCommerceDesc:setFillColor( unpack(cWhite) )
@@ -213,7 +213,7 @@ function setCommerce(item, rewards)
         local lblDescT = display.newText({
             text = "TUKS", 
             x = -158, y = 23, width = 70, 
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 23, align = "center"
         })
         lblDescT:setFillColor( 1 )
@@ -221,7 +221,7 @@ function setCommerce(item, rewards)
         local lblDesc1 = display.newText({
             text = "Recompensas Disponibles", 
             x = 60, y = -30, width = 200, 
-            font = fLatoRegular,   
+            font = fontRegular,   
             fontSize = 14, align = "left"
         })
         lblDesc1:setFillColor( unpack(cGrayH) )
@@ -229,7 +229,7 @@ function setCommerce(item, rewards)
         local lblDesc2 = display.newText({
             text = "Visitas Realizadas", 
             x = 60, y = 0, width = 200, 
-            font = fLatoRegular,   
+            font = fontRegular,   
             fontSize = 14, align = "left"
         })
         lblDesc2:setFillColor( unpack(cGrayH) )
@@ -237,7 +237,7 @@ function setCommerce(item, rewards)
         local lblDesc3 = display.newText({
             text = "Ultima Visita", 
             x = 60, y = 30, width = 200, 
-            font = fLatoRegular,   
+            font = fontRegular,   
             fontSize = 14, align = "left"
         })
         lblDesc3:setFillColor( unpack(cGrayH) )
@@ -256,7 +256,7 @@ function setCommerce(item, rewards)
         local lblTuks = display.newText({
             text = item.points, 
             x = -158, y = -12, width = 70, 
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 40, align = "center"
         })
         lblTuks:setFillColor( 1 )
@@ -268,7 +268,7 @@ function setCommerce(item, rewards)
         local lblValue0 = display.newText({
             text = item.avaliable, 
             x = xSpc, y = -30, width = 150, 
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 14, align = "right"
         })
         lblValue0:setFillColor( unpack(cPurpleL) )
@@ -276,7 +276,7 @@ function setCommerce(item, rewards)
         local lblValue1 = display.newText({
             text = "/"..item.rewards, 
             x = 140, y = -30, width = 150, 
-            font = fLatoRegular,   
+            font = fontRegular,   
             fontSize = 14, align = "right"
         })
         lblValue1:setFillColor( unpack(cGrayH) )
@@ -284,7 +284,7 @@ function setCommerce(item, rewards)
         local lblValue2 = display.newText({
             text = item.visits, 
             x = 140, y = 0, width = 150, 
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 14, align = "right"
         })
         lblValue2:setFillColor( unpack(cPurpleL) )
@@ -293,7 +293,7 @@ function setCommerce(item, rewards)
             local lblValue3 = display.newText({
                 text = item.lastVisit, 
                 x = 140, y = 30, width = 150, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 14, align = "right"
             })
             lblValue3:setFillColor( unpack(cPurpleL) )
@@ -309,7 +309,7 @@ function setCommerce(item, rewards)
         text = item.detail,
         y = yPosc + 10,
         x = midW, width = 420,
-        font = fLatoItalic,   
+        font = fontLight,   
         fontSize = 18, align = "left"
     })
     txtCommerceDetail.anchorY = 0
@@ -325,7 +325,7 @@ function setCommerce(item, rewards)
         text = item.address,
         y = yPosc,
         x = midW + 25, width = 400,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 18, align = "left"
     })
     txtContact1:setFillColor( unpack(cGrayXH) )
@@ -342,7 +342,7 @@ function setCommerce(item, rewards)
             text = item.phone,
             y = yPosc,
             x = midW + 25, width = 400,
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 18, align = "left"
         })
         txtContact2.url = "tel:"..item.phone
@@ -359,7 +359,7 @@ function setCommerce(item, rewards)
             text = item.web,
             y = yPosc,
             x = midW + 25, width = 400,
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 18, align = "left"
         })
         txtContact3.url = item.web
@@ -387,7 +387,7 @@ function setCommerce(item, rewards)
         local lblRedem = display.newText({
             text = "¡AFILIATE AHORA!", 
             x = midW - 25, y = yPosc,
-            font = fLatoBold,
+            font = fontBold,
             fontSize = 26, align = "center"
         })
         lblRedem:setFillColor( unpack(cWhite) )
@@ -402,7 +402,7 @@ function setCommerce(item, rewards)
     local lblTitle1 = display.newText({
         text = "RECOMPENSAS DISPONIBLES",     
         x = midW, y = yPosc, width = 460,
-        font = native.systemFont,
+        font = fontRegular,
         fontSize = 15, align = "left"
     })
     lblTitle1:setFillColor( 1 )
@@ -465,7 +465,7 @@ function newReward(reward, lastYP, cpoints)
         local points = display.newText({
             text = "GRATIS", 
             x = -127, y = 0,
-            font = native.systemFontBold,   
+            font = fontBold,   
             fontSize = 20, align = "center"
         })
         points:rotate( -45 )
@@ -475,7 +475,7 @@ function newReward(reward, lastYP, cpoints)
         local points = display.newText({
             text = reward.points, 
             x = -126, y = -7,
-            font = native.systemFontBold,   
+            font = fontBold,   
             fontSize = 26, align = "center"
         })
         points:setFillColor( 1 )
@@ -483,7 +483,7 @@ function newReward(reward, lastYP, cpoints)
         local points2 = display.newText({
             text = "PUNTOS", 
             x = -126, y = 18,
-            font = native.systemFontBold,   
+            font = fontBold,   
             fontSize = 14, align = "center"
         })
         points2:setFillColor( 1 )
@@ -493,7 +493,7 @@ function newReward(reward, lastYP, cpoints)
     local name = display.newText({
         text = reward.name, 
         x = 70, y = 0, width = 280,
-        font = native.systemFont,   
+        font = fontRegular,   
         fontSize = 19, align = "left"
     })
     name:setFillColor( .3 )
@@ -564,7 +564,7 @@ function setCommercePhotos(photos)
             local lblTitle1 = display.newText({
                 text = "GALERIA",     
                 x = midW, y = yPosc, width = 460,
-                font = native.systemFont,
+                font = fontRegular,
                 fontSize = 15, align = "left"
             })
             lblTitle1:setFillColor( 1 )
@@ -589,7 +589,7 @@ function setCommercePhotos(photos)
             local lblTitle1 = display.newText({
                 text = "GALERIA",     
                 x = midW, y = yPosc, width = 460,
-                font = native.systemFont,
+                font = fontRegular,
                 fontSize = 15, align = "left"
             })
             lblTitle1:setFillColor( 1 )

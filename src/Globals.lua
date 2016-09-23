@@ -29,11 +29,15 @@ cTurquesa = { .18, .74, .93  }
 cTurquesaL = { .49, .81, .96  }
 cTurquesaXL = { .96, .99, 1 }
 cFB = { 0, .42, .68 }
+cBTur = { 0, .67, .92 }
+cBBlu = { .19, 0, .29 }
+cBPur = { .26, .05, .38 }
 
 -- Fonts
-fLatoBold = 'Lato-Heavy'
-fLatoItalic = 'Lato-Regular'
-fLatoRegular = 'Lato-Regular'
+fontLight = 'Raleway Light'
+fontRegular = 'Raleway'
+fontSemiBold = 'Raleway SemiBold'
+fontBold = 'Raleway ExtraBold'
 
 -- Otras
 myTuks = ''

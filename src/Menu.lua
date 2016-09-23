@@ -119,7 +119,7 @@ function Menu:new()
         local txtNombre = display.newText({
             text = dbConfig.name, 
             x = 200, y = minScr-10, width = 300, 
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 20, align = "center"
         })
         txtNombre:setFillColor( unpack(cWhite) )
@@ -127,7 +127,7 @@ function Menu:new()
         local txtUbicacion = display.newText({
             text = dbConfig.city, 
             x = 200, y = minScr + 10, width = 300, 
-            font = fLatoItalic,   
+            font = fontLight,   
             fontSize = 18, align = "center"
         })
         txtUbicacion:setFillColor( unpack(cWhite) )
@@ -151,7 +151,7 @@ function Menu:new()
         local txtTitleTuks = display.newText({
             text = "Estado de Cuenta", 
             x = 260, y = 40, width = 300,
-            font = fLatoBold, fontSize = 24, align = "left"
+            font = fontBold, fontSize = 24, align = "left"
         })
         txtTitleTuks:setFillColor( unpack(cWhite) )
         grpOptions:insert( txtTitleTuks )
@@ -185,7 +185,7 @@ function Menu:new()
         txtLCard = display.newText({
             text = "Tarjeta Vinculada", 
             x = 66, y = 150, width = 120,
-             font = fLatoBold, fontSize = 14, align = "center"
+             font = fontBold, fontSize = 14, align = "center"
         })
         txtLCard:setFillColor( unpack(cWhite) )
         grpOptions:insert( txtLCard )
@@ -202,7 +202,7 @@ function Menu:new()
         local txtCCiudad = display.newText({
             text = "Cambio de Ciudad", 
             x = 200, y = 150, width = 120,
-            font = fLatoBold, fontSize = 14, align = "center"
+            font = fontBold, fontSize = 14, align = "center"
         })
         txtCCiudad:setFillColor( unpack(cWhite) )
         grpOptions:insert( txtCCiudad )
@@ -219,7 +219,7 @@ function Menu:new()
         local txtCSession = display.newText({
             text = "Cerrar Sesión", 
             x = 333, y = 150, width = 120,
-             font = fLatoBold, fontSize = 14, align = "center"
+             font = fontBold, fontSize = 14, align = "center"
         })
         txtCSession:setFillColor( unpack(cWhite) )
         grpOptions:insert( txtCSession )
@@ -259,7 +259,7 @@ function Menu:new()
         local txtTitle1 = display.newText({
             text = "Mis programas de lealtad", 
             x = 260, y = 40, width = 300,
-            font = fLatoBold, fontSize = 20, align = "left"
+            font = fontBold, fontSize = 20, align = "left"
         })
         txtTitle1:setFillColor( 1 )
         scrMMain:insert(txtTitle1)
@@ -280,7 +280,7 @@ function Menu:new()
         local txtTitle2 = display.newText({
             text = "Comercios Afiliados", 
             x = 260, y = 120, width = 300,
-            font = fLatoBold, fontSize = 20, align = "left"
+            font = fontBold, fontSize = 20, align = "left"
         })
         txtTitle2:setFillColor( 1 )
         scrMMain:insert(txtTitle2)
@@ -297,7 +297,7 @@ function Menu:new()
         local txtTitle3 = display.newText({
             text = "Recompensas Disponibles", 
             x = 260, y = 200, width = 300,
-            font = fLatoBold, fontSize = 20, align = "left"
+            font = fontBold, fontSize = 20, align = "left"
         })
         txtTitle3:setFillColor( 1 )
         scrMMain:insert(txtTitle3)

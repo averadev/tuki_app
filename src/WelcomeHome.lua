@@ -58,7 +58,7 @@ function scene:create( event )
     local txt1 = display.newText({
         text = "¡BIENVENIDO!",
         x = midW, y = midH - 50,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 30, align = "center"
     })
     txt1:setFillColor( unpack(cGrayXH) )
@@ -67,7 +67,7 @@ function scene:create( event )
     local txt2 = display.newText({
         text = "Comienza buscando",
         x = midW, y = midH-15,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 25, align = "center"
     })
     txt2:setFillColor( unpack(cGrayXH) )
@@ -76,7 +76,7 @@ function scene:create( event )
     local txt3 = display.newText({
         text = "los comercios afiliados",
         x = midW, y = midH+15,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 25, align = "center"
     })
     txt3:setFillColor( unpack(cGrayXH) )
@@ -96,7 +96,7 @@ function scene:create( event )
     local txtNear2 = display.newText({
         text = "LO MAS CERCA DE MI",
         x = midW + 35, y = midH + 120,
-        font = fLatoBold, width = 250,  
+        font = fontBold, width = 250,  
         fontSize = 20, align = "left"
     })
     txtNear2:setFillColor( unpack(cWhite) )
@@ -115,7 +115,7 @@ function scene:create( event )
     local txtInter2 = display.newText({
         text = "POR MIS INTERESES",
         x = midW + 35, y = midH + 210,
-        font = fLatoBold, width = 250,
+        font = fontBold, width = 250,
         fontSize = 20, align = "left"
     })
     txtInter2:setFillColor( unpack(cWhite) )

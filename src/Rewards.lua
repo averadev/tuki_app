@@ -190,7 +190,7 @@ function getRowRew(parent, reward, cpoints)
         local points = display.newText({
             text = "GRATIS", 
             x = 110, y = 0,
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 20, align = "center"
         })
         points:rotate( -45 )
@@ -200,7 +200,7 @@ function getRowRew(parent, reward, cpoints)
         local points = display.newText({
             text = reward.points, 
             x = 110, y = -7,
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 26, align = "center"
         })
         points:setFillColor( 1 )
@@ -208,7 +208,7 @@ function getRowRew(parent, reward, cpoints)
         local points2 = display.newText({
             text = "TUKS", 
             x = 110, y = 18,
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 16, align = "center"
         })
         points2:setFillColor( 1 )
@@ -218,7 +218,7 @@ function getRowRew(parent, reward, cpoints)
     local name = display.newText({
         text = reward.name, 
         x = 310, y = 0, width = 280,
-        font = fLatoRegular,   
+        font = fontRegular,   
         fontSize = 19, align = "left"
     })
     name:setFillColor( .3 )
@@ -305,7 +305,7 @@ function setListReward(commerces)
             local titleC = display.newText({
                 text = commerces[z].name, 
                 x = midW, y = 0, width = 420,
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 18, align = "left"
             })
             titleC:setFillColor( 1 )

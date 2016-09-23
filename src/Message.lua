@@ -59,7 +59,7 @@ function setMessage(item)
     local lblFecha = display.newText({
         text = item.fecha,     
         x = 350, y = 50, width = 200, 
-        font = fLatoRegular,
+        font = fontRegular,
         fontSize = 16, align = "right"
     })
     lblFecha:setFillColor( .3 )
@@ -68,7 +68,7 @@ function setMessage(item)
     local lblDe1 = display.newText({
         text = "De: ",     
         x = 90, y = 95, width = 100, 
-        font = fLatoBold,
+        font = fontBold,
         fontSize = 18, align = "left"
     })
     lblDe1:setFillColor( .3 )
@@ -77,7 +77,7 @@ function setMessage(item)
     local lblDe2 = display.newText({
         text = item.from,     
         x = 270, y = 95, width = 300, 
-        font = fLatoRegular,
+        font = fontRegular,
         fontSize = 18, align = "left"
     })
     lblDe2:setFillColor( .3 )
@@ -86,7 +86,7 @@ function setMessage(item)
     local lblAsunto1 = display.newText({
         text = "Asunto: ",     
         x = 90, y = 130, width = 100, 
-        font = fLatoBold,
+        font = fontBold,
         fontSize = 18, align = "left"
     })
     lblAsunto1:setFillColor( .3 )
@@ -95,7 +95,7 @@ function setMessage(item)
     local lblAsunto2 = display.newText({
         text = item.name,     
         x = 270, y = 130, width = 300, 
-        font = fLatoRegular,
+        font = fontRegular,
         fontSize = 18, align = "left"
     })
     lblAsunto2:setFillColor( .3 )
@@ -118,7 +118,7 @@ function setMessage(item)
     local lblDesc = display.newText({
         text = txtDesc,
         x = midW, y = lastY, width = 400, 
-        font = fLatoRegular,
+        font = fontRegular,
         fontSize = 18, align = "left"
     })
     lblDesc:setFillColor( .3 )
@@ -139,7 +139,7 @@ function setMessage(item)
         local txtCommerce = display.newText({
             text = "VER DETALLE", 
             x = midW, y = lastY,
-            font = fLatoBold,
+            font = fontBold,
             fontSize = 18, align = "center"
         })
         txtCommerce:setFillColor( 1 )

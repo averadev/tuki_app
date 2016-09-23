@@ -80,7 +80,7 @@ function setListWallet(rewards)
             local lblInfo = display.newText({
                 text = txtInfo,     
                 x = 180, y = yPosc, width = 300, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 17, align = "left"
             })
             lblInfo:setFillColor( unpack(cWhite) )
@@ -143,7 +143,7 @@ function setListWallet(rewards)
             local lblFecha = display.newText({
                 text = rewards[z].fecha,     
                 x = 120, y = -40, width = 200, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 14, align = "right"
             })
             lblFecha:setFillColor( .6 )
@@ -152,7 +152,7 @@ function setListWallet(rewards)
             local lblCommerce = display.newText({
                 text = rewards[z].commerce,     
                 x = 65, y = -15, width = 300, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 17, align = "left"
             })
             lblCommerce:setFillColor( .6 )
@@ -161,7 +161,7 @@ function setListWallet(rewards)
             local lblName = display.newText({
                 text = rewards[z].name, 
                 x = 65, y = 15, width = 300,
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 19, align = "left"
             })
             lblName:setFillColor( .3 )

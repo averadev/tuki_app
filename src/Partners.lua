@@ -211,7 +211,7 @@ function getCoverFirstFlow(obj)
     txtPName = display.newText({
         text = covers[idxCover].partner.name,     
         x = midW, y = 255, width = 440,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 24, align = "center"
     })
     txtPName:setFillColor( unpack(cGrayXH) )
@@ -220,7 +220,7 @@ function getCoverFirstFlow(obj)
     txtPConcept = display.newText({
         text = covers[idxCover].partner.description,     
         x = midW, y = 275, width = 440,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 14, align = "center"
     })
     txtPConcept:setFillColor( unpack(cGrayH) )
@@ -316,7 +316,7 @@ function setListCommerce(items)
         local name = display.newText({
             text = items[z].name,     
             x = poscLabels, y = -15, width = 270, 
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 22, align = "left"
         })
         name:setFillColor( unpack(cGrayXH) )
@@ -324,7 +324,7 @@ function setListCommerce(items)
         local concept = display.newText({
             text = items[z].description, 
             x = poscLabels, y = 10, width = 270, 
-            font = fLatoRegular,   
+            font = fontRegular,   
             fontSize = 16, align = "left"
         })
         concept:setFillColor( unpack(cGrayH) )

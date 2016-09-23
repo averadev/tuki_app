@@ -42,7 +42,12 @@ function scene:create( event )
     
     local bg = display.newRect( midW, h, intW, intH )
     bg.anchorY = 0
-    bg:setFillColor( unpack(cBlueH) )
+    bg:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBBlu) }, 
+        color2 = { unpack(cBTur) },
+        direction = "right"
+    } ) 
     screen:insert(bg)
     
 	tools = Tools:new()
@@ -51,61 +56,73 @@ function scene:create( event )
     tools:buildBottomBar()
     screen:insert(tools)
     
-    dbConfig = DBManager.getSettings()
-    
-    local initY = h + 140 -- inicio en Y del worksite
-    local hWorkSite = intH - (h + 220)
-    
+    -- Positions
+    local sLn = 0
     local allH = intH - h
-    local sizeQR = 350
-    print("allH: "..allH)
-    if allH < 685 then
-        sizeQR = 200
-    elseif allH < 750 then
-        sizeQR = 250
+    local xTopCode = midH - 60
+    local xBottomCode = midH + 140
+    if allH > 685 and allH < 750 then
+        xTopCode = xTopCode - 20
+        xBottomCode = xBottomCode + 25
+    elseif allH >= 750 then
+        sLn = 10
+        xTopCode = xTopCode - 50
+        xBottomCode = xBottomCode + 50
     end
     
-    local xTopCode = initY+(hWorkSite/2) - (sizeQR/2)
-    local xBottomCode = xTopCode + sizeQR
-    
     local lbl1 = display.newText({
-        text = "¡Hola!, tu codigó es:",
-        x = midW, y = xTopCode - 70, width = 400, 
-        font = fLatoRegular,   
-        fontSize = 22, align = "center"
+        text = "¡  A   T U K E A R  !",
+        x = midW, y = xTopCode - 80, width = 400, 
+        font = fontBold,   
+        fontSize = 45, align = "center"
     })
     lbl1:setFillColor( unpack(cWhite) )
     screen:insert( lbl1 )
     
     -- Buil format key
+    dbConfig = DBManager.getSettings()
     local lblClave = string.sub( dbConfig.id, 0 , 3 ).." "..
                     string.sub( dbConfig.id, 4, 7 ).." "..
                     string.sub( dbConfig.id, 8, 10 ).." "..
                     string.sub( dbConfig.id, 11, 13 )
     
     local lbl2 = display.newText({
-        text = lblClave,
+        text = 'CD: '..lblClave,
         x = midW, y = xTopCode - 40, width = 400, 
-        font = fLatoBold,   
+        font = fontSemiBold,   
         fontSize = 20, align = "center"
     })
     lbl2:setFillColor( unpack(cWhite) )
     screen:insert( lbl2 )
     
     local lbl3 = display.newText({
-        text = "Haz CheckIn en comercios afiliados TUKI",
-        x = midW, y = xBottomCode + 30, width = 400, 
-        font = fLatoRegular,   
+        text = "Haz Check-In en comercios afiliados.",
+        x = midW, y = xBottomCode + 50, width = 400, 
+        font = fontRegular,   
         fontSize = 18, align = "center"
     })
     lbl3:setFillColor( unpack(cWhite) )
     screen:insert( lbl3 )
     
-    local bgCode = display.newRect( midW, initY+(hWorkSite/2), sizeQR, sizeQR )
-    bgCode:setFillColor( unpack(cTurquesa) )
-    screen:insert(bgCode)
+    local grpQR = display.newGroup()
+    screen:insert( grpQR )
+    -- Lines
+    if allH > 685 then
+        local lnRT = display.newLine( midW+(50+sLn), midH-(80+sLn), midW+(130+sLn), midH-(80+sLn), midW+(130+sLn), midH-sLn )
+        lnRT.strokeWidth = 3
+        screen:insert( lnRT )
+        local lnRB = display.newLine( midW+(50+sLn), midH+(180+sLn), midW+(130+sLn), midH+(180+sLn), midW+(130+sLn), midH+(100+sLn) )
+        lnRB.strokeWidth = 3
+        screen:insert( lnRB )
+        local lnLB = display.newLine( midW-(130+sLn), midH+(100+sLn), midW-(130+sLn), midH+(180+sLn), midW-(50+sLn), midH+(180+sLn) )
+        lnLB.strokeWidth = 3
+        screen:insert( lnLB )
+        local lnLT = display.newLine( midW-(130+sLn), midH+sLn, midW-(130+sLn), midH-(80+sLn), midW-(50+sLn), midH-(80+sLn) )
+        lnLT.strokeWidth = 3
+        screen:insert( lnLT )
+    end
     
-    RestManager.retriveQR(dbConfig.id, screen, midW, initY+(hWorkSite/2), sizeQR - 20, sizeQR - 20)
+    RestManager.retriveQR(dbConfig.id, grpQR, midW, midH + 50, 270, 270)
     
 end	
 -- Called immediately after scene has moved onscreen:

@@ -126,7 +126,7 @@ function scene:create( event )
     local txt1 = display.newText({
         text = "¡SELECCIONA!",
         x = midW, y = h + 25,
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 30, align = "center"
     })
     txt1:setFillColor( unpack(cGrayXH) )
@@ -135,7 +135,7 @@ function scene:create( event )
     txtW2 = display.newText({
         text = "Selecciona tus intereses",
         x = midW, y = h + 60,
-        font = fLatoItalic,   
+        font = fontLight,   
         fontSize = 20, align = "center"
     })
     txtW2:setFillColor( unpack(cGrayXH) )
@@ -144,7 +144,7 @@ function scene:create( event )
     txtW3 = display.newText({
         text = " y encuentra tus comercios favoritos.",
         x = midW, y = h + 85,
-        font = fLatoItalic,   
+        font = fontLight,   
         fontSize = 20, align = "center"
     })
     txtW3:setFillColor( unpack(cGrayXH) )
@@ -208,7 +208,7 @@ function scene:create( event )
         btns[idx].txt = display.newText({
             text = Globals.filtros[z][1], 
             x = xPosc, y = yPosc + 60,
-            font = fLatoBold,   
+            font = fontBold,   
             fontSize = 16, align = "center"
         })
         btns[idx].txt:setFillColor( .5 )
@@ -231,7 +231,7 @@ function scene:create( event )
     local txtNear2 = display.newText({
         text = "CONTINUAR",
         x = midW + 35, y = intH - 45,
-        font = fLatoBold, width = 250,  
+        font = fontBold, width = 250,  
         fontSize = 20, align = "left"
     })
     txtNear2:setFillColor( unpack(cWhite) )

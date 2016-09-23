@@ -130,7 +130,7 @@ function setListCommerce(items)
             local name = display.newText({
                 text = items[z].name,     
                 x = poscLabels, y = -15, width = 270, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 22, align = "left"
             })
             name:setFillColor( unpack(cGrayXH) )
@@ -144,7 +144,7 @@ function setListCommerce(items)
             local lblTuks1 = display.newText({
                 text = items[z].points, 
                 x = -80, y = 20, width = 60, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 18, align = "right"
             })
             lblTuks1:setFillColor( unpack(cWhite) )
@@ -152,7 +152,7 @@ function setListCommerce(items)
             local lblTuks2 = display.newText({
                 text = "TUKS", 
                 x = -15, y = 20, width = 60, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 12, align = "left"
             })
             lblTuks2:setFillColor( unpack(cWhite) )
@@ -170,7 +170,7 @@ function setListCommerce(items)
             local lblTuks1 = display.newText({
                 text = items[z].posible, 
                 x = 110, y = 20, width = 60, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 18, align = "right"
             })
             lblTuks1:setFillColor( unpack(cWhite) )
@@ -178,7 +178,7 @@ function setListCommerce(items)
             local lblTuks2 = display.newText({
                 text = " / "..items[z].rewards, 
                 x = 170, y = 20, width = 60, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 12, align = "left"
             })
             lblTuks2:setFillColor( unpack(cWhite) )

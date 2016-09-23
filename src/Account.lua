@@ -73,7 +73,7 @@ function showAccount(usuario)
     local txtNombre = display.newText({
         text = usuario.name, 
         x = 350, y = lastY + 70, width = 300, 
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 20, align = "left"
     })
     txtNombre:setFillColor( unpack(cWhite) )
@@ -81,7 +81,7 @@ function showAccount(usuario)
     local txtUbicacion = display.newText({
         text = usuario.ciudad, 
         x = 350, y = lastY + 98, width = 300, 
-        font = fLatoItalic,   
+        font = fontLight,   
         fontSize = 18, align = "left"
     })
     txtUbicacion:setFillColor( unpack(cWhite) )
@@ -95,7 +95,7 @@ function showAccount(usuario)
     local txtDescTime = display.newText({
         text = "Eres TUKER desde:", 
         x = 350, y = lastY + 140, width = 300, 
-        font = fLatoRegular,   
+        font = fontRegular,   
         fontSize = 16, align = "left"
     })
     txtDescTime:setFillColor( unpack(cTurquesa) )
@@ -103,7 +103,7 @@ function showAccount(usuario)
     local txtTime = display.newText({
         text = usuario.signin, 
         x = 400, y = lastY + 140, width = 120, 
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 16, align = "left"
     })
     txtTime:setFillColor( unpack(cWhite) )
@@ -123,7 +123,7 @@ function showAccount(usuario)
     local lblTopL0 = display.newText({
         text = "Afiliado a", 
         x = 30, y = lastY + 20, width = 120, 
-        font = fLatoRegular,   
+        font = fontRegular,   
         fontSize = 16, align = "right"
     })
     lblTopL0:setFillColor( unpack(cWhite) )
@@ -131,7 +131,7 @@ function showAccount(usuario)
     local lblTopL = display.newText({
         text = (#usuario.joined).." Comercios", 
         x = 177, y = lastY + 20, width = 160, 
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 20, align = "left"
     })
     lblTopL:setFillColor( unpack(cWhite) )
@@ -144,7 +144,7 @@ function showAccount(usuario)
     local lblTopR = display.newText({
         text = availableR, 
         x = 245, y = lastY + 20, width = 70, 
-        font = fLatoBold,   
+        font = fontBold,   
         fontSize = 22, align = "right"
     })
     lblTopR:setFillColor( unpack(cWhite) )
@@ -152,7 +152,7 @@ function showAccount(usuario)
     local lblTopR0 = display.newText({
         text = "Recompensas Disponibles", 
         x = 385, y = lastY + 20, width = 200, 
-        font = fLatoRegular,   
+        font = fontRegular,   
         fontSize = 16, align = "left"
     })
     lblTopR0:setFillColor( unpack(cWhite) )
@@ -218,7 +218,7 @@ function showAccountCom(items)
             local lblDescT = display.newText({
                 text = "TUKS", 
                 x = 193, y = -32, width = 70, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 14, align = "center"
             })
             lblDescT:setFillColor( 1 )
@@ -226,7 +226,7 @@ function showAccountCom(items)
             local lblDesc1 = display.newText({
                 text = "Recompensas Disponibles", 
                 x = 60, y = -5, width = 200, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 14, align = "left"
             })
             lblDesc1:setFillColor( unpack(cGrayH) )
@@ -234,7 +234,7 @@ function showAccountCom(items)
             local lblDesc2 = display.newText({
                 text = "Visitas Realizadas", 
                 x = 60, y = 25, width = 200, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 14, align = "left"
             })
             lblDesc2:setFillColor( unpack(cGrayH) )
@@ -242,7 +242,7 @@ function showAccountCom(items)
             local lblDesc3 = display.newText({
                 text = "Ultima Visita", 
                 x = 60, y = 55, width = 200, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 14, align = "left"
             })
             lblDesc3:setFillColor( unpack(cGrayH) )
@@ -261,7 +261,7 @@ function showAccountCom(items)
             local lblCommerce = display.newText({
                 text = items[z].name, 
                 x = 40, y = -45, width = 220, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 22, align = "left"
             })
             lblCommerce:setFillColor( unpack(cGrayH) )
@@ -269,7 +269,7 @@ function showAccountCom(items)
             local lblTuks = display.newText({
                 text = items[z].points, 
                 x = 193, y = -52, width = 70, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 26, align = "center"
             })
             lblTuks:setFillColor( 1 )
@@ -281,7 +281,7 @@ function showAccountCom(items)
             local lblValue0 = display.newText({
                 text = items[z].avaliable, 
                 x = xSpc, y = -5, width = 150, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 14, align = "right"
             })
             lblValue0:setFillColor( unpack(cPurpleL) )
@@ -289,7 +289,7 @@ function showAccountCom(items)
             local lblValue1 = display.newText({
                 text = "/"..items[z].rewards, 
                 x = 140, y = -5, width = 150, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 14, align = "right"
             })
             lblValue1:setFillColor( unpack(cGrayH) )
@@ -297,7 +297,7 @@ function showAccountCom(items)
             local lblValue2 = display.newText({
                 text = items[z].visits, 
                 x = 140, y = 25, width = 150, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 14, align = "right"
             })
             lblValue2:setFillColor( unpack(cPurpleL) )
@@ -306,7 +306,7 @@ function showAccountCom(items)
                 local lblValue3 = display.newText({
                     text = items[z].lastVisit, 
                     x = 140, y = 55, width = 150, 
-                    font = fLatoBold,   
+                    font = fontBold,   
                     fontSize = 14, align = "right"
                 })
                 lblValue3:setFillColor( unpack(cPurpleL) )
@@ -329,7 +329,7 @@ function showAccountCom(items)
                 local lblZero1 = display.newText({
                     text = "Afiliado pero ", 
                     x = 80, y = lastY + 15, width = 100, 
-                    font = fLatoRegular,   
+                    font = fontRegular,   
                     fontSize = 14, align = "left"
                 })
                 lblZero1:setFillColor( 1 )
@@ -337,7 +337,7 @@ function showAccountCom(items)
                 local lblZero2 = display.newText({
                     text = "SIN TUKS", 
                     x = 162, y = lastY + 15, width = 100, 
-                    font = fLatoBold,   
+                    font = fontBold,   
                     fontSize = 14, align = "left"
                 })
                 lblZero2:setFillColor( 1 )
@@ -377,7 +377,7 @@ function showAccountCom(items)
             local lblCommerce = display.newText({
                 text = items[z].name, 
                 x = 40, y = -10, width = 350, 
-                font = fLatoBold,   
+                font = fontBold,   
                 fontSize = 22, align = "left"
             })
             lblCommerce:setFillColor( unpack(cGrayH) )
@@ -385,7 +385,7 @@ function showAccountCom(items)
             local lblDesc = display.newText({
                 text = items[z].description, 
                 x = 40, y = 12, width = 350, 
-                font = fLatoRegular,   
+                font = fontRegular,   
                 fontSize = 14, align = "left"
             })
             lblDesc:setFillColor( unpack(cGrayH) )

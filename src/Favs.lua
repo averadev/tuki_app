@@ -174,7 +174,7 @@ function setListReward(rewards)
                 local points = display.newText({
                     text = "GRATIS", 
                     x = -127, y = 0,
-                    font = native.systemFontBold,   
+                    font = fontBold,   
                     fontSize = 20, align = "center"
                 })
                 points:rotate( -45 )
@@ -184,7 +184,7 @@ function setListReward(rewards)
                 local points = display.newText({
                     text = rewards[z].points, 
                     x = -126, y = -7,
-                    font = native.systemFontBold,   
+                    font = fontBold,   
                     fontSize = 26, align = "center"
                 })
                 points:setFillColor( 1 )
@@ -192,7 +192,7 @@ function setListReward(rewards)
                 local points2 = display.newText({
                     text = "PUNTOS", 
                     x = -126, y = 18,
-                    font = native.systemFontBold,   
+                    font = fontBold,   
                     fontSize = 14, align = "center"
                 })
                 points2:setFillColor( 1 )
@@ -202,7 +202,7 @@ function setListReward(rewards)
             local commerce = display.newText({
                 text = rewards[z].commerce,     
                 x = 70, y = -15, width = 300, 
-                font = native.systemFontBold,   
+                font = fontBold,   
                 fontSize = 17, align = "left"
             })
             commerce:setFillColor( .6 )
@@ -211,7 +211,7 @@ function setListReward(rewards)
             local name = display.newText({
                 text = rewards[z].name, 
                 x = 70, y = 10, width = 300,
-                font = native.systemFont,   
+                font = fontRegular,   
                 fontSize = 19, align = "left"
             })
             name:setFillColor( .3 )
