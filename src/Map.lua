@@ -88,11 +88,10 @@ function scene:create( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
-    local bg = display.newRect( 0, h + 140, display.contentWidth, intH - h - 220 )
+    local bg = display.newRect( 0, h + 60, display.contentWidth, intH - h - 120 )
 	bg.anchorX = 0
 	bg.anchorY = 0
 	bg:setFillColor( 245/255, 245/255, 245/255 )
@@ -108,7 +107,7 @@ function scene:show( event )
         tools:showBubble(false)
         Globals.scenes[#Globals.scenes + 1] = composer.getSceneName( "current" ) 
         print("Mapa")
-        myMap = native.newMapView( 0, h + 140, display.contentWidth, intH - h - 220 )
+        myMap = native.newMapView( 0, h + 60, display.contentWidth, intH - h - 120 )
         if myMap then
             myMap.anchorX = 0
             myMap.anchorY = 0

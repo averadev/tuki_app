@@ -35,7 +35,7 @@ local txtPoints, txtTuks, txtPoints2, txtName, txtCommerce, iconRewardBig, btnDe
 local yItem, itemSize, itemCoverSize, cTuks1, cTuks2, scrViewCM
 local cards, idxA, favH, favOn, favOff
 local wCmp, hCmp, midSize, currentPH
-
+local initHY
 
 -- Arrays
 local cardL = {}
@@ -105,31 +105,18 @@ function getHPartner(event)
     if not(event.target.active) then
         idx = event.target.idx
         currentPH = idx
-        for z = 1, #comRews, 1 do 
-            -- Deactivate
-            if coverHComer[z].active then
-                coverHComer[z].active = false
-                coverHComer[z].bgFP1:setFillColor( unpack(cGrayL) )
-                coverHComer[z].bgFP2:setFillColor( unpack(cWhite) )  
-            end
-        end
-        -- Activate
-        tools:setLoading(true, screen)
-        coverHComer[idx].active = true
-        coverHComer[idx].bgFP1:setFillColor( unpack(cTurquesa) )
-        if curLogo then
-            curLogo:removeSelf()
-            curLogo = nil;
-        end
+        
+        local circleLogo = display.newImage("img/deco/circleLogo80.png")
+        circleLogo:translate( midW-midSize+40, h + 255 )
+        workSite:insert( circleLogo )
+        
+        local mask = graphics.newMask( "img/deco/maskLogo80.png" )
         curLogo = display.newImage( comRews[idx].image, system.TemporaryDirectory )
-        curLogo:translate( midW-midSize+40, h + 239 )
-        curLogo.height = 75
-        curLogo.width = 75
+        curLogo:setMask( mask )
+        curLogo:translate( midW-midSize+40, h + 255 )
+        curLogo.height = 80
+        curLogo.width = 80
         workSite:insert(curLogo)
-        color = {tonumber(comRews[idx].colorA1)/255, tonumber(comRews[idx].colorA2)/255, tonumber(comRews[idx].colorA3)/255}
-        colorL = { 1-color[1], 1-color[2], 1-color[3] }
-        bgTCover1:setFillColor( color[1], color[2], color[3] )
-        bgTop:setFillColor( color[1], color[2], color[3] )
         txtCommerce.text = comRews[idx].name
         txtCommerceDesc.text = comRews[idx].description
         loadImage({idx = 0, name = "HomeRewards", path = "assets/img/api/rewards/", items = comRews[idx].rewards})
@@ -144,24 +131,31 @@ function getCarCom(items)
     comRews = items
     
     for z = 1, #comRews, 1 do 
-        local xPosc = (z * 94) - 50
+        local xPosc = (z * 100) - 40
 
-        coverHComer[z] = display.newContainer( 90, 90 )
+        coverHComer[z] = display.newContainer( 95, 95 )
         coverHComer[z].idx = z
         coverHComer[z].active = false
-        coverHComer[z]:translate( xPosc, 50 )
+        coverHComer[z]:translate( xPosc, 60 )
         scrViewCM:insert( coverHComer[z] )
         coverHComer[z]:addEventListener( 'tap', getHPartner)
-
-        coverHComer[z].bgFP1 = display.newRect(0, 0, 90, 90 )
-        coverHComer[z].bgFP1:setFillColor( unpack(cGrayL) )
-        coverHComer[z]:insert( coverHComer[z].bgFP1 )
-
-        coverHComer[z].bgFP2 = display.newRect(0, 0, 80, 80 )
-        coverHComer[z].bgFP2:setFillColor( unpack(cWhite) )
-        coverHComer[z]:insert( coverHComer[z].bgFP2 )
-
+        
+        local txt = display.newText({
+            text = comRews[z].name, 
+            x = xPosc, y = 115, width = 98,
+            font = fontSemiBold,   
+            fontSize = 12, align = "center"
+        })
+        txt:setFillColor( .4 )
+        scrViewCM:insert( txt )
+        
+        local circleLogo = display.newImage("img/deco/circleLogo80.png")
+        circleLogo:translate( 0, 0 )
+        coverHComer[z]:insert( circleLogo )
+        
+        local mask = graphics.newMask( "img/deco/maskLogo80.png" )
         coverHComer[z].img = display.newImage( comRews[z].image, system.TemporaryDirectory )
+        coverHComer[z].img:setMask( mask )
         coverHComer[z].img:translate(0, 0)
         coverHComer[z].img.height = 80
         coverHComer[z].img.width = 80
@@ -174,7 +168,7 @@ function getCarCom(items)
         scrViewCM:setIsLocked( true )
     else
         -- Set new scroll position
-        scrViewCM:setScrollWidth((94 * #comRews) - 5)
+        scrViewCM:setScrollWidth((100 * #comRews) + 20)
     end
 end
 
@@ -257,14 +251,14 @@ function buildCard(item)
     local idx = #cardL + 1
     local imgS = graphics.newImageSheet( item.image, system.TemporaryDirectory, { width = 220, height = 330, numFrames = 2 })
     
-    cardL[idx] = display.newRect( midW, h + 280, wCmp/2, hCmp )
+    cardL[idx] = display.newRect( midW, h + 310, wCmp/2, hCmp )
     cardL[idx].alpha = 0
     cardL[idx].anchorY = 0
     cardL[idx].anchorX = 1
     cardL[idx].fill = { type = "image", sheet = imgS, frame = 1 }
     cards:insert(cardL[idx])
     
-    cardR[idx] = display.newRect( midW, h + 280, wCmp/2, hCmp )
+    cardR[idx] = display.newRect( midW, h + 310, wCmp/2, hCmp )
     cardR[idx].alpha = 0
     cardR[idx].anchorY = 0
     cardR[idx].anchorX = 0
@@ -416,17 +410,17 @@ function scene:create( event )
     screen:insert(tools)
     
     scrViewCM = widget.newScrollView {
-        top = h + 90,
-        left = 18,
-        width = intW - 36,
-        height = 100,
+        top = h + 60,
+        left = 0,
+        width = intW,
+        height = 130,
         verticalScrollDisabled = true,
-		backgroundColor = { 1 }
+		backgroundColor = { unpack(cGrayXXL) }
     }
     screen:insert(scrViewCM)
     
     -- Tamaños y posicones
-    initY  = h + 200 
+    initHY  = h + 220 
     allH = intH - h
     wCmp, hCmp = 440, 330
     wCTitle, rLRest, hHPoints, yHPoints, hHTuks, xxLCircle = 0, 0, 0, 0, 0, 0
@@ -450,89 +444,82 @@ function scene:create( event )
     workSite = display.newGroup()
     screen:insert(workSite)
     
-    local bgGrayT = display.newRoundedRect(midW, initY - 3, wCmp + 4, 100, 10 )
+    local bgGrayT = display.newRect(midW - (wCmp/2) + 40, initHY, 100, 100 )
     bgGrayT.anchorY = 0
-    bgGrayT:setFillColor( unpack(cGrayM) )
+    bgGrayT:setFillColor( unpack(cWhite) )
     bgGrayT:addEventListener( 'tap', tapCommerce) 
     workSite:insert( bgGrayT )
-    bgTop = display.newRoundedRect(midW, initY, wCmp, 100, 10 )
-    bgTop.anchorY = 0
-    bgTop:setFillColor( unpack(cTurquesa) )
-    workSite:insert( bgTop )
-    local bgGray = display.newRect(midW, initY + 80,  wCmp + 4, hCmp )
+    
+    local bgGray = display.newRect(midW, initHY + 80,  wCmp + 4, hCmp )
     bgGray.anchorY = 0
-    bgGray:setFillColor( unpack(cGrayM) )
+    bgGray:setFillColor( unpack(cWhite) )
     bgGray:addEventListener( 'tap', tapReward) 
     workSite:insert( bgGray )
     cards = display.newGroup()
     workSite:insert(cards)
-    bgTCover1 = display.newRoundedRect(midW-midSize+40, initY - 6, 90, 90, 10 )
-    bgTCover1.anchorY = 0
-    bgTCover1:setFillColor( unpack(cTurquesa) )
-    workSite:insert( bgTCover1 )
-    local bgTCover2 = display.newRoundedRect(midW-midSize+40, initY - 2, 82, 82, 10 )
-    bgTCover2.anchorY = 0
-    bgTCover2:setFillColor( unpack(cWhite) )
-    workSite:insert( bgTCover2 )
+    
     txtCommerce = display.newText({
         text = '',
-        y = initY + 30,
+        y = initHY + 25,
         x = midW + 50, width = 350 - wCTitle,
-        font = fontBold,   
+        font = fontSemiBold,   
         fontSize = 35, align = "left"
     })
-    txtCommerce:setFillColor( unpack(cWhite) )
+    txtCommerce:setFillColor( unpack(cBlueH) )
     workSite:insert(txtCommerce)
     txtCommerceDesc = display.newText({
         text = '',
-        y = initY + 60,
+        y = initHY + 55,
         x = midW + 53, width = 350 - wCTitle,
         font = fontLight,   
         fontSize = 18, align = "left"
     })
-    txtCommerceDesc:setFillColor( unpack(cWhite) )
+    txtCommerceDesc:setFillColor( unpack(cBlueH) )
     workSite:insert(txtCommerceDesc)
-    
     
     -- Favs
     favH = display.newGroup()
-    favH:translate( midW + (hCmp/2), initY + 120 )
+    favH:translate( midW + (hCmp/2), initHY + 120 )
     workSite:insert(favH)
     local bgFav = display.newRect( 0, 0, 60, 60 )
     bgFav.alpha = .01
     bgFav:addEventListener( 'tap', tapFavHome) 
     favH:insert( bgFav )
-    favOn = display.newImage("img/icon/iconRewardBig2.png")
+    favOn = display.newImage("img/icon/iconRewardHeart2.png")
+    favOn:scale( 1.4, 1.5 )
     favOn.alpha = .4
     favH:insert( favOn )
     favOff = display.newImage("img/icon/iconRewardBig1.png")
+    favOff:scale( 1.4, 1.5 )
     favH:insert( favOff )
     
     -- Circle points
-    local initY = initY + hCmp + 83
+    local initHY = initHY + hCmp + 83
     local xLCircle = 115 +xxLCircle
     local rLCircle = 80
     
     if not(isFooter) then
-        local bgBottom = display.newRect(midW, initY - 10, wCmp + 4, 60 )
+        local bgBottom = display.newRect(midW, initHY - 10, wCmp + 4, 60 )
         bgBottom.anchorY = 1
         bgBottom:setFillColor( 0 )
         bgBottom.alpha = .5
         workSite:insert( bgBottom )
     end
-    local cTuks1 = display.newCircle( xLCircle, initY - 45, rLCircle - rLRest )
-    cTuks1:setFillColor( unpack(cWhite) )
-    workSite:insert( cTuks1 )
-    local cTuks2 = display.newCircle( xLCircle, initY - 45, rLCircle - rLRest - 4 )
-    cTuks2:setFillColor( unpack(cTurquesa) )
-    workSite:insert( cTuks2 )
-    local bgLine = display.newRect(midW, initY - 3, initY + 4, 3 )
+    
+    local bgPoints = display.newImage("img/deco/bgPoints.png")
+    bgPoints:translate(xLCircle, initHY - 80 + yHPoints)
+    workSite:insert( bgPoints )
+    if allH <= 750 then
+        bgPoints:scale(.85, .8)
+    end
+    
+    local bgLine = display.newRect(midW, initHY - 3, initHY + 4, 3 )
     bgLine.anchorY = 0
     bgLine:setFillColor( unpack(cWhite) )
     workSite:insert( bgLine )
     txtPoints = display.newText({
         text = '',     
-        y = initY - 70 + yHPoints,
+        y = initHY - 100 + yHPoints,
         x = xLCircle, width = 150,
         font = fontBold,   
         fontSize = 70 - hHPoints, align = "center"
@@ -541,28 +528,32 @@ function scene:create( event )
     workSite:insert(txtPoints)
     txtTuks = display.newText({
         text = 'TUKS', 
-        y = initY - 25,
+        y = initHY - 50,
         x = xLCircle, width = 150,
-        font = fontBold,   
+        font = fontSemiBold,   
         fontSize = 30 - hHTuks, align = "center"
     })
-    txtTuks.alpha = .7
-    txtTuks:setFillColor( unpack(cBlueH) )
+    txtTuks:setFillColor( unpack(cWhite) )
     workSite:insert(txtTuks)
     
     -- Bottom
     if isFooter then
-        local bgBottom = display.newRoundedRect(midW, initY, wCmp + 4, 80, 10 )
-        bgBottom.anchorY = 0
-        bgBottom:setFillColor( unpack(cBlueH) )
-        workSite:insert( bgBottom )
-        local bgBottomT = display.newRect(midW, initY, wCmp + 4, 20 )
-        bgBottomT.anchorY = 0
-        bgBottomT:setFillColor( unpack(cBlueH) )
-        workSite:insert( bgBottomT )
+        local bgBottom1 = display.newRect(midW, initHY, wCmp + 4, 80 )
+        bgBottom1.anchorY = 0
+        bgBottom1:setFillColor( unpack(cBTur) )
+        workSite:insert( bgBottom1 )
+        local bgBottom2 = display.newRect(midW, initHY + 4, wCmp - 4, 72 )
+        bgBottom2.anchorY = 0
+        bgBottom2:setFillColor( {
+            type = 'gradient',
+            color1 = { unpack(cBBlu) }, 
+            color2 = { unpack(cBTur) },
+            direction = "right"
+        } )
+        workSite:insert( bgBottom2 )
         txtName = display.newText({
             text = '',   
-            y = initY + 40,
+            y = initHY + 40,
             x = midW, width = wCmp -30,
             font = fontBold,   
             fontSize = 25, align = "left"
@@ -574,7 +565,7 @@ function scene:create( event )
         
         txtName = display.newText({
             text = '',   
-            y = initY - 40,
+            y = initHY - 40,
             x = midW + 60 - xxLCircle, width = wCmp - 150,
             font = fontBold,   
             fontSize = 18, align = "left"
@@ -602,10 +593,6 @@ end
 
 -- Remove Listener
 function scene:destroy( event )
-    if scrViewCM then
-        --scrViewCM:removeSelf()
-        --scrViewCM = nil;
-    end
 end
 
 -- Listener setup

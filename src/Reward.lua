@@ -86,7 +86,6 @@ end
 -- @param event objeto evento
 ------------------------------------
 function tapCommerce(event)
-    print("EVENTOOOO")
     local t = event.target
     audio.play(fxTap)
     composer.removeScene( "src.Partner" )
@@ -147,98 +146,91 @@ function setReward(item)
     local bgTop = display.newRoundedRect(midW, yPosc, 440, 80, 10 )
     bgTop.idCommerce = item.idCommerce
     bgTop:addEventListener( 'tap', tapCommerce)
-    bgTop:setFillColor( color[1], color[2], color[3] )
+    bgTop:setFillColor( unpack(cWhite) )
     scrViewRe:insert( bgTop )
-    local bgTopB = display.newRect(midW, yPosc+30, 440, 20 )
-    bgTopB:setFillColor( color[1], color[2], color[3] )
-    scrViewRe:insert( bgTopB )
-    local bgTCover1 = display.newRoundedRect(65, yPosc, 90, 90, 10 )
-    bgTCover1:setFillColor( color[1], color[2], color[3] )
-    scrViewRe:insert( bgTCover1 )
-    local bgTCover2 = display.newRoundedRect(65, yPosc, 82, 82, 10 )
-    bgTCover2:setFillColor( unpack(cWhite) )
-    scrViewRe:insert( bgTCover2 )
     
     local txtInfo1 = display.newText({
         text = item.name, 
-        x = midW + 40, y = yPosc - 15, width = 320, 
-        font = fontBold,
+        x = midW + 40, y = yPosc-10, width = 320, 
+        font = fontSemiBold,
         fontSize = 21, align = "left"
     })
-    txtInfo1:setFillColor( unpack(cWhite) )
+    txtInfo1.anchorY = 1
+    txtInfo1:setFillColor( unpack(cBlueH) )
     scrViewRe:insert( txtInfo1 )
     local name = display.newText({
         text = item.commerce,     
-        x = midW + 40, y = yPosc + 15, width = 320, 
+        x = midW + 40, y = yPosc, width = 320, 
         font = fontRegular,
         fontSize = 18, align = "left"
     })
-    name:setFillColor( unpack(cWhite) )
+    name:setFillColor( unpack(cBlueH) )
     scrViewRe:insert( name )
     
-    yPosc = yPosc + 65
+    
     local txtInfo2 = display.newText({
         text = item.description, 
-        x = midW, y = yPosc, width = 440, 
+        x = midW + 40, y = yPosc + 10, width = 320, 
         font = fontRegular,
-        fontSize = 16, align = "left"
+        fontSize = 14, align = "left"
     })
-    txtInfo2:setFillColor( unpack(cGrayH) )
+    txtInfo2.anchorY = 0
+    txtInfo2:setFillColor( unpack(cBlueH) )
     scrViewRe:insert( txtInfo2 )
     
-    if txtInfo2.height > 22 then
-        local addSpc = txtInfo2.height - 20
-        yPosc = yPosc + addSpc
-        txtInfo2.y = txtInfo2.y  + (addSpc/2)
-    end
+    if txtInfo1.height > 40 then
+        txtInfo1.y = yPosc-5
+        name.y = yPosc+5
+        txtInfo2.y = yPosc+15
+    end 
     
     -- Imagen
-    yPosc = yPosc + 190
+    yPosc = yPosc + 225
     local bgImage = display.newRoundedRect(midW, yPosc, 440, 330, 5 )
-    bgImage:setFillColor( unpack(cGrayM) )
+    bgImage:setFillColor( unpack(cBTur) )
     scrViewRe:insert( bgImage )
     local imgPBig = display.newImage(item.image, system.TemporaryDirectory)
     imgPBig:translate( midW, yPosc )
-    imgPBig.width = 432
-    imgPBig.height = 324
+    imgPBig.width = 436
+    imgPBig.height = 326
     scrViewRe:insert( imgPBig )
     
     -- Comercio Afiliado
     if item.idCommerce == item.isCommerce then
         -- Fondos Puntos
-        yPosc = yPosc + 205
-        local bgMyTuks = display.newRoundedRect( midW - 10, yPosc, 210, 60, 10 )
+        yPosc = yPosc + 220
+        local bgMyTuks = display.newRoundedRect( midW - 10, yPosc, 210, 90, 5 )
         bgMyTuks.anchorX = 1
-        bgMyTuks:setFillColor( unpack(cBlueH) )
+        bgMyTuks:setFillColor( unpack(cBTur) )
         scrViewRe:insert(bgMyTuks)
-        local bgMyTuksR = display.newRect( midW - 10, yPosc, 40, 60 )
+        local bgMyTuksR = display.newRoundedRect( midW - 12, yPosc, 206, 86, 5 )
         bgMyTuksR.anchorX = 1
-        bgMyTuksR:setFillColor( unpack(cBlueH) )
+        bgMyTuksR:setFillColor( unpack(cWhite) )
         scrViewRe:insert(bgMyTuksR)
-        local bgTuks = display.newRoundedRect( midW + 10, yPosc, 210, 60, 10 )
+        local bgTuks = display.newRoundedRect( midW + 10, yPosc, 210, 90, 5 )
         bgTuks.anchorX = 0
-        bgTuks:setFillColor( unpack(cBlueH) )
+        bgTuks:setFillColor( unpack(cBTur) )
         scrViewRe:insert(bgTuks)
-        local bgTuksL = display.newRect( midW + 10, yPosc, 40, 60 )
+        local bgTuksL = display.newRoundedRect( midW + 12, yPosc, 206, 86, 5 )
         bgTuksL.anchorX = 0
-        bgTuksL:setFillColor( unpack(cBlueH) )
+        bgTuksL:setFillColor( unpack(cWhite) )
         scrViewRe:insert(bgTuksL)
         -- Mis Puntos
         local txtPoints1A = display.newText({
             text = item.userPoints, 
-            x = 120, y = yPosc-7,
-            font = fontBold,
-            fontSize = 32, align = "center"
+            x = 120, y = yPosc+10,
+            font = fontSemiBold,
+            fontSize = 40, align = "center"
         })
-        txtPoints1A:setFillColor( unpack(cWhite) )
+        txtPoints1A:setFillColor( unpack(cBPur) )
         scrViewRe:insert( txtPoints1A )
         local txtPoints1B = display.newText({
-            text = "MIS PUNTOS", 
-            x = 120, y = yPosc+15,
+            text = "TUS TUKS", 
+            x = 120, y = yPosc-17,
             font = fontRegular,
-            fontSize = 12, align = "center"
+            fontSize = 25, align = "center"
         })
-        txtPoints1B:setFillColor( unpack(cWhite) )
+        txtPoints1B:setFillColor( unpack(cBPur) )
         scrViewRe:insert( txtPoints1B )
         -- Puntos
         if item.points == "0" then
@@ -248,197 +240,187 @@ function setReward(item)
                 font = fontBold,
                 fontSize = 32, align = "center"
             })
-            txtPoints2A:setFillColor( unpack(cWhite) )
+            txtPoints2A:setFillColor( unpack(cBPur) )
             scrViewRe:insert( txtPoints2A )
         else
             local txtPoints2A = display.newText({
                 text = item.points, 
-                x = 360, y = yPosc-7,
-                font = fontBold,
-                fontSize = 32, align = "center"
+                x = 360, y = yPosc+10,
+                font = fontSemiBold,
+                fontSize = 40, align = "center"
             })
-            txtPoints2A:setFillColor( unpack(cWhite) )
+            txtPoints2A:setFillColor( unpack(cBPur) )
             scrViewRe:insert( txtPoints2A )
             local txtPoints2B = display.newText({
-                text = "TUKS", 
-                x = 360, y = yPosc+15,
+                text = "VALE POR", 
+                x = 360, y = yPosc-17,
                 font = fontRegular,
-                fontSize = 12, align = "center"
+                fontSize = 25, align = "center"
             })
-            txtPoints2B:setFillColor( unpack(cWhite) )
+            txtPoints2B:setFillColor( unpack(cBPur) )
             scrViewRe:insert( txtPoints2B )
         end
         -- Comprar
         if not(giftReden) then
-            yPosc = yPosc + 70
-            local bgRedem = display.newRoundedRect( midW, yPosc, 440, 60, 10 )
-            bgRedem:setFillColor( unpack(cPurpleL) )
+            yPosc = yPosc + 95
+            local bgRedem2 = display.newRoundedRect( midW, yPosc, 440, 70, 5 )
+            bgRedem2:setFillColor( {
+                type = 'gradient',
+                color1 = { unpack(cBBlu) }, 
+                color2 = { unpack(cBTur) },
+                direction = "right"
+            } ) 
+            scrViewRe:insert(bgRedem2)
+            local bgRedem = display.newRoundedRect( midW, yPosc, 436, 66, 5 )
+            bgRedem:setFillColor( unpack(cWhite) )
             scrViewRe:insert(bgRedem)
-            local bgRedemR1 = display.newRoundedRect( 420, yPosc, 80, 60, 10 )
-            bgRedemR1:setFillColor( unpack(cPurple) )
-            scrViewRe:insert(bgRedemR1)
-            local bgRedemR2 = display.newRect( 400, yPosc, 40, 60 )
-            bgRedemR2:setFillColor( unpack(cPurple) )
-            scrViewRe:insert(bgRedemR2)
             local lblRedem = display.newText({
-                text = "COMPRAR", 
+                text = "NO CUENTAS CON SUFICIENTES TUKS", 
                 x = midW, y = yPosc,
                 font = fontBold,
-                fontSize = 26, align = "center"
+                fontSize = 20, align = "center"
             })
-            lblRedem:setFillColor( unpack(cWhite) )
+            lblRedem:setFillColor( unpack(cBTur) )
             scrViewRe:insert( lblRedem )
-            local menuPoints = display.newImage( "img/icon/menuPoints.png" )
-            menuPoints:translate( 420, yPosc )
-            scrViewRe:insert( menuPoints )
 
             -- Validate points
             if tonumber(item.userPoints) >= tonumber(item.points) then
-                bgRedem:addEventListener( 'tap', goToCheckReward)
-            else
-                local bgGray = display.newRoundedRect( midW, yPosc, 440, 60, 10 )
-                bgGray.alpha = .5
-                bgGray:setFillColor( 1 )
-                scrViewRe:insert(bgGray)
+                local lblRedem2 = display.newText({
+                    text = "C O M P R A R", 
+                    x = midW, y = yPosc,
+                    font = fontSemiold,
+                    fontSize = 25, align = "center"
+                })
+                lblRedem2:setFillColor( unpack(cWhite) )
+                scrViewRe:insert( lblRedem2 )
+                bgRedem.alpha = 0
+                lblRedem.alpha = 0
+                bgRedem2:addEventListener( 'tap', goToCheckReward)
             end
         end
     -- Comercio NO Afiliado
     else
         -- Fondos Puntos
-        yPosc = yPosc + 205
-        local bgMyTuks = display.newRoundedRect( midW - 70, yPosc, 150, 60, 10 )
+        yPosc = yPosc + 220
+        local bgMyTuks = display.newRoundedRect( midW - 10, yPosc, 210, 90, 5 )
         bgMyTuks.anchorX = 1
-        bgMyTuks:setFillColor( unpack(cBlueH) )
+        bgMyTuks:setFillColor( unpack(cBTur) )
         scrViewRe:insert(bgMyTuks)
-        local bgMyTuksR = display.newRect( midW - 70, yPosc, 40, 60 )
+        local bgMyTuksR = display.newRoundedRect( midW - 12, yPosc, 206, 86, 5 )
         bgMyTuksR.anchorX = 1
-        bgMyTuksR:setFillColor( unpack(cBlueH) )
+        bgMyTuksR:setFillColor( unpack(cWhite) )
         scrViewRe:insert(bgMyTuksR)
-        -- Mis Puntos
+        local bgTuks = display.newRoundedRect( midW + 10, yPosc, 210, 90, 5 )
+        bgTuks.anchorX = 0
+        bgTuks:setFillColor( unpack(cBTur) )
+        scrViewRe:insert(bgTuks)
+        local bgTuksL = display.newRoundedRect( midW + 12, yPosc, 206, 86, 5 )
+        bgTuksL.anchorX = 0
+        bgTuksL:setFillColor( unpack(cWhite) )
+        scrViewRe:insert(bgTuksL)
+        
         local txtPoints1A = display.newText({
-            text = item.points, 
-            x = 100, y = yPosc-7,
-            font = fontBold,
-            fontSize = 32, align = "center"
-        })
-        txtPoints1A:setFillColor( unpack(cWhite) )
-        scrViewRe:insert( txtPoints1A )
-        local txtPoints1B = display.newText({
-            text = "TUKS", 
-            x = 100, y = yPosc+15,
-            font = fontRegular,
-            fontSize = 12, align = "center"
-        })
-        txtPoints1B:setFillColor( unpack(cWhite) )
-        scrViewRe:insert( txtPoints1B )
-        local txtJoinMessage = display.newText({
             text = "AÚN NO ESTAS AFILIADO A ESTE COMERCIO", 
-            x = midW + 80, y = yPosc,
-            width = 200, font = fontBold,
-            fontSize = 16, align = "center"
+            x = 120, y = yPosc,
+            font = fontSemiBold, width = 200,
+            fontSize = 20, align = "center"
         })
-        txtJoinMessage:setFillColor( unpack(cGrayH) )
-        scrViewRe:insert( txtJoinMessage )
+        txtPoints1A:setFillColor( unpack(cBPur) )
+        scrViewRe:insert( txtPoints1A )
+        local txtPoints2A = display.newText({
+            text = item.points, 
+            x = 360, y = yPosc+10,
+            font = fontSemiBold,
+            fontSize = 40, align = "center"
+        })
+        txtPoints2A:setFillColor( unpack(cBPur) )
+        scrViewRe:insert( txtPoints2A )
+        local txtPoints2B = display.newText({
+            text = "VALE POR", 
+            x = 360, y = yPosc-17,
+            font = fontRegular,
+            fontSize = 25, align = "center"
+        })
+        txtPoints2B:setFillColor( unpack(cBPur) )
+        scrViewRe:insert( txtPoints2B )
 
         -- Comprar
-        yPosc = yPosc + 70
-        local bgRedem = display.newRoundedRect( midW, yPosc, 440, 60, 10 )
-        bgRedem:setFillColor( unpack(cPurpleL) )
-        bgRedem.idCommerce = item.idCommerce
-        bgRedem:addEventListener( 'tap', setCommerceJoin)
-        scrViewRe:insert(bgRedem)
-        local lblRedem = display.newText({
+        yPosc = yPosc + 95
+        local bgRedem3 = display.newRoundedRect( midW, yPosc, 440, 70, 5 )
+        bgRedem3:setFillColor( {
+            type = 'gradient',
+            color1 = { unpack(cBBlu) }, 
+            color2 = { unpack(cBTur) },
+            direction = "right"
+        } ) 
+        bgRedem3.idCommerce = item.idCommerce
+        bgRedem3:addEventListener( 'tap', setCommerceJoin)
+        scrViewRe:insert(bgRedem3)
+        local lblRedem2 = display.newText({
             text = "¡AFILIATE AHORA!", 
             x = midW, y = yPosc,
-            font = fontBold,
-            fontSize = 26, align = "center"
+            font = fontSemiold,
+            fontSize = 25, align = "center"
         })
-        lblRedem:setFillColor( unpack(cWhite) )
-        scrViewRe:insert( lblRedem )
+        lblRedem2:setFillColor( unpack(cWhite) )
+        scrViewRe:insert( lblRedem2 )
     end
     
     -- Comercio
-    yPosc = yPosc + 70
+    yPosc = yPosc + 90
     local bgCommerce = display.newRect( midW - 120, yPosc, 200, 60 )
     bgCommerce.idCommerce = item.idCommerce
     bgCommerce:addEventListener( 'tap', tapCommerce)
     scrViewRe:insert(bgCommerce)
     local txtCommerce = display.newText({
-        text = "IR A COMERCIO", 
-        x = midW - 140, y = yPosc,
-        font = fontBold,
-        fontSize = 16, align = "center"
+        text = "CONOCER COMERCIO", 
+        x = midW - 75, y = yPosc,
+        font = fontSemiBold, width = 120,
+        fontSize = 14
     })
-    txtCommerce:setFillColor( unpack(cGrayXH) )
+    txtCommerce:setFillColor( unpack(cBlueH) )
     scrViewRe:insert( txtCommerce )
     local icoBtnCommerce = display.newImage( "img/icon/icoBtnCommerce.png" )
-    icoBtnCommerce:translate( 200, yPosc )
+    icoBtnCommerce:translate( 60, yPosc )
     scrViewRe:insert( icoBtnCommerce )
-    -- Lineas
-    local line1 = display.newLine(midW, yPosc-30, midW, yPosc+30)
-    line1:setStrokeColor( .58, .2 )
-    line1.strokeWidth = 2
-    scrViewRe:insert(line1)
-    
+   
     -- Compartir
     local bgShare = display.newRect( midW + 120, yPosc, 200, 60 )
     bgShare.item = item
     bgShare:addEventListener( 'tap', doShare)
     scrViewRe:insert(bgShare)
     local txtShare = display.newText({
-        text = "COMPARTIR", 
-        x = midW + 90, y = yPosc,
-        font = fontBold,
-        fontSize = 16, align = "center"
+        text = "COMPARTIR CON MIS AMIGOS", 
+        x = midW + 155, y = yPosc,
+        font = fontSemiBold, width = 120,
+        fontSize = 14
     })
-    txtShare:setFillColor( unpack(cGrayXH) )
+    txtShare:setFillColor( unpack(cBlueH) )
     scrViewRe:insert( txtShare )
     local icoBtnShare = display.newImage( "img/icon/icoBtnShare.png" )
-    icoBtnShare:translate( 410, yPosc )
+    icoBtnShare:translate( 290, yPosc )
     scrViewRe:insert( icoBtnShare )
     
-    -- Info Adicional
-    yPosc = yPosc + 40
-    local bgInfoSw = display.newRoundedRect( midW, yPosc, 440, 100, 10 )
-    bgInfoSw.anchorY = 0
-    bgInfoSw:setFillColor( .95 )
-    scrViewRe:insert(bgInfoSw)
-    local bgInfo = display.newRoundedRect( midW, yPosc + 2, 436, 96, 10 )
-    bgInfo.anchorY = 0
-    bgInfo:setFillColor( 1 )
-    scrViewRe:insert(bgInfo)
-    
     -- Vigencia
-    yPosc = yPosc + 30
-    local PLTime = display.newImage("img/icon/PLTime.png")
-    PLTime:translate( 60, yPosc )
-    scrViewRe:insert( PLTime )
-    local txtVigencia1 = display.newText({
-        text = "Vigencia:", 
-        x = 160, y = yPosc, width = 150, 
-        font = fontRegular,
-        fontSize = 18, align = "left"
-    })
-    txtVigencia1:setFillColor( .3 )
-    scrViewRe:insert( txtVigencia1 )
-    local txtVigencia2 = display.newText({
-        text = item.vigencia, 
-        x = 315, y = yPosc, width = 300, 
+    yPosc = yPosc + 70
+    local txtVigencia = display.newText({
+        text = "Valido al "..item.vigencia, 
+        x = 240, y = yPosc, width = 400, 
         font = fontBold,
         fontSize = 18, align = "left"
     })
-    txtVigencia2:setFillColor( .3 )
-    scrViewRe:insert( txtVigencia2 )
+    txtVigencia:setFillColor( unpack(cBlueH) )
+    scrViewRe:insert( txtVigencia )
     
-    yPosc = yPosc + 40
     -- Terminos y Condiciones
+    yPosc = yPosc + 35
     local txtTerminos1 = display.newText({
         text = "Terminos y Condiciones:", 
         x = 240, y = yPosc, width = 400, 
         font = fontRegular,
         fontSize = 18, align = "left"
     })
-    txtTerminos1:setFillColor( .3 )
+    txtTerminos1:setFillColor( unpack(cBlueH) )
     scrViewRe:insert( txtTerminos1 )
     local txtTerminos2 = display.newText({
         text = item.terms, 
@@ -447,14 +429,11 @@ function setReward(item)
         fontSize = 14, align = "left"
     })
     txtTerminos2.anchorY = 0
-    txtTerminos2:setFillColor( .3 )
+    txtTerminos2:setFillColor( unpack(cBlueH) )
     scrViewRe:insert( txtTerminos2 )
     
-    yPosc = txtTerminos2.y + txtTerminos2.height + 30
+    yPosc = txtTerminos2.y + txtTerminos2.height + 40
     scrViewRe:setScrollHeight(yPosc)
-    
-    bgInfoSw.height = bgInfoSw.height + txtTerminos2.height
-    bgInfo.height = bgInfo.height + txtTerminos2.height
     
     -- Load logo Comercio
     local commerce = {{image = item.comImage}}
@@ -462,10 +441,16 @@ function setReward(item)
 end
     
 function setRewardLogo(item)
+    local circleLogo = display.newImage("img/deco/circleLogo100.png")
+    circleLogo:translate( 65, 60 )
+    scrViewRe:insert( circleLogo )
+    
+    local mask = graphics.newMask( "img/deco/maskLogo100.png" )
     local imgPBig = display.newImage(item.image, system.TemporaryDirectory)
     imgPBig:translate( 65, 60 )
-    imgPBig.width = 75
-    imgPBig.height = 75
+    imgPBig.height = 90
+    imgPBig.width = 90
+    imgPBig:setMask( mask )
     scrViewRe:insert( imgPBig )
 end
 
@@ -477,10 +462,10 @@ function isRedem()
     function setDesR(event)
         return true
     end
-    local bgRedem = display.newRoundedRect( midW, 590, 440, 60, 10 )
-    bgRedem:setFillColor( unpack(cGrayM) )
-    bgRedem:addEventListener( 'tap', setDesR)
-    grpIsRedem:insert(bgRedem)
+    local bgRedem1 = display.newRoundedRect( midW, 590, 440, 60, 10 )
+    bgRedem1:setFillColor( unpack(cGrayM) )
+    bgRedem1:addEventListener( 'tap', setDesR)
+    grpIsRedem:insert(bgRedem1)
     
     local lblRedem = display.newText({
         text = "ESTE ARTICULO YA FUE CANJEADO", 
@@ -507,12 +492,11 @@ function scene:create( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
-    local initY = h + 140 -- inicio en Y del worksite
-    local hWorkSite = intH - (h + 220)
+    local initY = h + 60 -- inicio en Y del worksite
+    local hWorkSite = intH - (h + 120)
     
     scrViewRe = widget.newScrollView
 	{

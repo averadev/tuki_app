@@ -13,7 +13,7 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    local site = "http://tukicard.com/tuki_ws/"
+    local site = "http://localhost/tuki_ws/"
     --local site = "http://mytuki.com/api/"
 	
 	function urlencode(str)
@@ -49,7 +49,7 @@ local RestManager = {}
         elseif obj.name == "Commerces" then
             setListCommerce(obj.items)
         elseif obj.name == "Commerce" then
-            setCommerce(obj.items[1], obj.rewards)
+            setCommerce(obj.items[1], obj.branchs, obj.rewards)
             if #obj.photos > 0 then
                 loadImage({idx = 0, name = "CommercePhotos", path = "assets/img/api/commerce/photos/", items = obj.photos})
             end
@@ -57,6 +57,8 @@ local RestManager = {}
             setCommercePhotos(obj.items)
         elseif obj.name == "Wallet" then
             setListWallet(obj.items)
+        elseif obj.name == "WalletLogos" then
+            setWalletLogos(obj.items)
         elseif obj.name == "Messages" then
             setListMessages(obj.items)
         elseif obj.name == "Message" then
@@ -66,7 +68,7 @@ local RestManager = {}
             local mask = graphics.newMask( "img/deco/qrMask.jpg" )
             local imagen = display.newImage( item.image, system.TemporaryDirectory )
             item.parent:insert(imagen)
-            item:setMask( mask )
+            imagen:setMask( mask )
             imagen.width = item.w
             imagen.height = item.h
             imagen:translate(item.x, item.y)
@@ -115,8 +117,14 @@ local RestManager = {}
         local fhd = io.open( path )
         if fhd then
             fhd:close()
+            local sizeMask = 'maskLogo100.png'
+            if w == 120 then
+                sizeMask = 'maskLogo120.png'
+            end
+            local mask = graphics.newMask( "img/deco/"..sizeMask )
             local imagen = display.newImage( img, system.TemporaryDirectory )
             parent:insert(imagen)
+            imagen:setMask( mask )
             imagen.width = w
             imagen.height = h
             imagen:translate(x, y)
@@ -125,7 +133,13 @@ local RestManager = {}
             local function imageListener( event )
                 if ( event.isError ) then
                 else
+                    local sizeMask = 'maskLogo100.png'
+                    if w == 120 then
+                        sizeMask = 'maskLogo120.png'
+                    end
+                    local mask = graphics.newMask( "img/deco/"..sizeMask )
                     parent:insert(event.target)
+                    event.target:setMask( mask )
                     event.target.width = w
                     event.target.height = h
                     event.target:translate(x, y)
@@ -550,7 +564,7 @@ local RestManager = {}
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
-                loadImage({idx = 0, name = "Commerce", path = "assets/img/api/commerce/", items = data.items, rewards = data.rewards, photos = data.photos})
+                loadImage({idx = 0, name = "Commerce", path = "assets/img/api/commerce/", items = data.items, branchs = data.branchs, rewards = data.rewards, photos = data.photos})
             end
             return true
         end
@@ -560,7 +574,7 @@ local RestManager = {}
 
     RestManager.getWallet = function()
 		local url = site.."mobile/getWallet/format/json/idUser/"..dbConfig.id
-        
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else

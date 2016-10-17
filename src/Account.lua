@@ -31,7 +31,7 @@ local tools, scrViewA
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
--------------------------------------
+----------------------------    ---------
 -- Consulta Comercio
 -- @param event objeto evento
 ------------------------------------
@@ -50,31 +50,37 @@ end
 function showAccount(usuario)
     -- Background
     local lastY = 0
-    local bgFB = display.newRect(midW, lastY, intW, 200 )
+    local bgFB = display.newRect(midW, lastY, intW, 270 )
     bgFB.anchorY = 0
-    bgFB:setFillColor( .38 )
+    bgFB:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBBlu) }, 
+        color2 = { unpack(cBTur) },
+        direction = "bottom"
+    } )
     scrViewA:insert(bgFB)
     
-    if usuario.fbid == nil or usuario.fbid == '' or usuario.fbid == 0 or usuario.fbid == '0' then
-        local bgFB = display.newCircle( 95, lastY + 100, 78 )
-        bgFB:setFillColor( unpack(cTurquesa) )
-        scrViewA:insert(bgFB)
+    if usuario.fbid == nil or usuario.fbid == '' or usuario.fbid == 0 or usuario.fbid == '0' then     
+        local fbFrame = display.newImage("img/deco/circleLogo100.png")
+        fbFrame:translate(100, 90)
+        scrViewA:insert( fbFrame )
         local fbPhoto = display.newImage("img/deco/fbPhoto.png")
-        fbPhoto:translate(95, lastY + 100)
+        fbPhoto:translate(100, 90)
         scrViewA:insert( fbPhoto )
     else
-        url = "http://graph.facebook.com/"..usuario.fbid.."/picture?large&width=150&height=150"
-        local isReady = retriveImage(usuario.fbid.."fbmax", url, scrViewA, 95, lastY + 100, 150, 150)
-        local fbFrame = display.newImage("img/deco/fbFrame.png")
-        fbFrame:translate(95, lastY + 100)
+        local fbFrame = display.newImage("img/deco/circleLogo120.png")
+        fbFrame:translate(100, 90)
         scrViewA:insert( fbFrame )
+        url = "http://graph.facebook.com/"..usuario.fbid.."/picture?large&width=150&height=150"
+        retriveImage(usuario.fbid.."fbmax", url, scrViewA, 100, 90, 120, 120, true)
     end
+    
 
     local txtNombre = display.newText({
         text = usuario.name, 
         x = 350, y = lastY + 70, width = 300, 
         font = fontBold,   
-        fontSize = 20, align = "left"
+        fontSize = 22, align = "left"
     })
     txtNombre:setFillColor( unpack(cWhite) )
     scrViewA:insert( txtNombre )
@@ -82,32 +88,19 @@ function showAccount(usuario)
         text = usuario.ciudad, 
         x = 350, y = lastY + 98, width = 300, 
         font = fontLight,   
-        fontSize = 18, align = "left"
+        fontSize = 20, align = "left"
     })
     txtUbicacion:setFillColor( unpack(cWhite) )
     scrViewA:insert( txtUbicacion )
     
-    local lineTop = display.newLine(190, lastY + 120, 450, lastY + 120)
-    lineTop:setStrokeColor( unpack(cGrayM) )
-    lineTop.strokeWidth = 3
-    scrViewA:insert(lineTop)
-    
     local txtDescTime = display.newText({
-        text = "Eres TUKER desde:", 
-        x = 350, y = lastY + 140, width = 300, 
+        text = "Eres TUKER desde: "..usuario.signin, 
+        x = 350, y = lastY + 125, width = 300, 
         font = fontRegular,   
-        fontSize = 16, align = "left"
+        fontSize = 14, align = "left"
     })
-    txtDescTime:setFillColor( unpack(cTurquesa) )
+    txtDescTime:setFillColor( unpack(cWhite) )
     scrViewA:insert( txtDescTime )
-    local txtTime = display.newText({
-        text = usuario.signin, 
-        x = 400, y = lastY + 140, width = 120, 
-        font = fontBold,   
-        fontSize = 16, align = "left"
-    })
-    txtTime:setFillColor( unpack(cWhite) )
-    scrViewA:insert( txtTime )
     
     -- Desc Tuks
     lastY = lastY + 200
@@ -115,45 +108,44 @@ function showAccount(usuario)
     for z = 1, #usuario.joined, 1 do 
         availableR = availableR + tonumber(usuario.joined[z].avaliable)
     end
-    local bgTopL = display.newRect(0, lastY, midW, 45 )
-    bgTopL.anchorX = 0
-    bgTopL.anchorY = 0
-    bgTopL:setFillColor( unpack(cPurpleL) )
-    scrViewA:insert(bgTopL)
-    local lblTopL0 = display.newText({
-        text = "Afiliado a", 
-        x = 30, y = lastY + 20, width = 120, 
-        font = fontRegular,   
-        fontSize = 16, align = "right"
-    })
-    lblTopL0:setFillColor( unpack(cWhite) )
-    scrViewA:insert( lblTopL0 )
+    
+    local lnDot480 = display.newImage("img/deco/lnDot480.png")
+    lnDot480:translate(midW, lastY - 25)
+    scrViewA:insert( lnDot480 )
+    local lnDot480 = display.newImage("img/deco/dotV.png")
+    lnDot480:translate(midW, lastY + 25)
+    scrViewA:insert( lnDot480 )
+    
     local lblTopL = display.newText({
-        text = (#usuario.joined).." Comercios", 
-        x = 177, y = lastY + 20, width = 160, 
+        text = (#usuario.joined), 
+        x = 120, y = lastY, width = 160, 
         font = fontBold,   
-        fontSize = 20, align = "left"
+        fontSize = 30, align = "center"
     })
     lblTopL:setFillColor( unpack(cWhite) )
     scrViewA:insert( lblTopL )
-    local bgTopR = display.newRect(midW, lastY, midW, 45 )
-    bgTopR.anchorX = 0
-    bgTopR.anchorY = 0
-    bgTopR:setFillColor( unpack(cTurquesa) )
-    scrViewA:insert(bgTopR)
+    local lblTopL0 = display.newText({
+        text = "COMERCIOS A LOS QUE ESTAS AFILIADO", 
+        x = 120, y = lastY + 40, width = 200, 
+        font = fontSemiRegular,   
+        fontSize = 15, align = "center"
+    })
+    lblTopL0:setFillColor( unpack(cWhite) )
+    scrViewA:insert( lblTopL0 )
+    
     local lblTopR = display.newText({
         text = availableR, 
-        x = 245, y = lastY + 20, width = 70, 
+        x = 360, y = lastY, width = 70, 
         font = fontBold,   
-        fontSize = 22, align = "right"
+        fontSize = 30, align = "center"
     })
     lblTopR:setFillColor( unpack(cWhite) )
     scrViewA:insert( lblTopR )
     local lblTopR0 = display.newText({
-        text = "Recompensas Disponibles", 
-        x = 385, y = lastY + 20, width = 200, 
-        font = fontRegular,   
-        fontSize = 16, align = "left"
+        text = "RECOMPENSAS DISPONIBLES", 
+        x = 360, y = lastY + 40, width = 200, 
+        font = fontSemiRegular,   
+        fontSize = 15, align = "center"
     })
     lblTopR0:setFillColor( unpack(cWhite) )
     scrViewA:insert( lblTopR0 )
@@ -166,152 +158,135 @@ end
 ------------------------------------
 function showAccountCom(items)
     -- Print Commerce
-    local lastY = 260
+    local lastY = 280
     for z = 1, #items, 1 do 
         if tonumber(items[z].points) > 0 then
             
-            local container = display.newContainer( 460, 144 )
+            local container = display.newContainer( 460, 154 )
             container.anchorY = 0
             container:translate( midW, lastY )
             scrViewA:insert( container )
             
-            local bgCom1 = display.newRect(0, 0, intW - 20, 144 )
-            bgCom1:setFillColor( unpack(cGrayXL) )
-            container:insert(bgCom1)
             local bgCom2 = display.newRect(0, 0, intW - 24, 140 )
             bgCom2:setFillColor( 1 )
             bgCom2.idx = items[z].id
             bgCom2:addEventListener( 'tap', tapCommerce)
             container:insert(bgCom2)
-
-            local bgImg1 = display.newRect(-158, 0, 144, 144 )
-            bgImg1:setFillColor( unpack(cGrayL) )
-            container:insert(bgImg1)
-            local bgImg2 = display.newRect(-158, 0, 140, 140 )
-            bgImg2:setFillColor( 1 )
-            container:insert(bgImg2)
+            
+            local fbFrame = display.newImage("img/deco/circleLogo120.png")
+            fbFrame:translate( -153, 0 )
+            container:insert( fbFrame )
+            local mask = graphics.newMask( "img/deco/maskLogo120.png" )
             local img = display.newImage( items[z].image, system.TemporaryDirectory )
-            img:translate( -158, 0 )
-            img.width = 140
-            img.height = 140
+            img:setMask( mask )
+            img:translate( -153, 0 )
+            img.width = 120
+            img.height = 120
             container:insert( img )
 
-            local bgTuks1 = display.newRect(193, -45, 70, 50 )
-            bgTuks1:setFillColor( unpack(cTurquesa) )
-            container:insert(bgTuks1)
-            local bgTuks2 = display.newRect(193, -45, 66, 46 )
-            bgTuks2:setFillColor( unpack(cBlueH) )
-            container:insert(bgTuks2)
-
-            local bgDesc1 = display.newRect(-86, -20, 314, 30 )
+            local bgDesc1 = display.newRect(-75, -10, 290, 20 )
             bgDesc1.anchorX = 0
-            bgDesc1.anchorY = 0
             bgDesc1:setFillColor( unpack(cGrayXXL) )
             container:insert(bgDesc1)
-            local bgDesc2 = display.newRect(-86, 40, 314, 30 )
+            local bgDesc2 = display.newRect(-75, 40, 290, 20 )
             bgDesc2.anchorX = 0
-            bgDesc2.anchorY = 0
             bgDesc2:setFillColor( unpack(cGrayXXL) )
             container:insert(bgDesc2)
 
             -- Descripciones
             local lblDescT = display.newText({
                 text = "TUKS", 
-                x = 193, y = -32, width = 70, 
-                font = fontRegular,   
-                fontSize = 14, align = "center"
+                x = 170, y = -30, width = 70, 
+                font = fontSemiBold,   
+                fontSize = 10, align = "right"
             })
-            lblDescT:setFillColor( 1 )
+            lblDescT:setFillColor( unpack(cBlueH) )
             container:insert( lblDescT )
             local lblDesc1 = display.newText({
                 text = "Recompensas Disponibles", 
-                x = 60, y = -5, width = 200, 
+                x = 30, y = -10, width = 200, 
                 font = fontRegular,   
                 fontSize = 14, align = "left"
             })
-            lblDesc1:setFillColor( unpack(cGrayH) )
+            lblDesc1:setFillColor( unpack(cBlueH) )
             container:insert( lblDesc1 )
             local lblDesc2 = display.newText({
                 text = "Visitas Realizadas", 
-                x = 60, y = 25, width = 200, 
+                x = 30, y = 15, width = 200, 
                 font = fontRegular,   
                 fontSize = 14, align = "left"
             })
-            lblDesc2:setFillColor( unpack(cGrayH) )
+            lblDesc2:setFillColor( unpack(cBlueH) )
             container:insert( lblDesc2 )
             local lblDesc3 = display.newText({
                 text = "Ultima Visita", 
-                x = 60, y = 55, width = 200, 
+                x = 30, y = 40, width = 200, 
                 font = fontRegular,   
                 fontSize = 14, align = "left"
             })
-            lblDesc3:setFillColor( unpack(cGrayH) )
+            lblDesc3:setFillColor( unpack(cBlueH) )
             container:insert( lblDesc3 )
-            local Account01 = display.newImage("img/icon/Account01.png")
-            Account01:translate(-64, 24)
-            container:insert( Account01 )
-            local Account02 = display.newImage("img/icon/Account02.png")
-            Account02:translate(-64, -6)
-            container:insert( Account02 )
-            local Account03 = display.newImage("img/icon/Account03.png")
-            Account03:translate(-64, 54)
-            container:insert( Account03 )
 
             --- Valores
             local lblCommerce = display.newText({
                 text = items[z].name, 
-                x = 40, y = -45, width = 220, 
-                font = fontBold,   
+                x = 40, y = -35, width = 220, 
+                font = fontSemiBold,   
                 fontSize = 22, align = "left"
             })
-            lblCommerce:setFillColor( unpack(cGrayH) )
+            lblCommerce:setFillColor( unpack(cBlueH) )
             container:insert( lblCommerce )
             local lblTuks = display.newText({
                 text = items[z].points, 
-                x = 193, y = -52, width = 70, 
+                x = 140, y = -35, width = 70, 
                 font = fontBold,   
-                fontSize = 26, align = "center"
+                fontSize = 26, align = "right"
             })
-            lblTuks:setFillColor( 1 )
+            lblTuks:setFillColor( unpack(cBlueH) )
             container:insert( lblTuks )
-            local xSpc = 125
+            local xSpc = 115
             if tonumber(items[z].rewards) > 9 then
-                xSpc = 117
+                xSpc = 107
             end
             local lblValue0 = display.newText({
                 text = items[z].avaliable, 
-                x = xSpc, y = -5, width = 150, 
+                x = xSpc, y = -10, width = 150, 
                 font = fontBold,   
                 fontSize = 14, align = "right"
             })
-            lblValue0:setFillColor( unpack(cPurpleL) )
+            lblValue0:setFillColor( unpack(cBlueH) )
             container:insert( lblValue0 )
             local lblValue1 = display.newText({
                 text = "/"..items[z].rewards, 
-                x = 140, y = -5, width = 150, 
+                x = 130, y = -10, width = 150, 
                 font = fontRegular,   
                 fontSize = 14, align = "right"
             })
-            lblValue1:setFillColor( unpack(cGrayH) )
+            lblValue1:setFillColor( unpack(cBlueH) )
             container:insert( lblValue1 )
             local lblValue2 = display.newText({
                 text = items[z].visits, 
-                x = 140, y = 25, width = 150, 
+                x = 130, y = 15, width = 150, 
                 font = fontBold,   
                 fontSize = 14, align = "right"
             })
-            lblValue2:setFillColor( unpack(cPurpleL) )
+            lblValue2:setFillColor( unpack(cBlueH) )
             container:insert( lblValue2 )
             if items[z].lastVisit then 
                 local lblValue3 = display.newText({
                     text = items[z].lastVisit, 
-                    x = 140, y = 55, width = 150, 
+                    x = 130, y = 40, width = 150, 
                     font = fontBold,   
                     fontSize = 14, align = "right"
                 })
-                lblValue3:setFillColor( unpack(cPurpleL) )
+                lblValue3:setFillColor( unpack(cBlueH) )
                 container:insert( lblValue3 )
             end
+            
+            local lnDot = display.newImage("img/deco/lnDot.png")
+            lnDot:translate( 0, 76 )
+            container:insert( lnDot )
+            
             lastY = lastY + 154
         end
     end
@@ -322,76 +297,80 @@ function showAccountCom(items)
             
             if isFirst then
                 lastY = lastY + 10
-                local bgCom1 = display.newRect(midW, lastY, intW, 30 )
+                local bgCom1 = display.newRect(midW, lastY, 440, 34 )
                 bgCom1.anchorY = 0
-                bgCom1:setFillColor( unpack(cGrayM) )
+                bgCom1:setFillColor( unpack(cBTur) )
                 scrViewA:insert(bgCom1)
+                local bgCom2 = display.newRect(midW, lastY+2, 436, 30 )
+                bgCom2.anchorY = 0
+                bgCom2:setFillColor( unpack(cWhite) )
+                scrViewA:insert(bgCom2)
                 local lblZero1 = display.newText({
                     text = "Afiliado pero ", 
                     x = 80, y = lastY + 15, width = 100, 
                     font = fontRegular,   
                     fontSize = 14, align = "left"
                 })
-                lblZero1:setFillColor( 1 )
+                lblZero1:setFillColor( unpack(cBlueH) )
                 scrViewA:insert( lblZero1 )
                 local lblZero2 = display.newText({
                     text = "SIN TUKS", 
-                    x = 162, y = lastY + 15, width = 100, 
+                    x = 168, y = lastY + 15, width = 100, 
                     font = fontBold,   
                     fontSize = 14, align = "left"
                 })
-                lblZero2:setFillColor( 1 )
+                lblZero2:setFillColor( unpack(cBlueH) )
                 scrViewA:insert( lblZero2 )
                 lastY = lastY + 40
                 
                 isFirst = false
             end
             
-            local container = display.newContainer( 460, 74 )
+            local container = display.newContainer( 460, 100 )
             container.anchorY = 0
             container:translate( midW, lastY )
             scrViewA:insert( container )
             
-            local bgCom1 = display.newRect(0, 0, intW - 20, 74 )
-            bgCom1:setFillColor( unpack(cGrayXL) )
-            container:insert(bgCom1)
             local bgCom2 = display.newRect(0, 0, intW - 24, 70 )
             bgCom2:setFillColor( 1 )
             bgCom2.idx = items[z].id
             bgCom2:addEventListener( 'tap', tapCommerce)
             container:insert(bgCom2)
             
-            local bgImg1 = display.newRect(-191, 0, 74, 74 )
-            bgImg1:setFillColor( unpack(cGrayL) )
-            container:insert(bgImg1)
-            local bgImg2 = display.newRect(-191, 0, 70, 70 )
-            bgImg2:setFillColor( 1 )
-            container:insert(bgImg2)
+            local fbFrame = display.newImage("img/deco/circleLogo80.png")
+            fbFrame:translate(-170, 0)
+            container:insert( fbFrame )
+            local mask = graphics.newMask( "img/deco/maskLogo70.png" )
             local img = display.newImage( items[z].image, system.TemporaryDirectory )
-            img:translate( -191, 0 )
+            img:translate( -170, 0 )
+            img:setMask( mask )
             img.width = 70
             img.height = 70
             container:insert( img )
             
+            local lnDot = display.newImage("img/deco/lnDot.png")
+            lnDot:translate( 0, 49 )
+            container:insert( lnDot )
+            
             --- Valores
             local lblCommerce = display.newText({
                 text = items[z].name, 
-                x = 40, y = -10, width = 350, 
-                font = fontBold,   
+                x = 40, y = -10, width = 310, 
+                font = fontSemiBold,   
                 fontSize = 22, align = "left"
             })
-            lblCommerce:setFillColor( unpack(cGrayH) )
+            lblCommerce:setFillColor( unpack(cBlueH) )
             container:insert( lblCommerce )
             local lblDesc = display.newText({
                 text = items[z].description, 
-                x = 40, y = 12, width = 350, 
+                x = 40, y = 12, width = 310, 
                 font = fontRegular,   
                 fontSize = 14, align = "left"
             })
-            lblDesc:setFillColor( unpack(cGrayH) )
+            lblDesc:setFillColor( unpack(cBlueH) )
             container:insert( lblDesc )
             
-            lastY = lastY + 84
+            lastY = lastY + 100
         end
     end
     
@@ -412,16 +391,15 @@ function scene:create( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
     scrViewA = widget.newScrollView
 	{
-		top = h + 140,
+		top = h + 60,
 		left = 0,
 		width = display.contentWidth,
-		height = intH - (h + 220),
+		height = intH - (h + 120),
 		horizontalScrollDisabled = true,
 		backgroundColor = { 1 }
 	}

@@ -12,12 +12,6 @@ local DBManager = require('src.DBManager')
 local OneSignal = require("plugin.OneSignal")
 DBManager.setupSquema() 
 
-local systemFonts = native.getFontNames()
-for i, fontName in ipairs( systemFonts ) do
-     print( "Font Name = " .. tostring( fontName ) )
-end
-
-
 -- This function gets called when the user opens a notification or one is received when the app is open and active.
 function DidReceiveRemoteNotification(message, data, isActive)
     if (data) then
@@ -33,6 +27,16 @@ end
 OneSignal.Init("774cd845-e756-4081-b185-c51855beb9cc", "7592263599", DidReceiveRemoteNotification)
 
 
+--[[
+local lfs = require "lfs"
+local doc_path = system.pathForFile( "", system.TemporaryDirectory )
+local destDir = system.TemporaryDirectory
+for file in lfs.dir(doc_path) do
+local file_attr = lfs.attributes( system.pathForFile( file, destDir  ) )
+os.remove( system.pathForFile( file, destDir  ) ) 
+end
+]]--
+
 
 local dbConfig = DBManager.getSettings()
 if dbConfig.id == '' then
@@ -40,8 +44,6 @@ if dbConfig.id == '' then
 elseif dbConfig.afiliated == 0 then
     composer.gotoScene("src.WelcomeHome")
 else
-    --composer.gotoScene("src.Home")
-    composer.gotoScene("src.CheckIn")
-    --composer.gotoScene("src.Reward", { params = { idReward = 18 } } )
-    --composer.gotoScene("src.Partner", { params = { idCommerce = 1 } } )
+    composer.gotoScene("src.Partners")
+    --composer.gotoScene("src.WelcomeList", { params = { filter = '1' } } )
 end

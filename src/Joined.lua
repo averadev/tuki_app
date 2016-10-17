@@ -80,7 +80,7 @@ function doFilter(txtFil)
     end
     
     if txtFil == '' then
-        tools:setEmpty(rowPartner, scrViewP, "No tienes comercios afiliados para el filtro seleccionado")
+        tools:setEmpty(rowPartner, scrViewP, "No tienes comercios afiliados con tu selección")
     else
         tools:setLoading(true, scrViewP)
         RestManager.getJoined(txtFil)
@@ -94,99 +94,101 @@ end
 function setListCommerce(items)
     -- Valida registros vacios
     if #items == 0 then
-        tools:setEmpty(rowPartner, scrViewP, "No tienes comercios afiliados para el filtro seleccionado")
+        tools:setEmpty(rowPartner, scrViewP, "No tienes comercios afiliados con tu selección")
     else
         -- Recorre registros y arma lista
+        lastYP = 45
         for z = 1, #items, 1 do 
-            lastYP = 80
-            rowPartner[z] = display.newContainer( 480, 95 )
-            rowPartner[z]:translate( midW, lastYP + (95*z) )
+            rowPartner[z] = display.newContainer( 480, 164 )
+            rowPartner[z]:translate( midW, lastYP + (164*z) )
             scrViewP:insert( rowPartner[z] )
 
             -- Fondo
-            local bg1 = display.newRect( 0, 0, 460, 80 )
-            bg1:setFillColor( unpack(cGrayXL) )
-            rowPartner[z]:insert( bg1 )
-            local bg2 = display.newRect( 0, 0, 452, 72 )
+            local bg2 = display.newRect( 0, 0, 452, 120 )
             bg2:setFillColor( unpack(cWhite) )
             bg2.partner = items[z]
             bg2:addEventListener( 'tap', tapCommerce)
             rowPartner[z]:insert( bg2 )
 
             -- Imagen Comercio
-            local bgImg0 = display.newRect( -188, 0, 85, 85 )
-            bgImg0:setFillColor( tonumber(items[z].colorA1)/255, tonumber(items[z].colorA2)/255, tonumber(items[z].colorA3)/255 )
-            rowPartner[z]:insert( bgImg0 )
-            local bgImg = display.newRect( -188, 0, 75, 75 )
-            bgImg:setFillColor( 1 )
-            rowPartner[z]:insert( bgImg )
+            local fbFrame = display.newImage("img/deco/circleLogo100.png")
+            fbFrame:translate( -153, -20 )
+            rowPartner[z]:insert( fbFrame )
+            local mask = graphics.newMask( "img/deco/maskLogo100.png" )
             local img = display.newImage( items[z].image, system.TemporaryDirectory )
-            img:translate( -188, 0 )
-            img.width = 70
-            img.height = 70
+            img:setMask( mask )
+            img:translate( -153, -20 )
+            img.width = 90
+            img.height = 90
             rowPartner[z]:insert( img )
 
             -- Textos
             local name = display.newText({
                 text = items[z].name,     
-                x = poscLabels, y = -15, width = 270, 
+                x = 0, y = 45, width = 390, 
                 font = fontBold,   
                 fontSize = 22, align = "left"
             })
-            name:setFillColor( unpack(cGrayXH) )
+            name:setFillColor( unpack(cBlueH) )
             rowPartner[z]:insert( name )
+            local concept = display.newText({
+                text = items[z].description, 
+                x = 0, y = 65, width = 390, 
+                font = fontRegular,   
+                fontSize = 16, align = "left"
+            })
+            concept:setFillColor( unpack(cBlueH) )
+            rowPartner[z]:insert( concept )
 
             -- Tuks
-            local bgTuks = display.newRect( -144, 20, 184, 30 )
-            bgTuks.anchorX = 0
-            bgTuks:setFillColor( unpack(cBlueH) )
-            rowPartner[z]:insert( bgTuks )
-            local lblTuks1 = display.newText({
-                text = items[z].points, 
-                x = -80, y = 20, width = 60, 
-                font = fontBold,   
-                fontSize = 18, align = "right"
-            })
-            lblTuks1:setFillColor( unpack(cWhite) )
-            rowPartner[z]:insert( lblTuks1 )
-            local lblTuks2 = display.newText({
+            print(intH)
+            local bgTuks1 = display.newRect( 70, -43, 270, 45 )
+            bgTuks1:setFillColor( unpack(cBTur) )
+            rowPartner[z]:insert( bgTuks1 )
+            local bgTuks2 = display.newRect( 70, 5, 270, 45 )
+            bgTuks2:setFillColor( unpack(cBBlu) )
+            rowPartner[z]:insert( bgTuks2 )
+            local lblDesc1 = display.newText({
                 text = "TUKS", 
-                x = -15, y = 20, width = 60, 
-                font = fontRegular,   
-                fontSize = 12, align = "left"
+                x = 60, y = -50,
+                font = fontRegular, width = 200,
+                fontSize = 18, align = "left"
             })
-            lblTuks2:setFillColor( unpack(cWhite) )
-            rowPartner[z]:insert( lblTuks2 )
-
-            -- Rewards
-            local bgRew = display.newRect( 41, 20, 184, 30 )
-            bgRew.anchorX = 0
-            bgRew:setFillColor( unpack(cPurple) )
-            rowPartner[z]:insert( bgRew )
-            local iconMedal = display.newImage("img/icon/iconMedalSmall.png")
-            iconMedal.alpha = .7
-            iconMedal:translate( 110, 20 )
-            rowPartner[z]:insert( iconMedal )
-            local lblTuks1 = display.newText({
-                text = items[z].posible, 
-                x = 110, y = 20, width = 60, 
-                font = fontRegular,   
-                fontSize = 18, align = "right"
+            lblDesc1:setFillColor( unpack(cWhite) )
+            rowPartner[z]:insert( lblDesc1 )
+            local lblDesc2 = display.newText({
+                text = "Recompensas", 
+                x = 60, y = -2,
+                font = fontRegular, width = 200,
+                fontSize = 18, align = "left"
             })
-            lblTuks1:setFillColor( unpack(cWhite) )
-            rowPartner[z]:insert( lblTuks1 )
-            local lblTuks2 = display.newText({
-                text = " / "..items[z].rewards, 
-                x = 170, y = 20, width = 60, 
-                font = fontRegular,   
-                fontSize = 12, align = "left"
+            lblDesc2:setFillColor( unpack(cWhite) )
+            rowPartner[z]:insert( lblDesc2 )
+            
+            local lblVal1 = display.newText({
+                text = items[z].points, 
+                x = 100, y = -45,
+                font = fontBold, width = 200,   
+                fontSize = 40, align = "right"
             })
-            lblTuks2:setFillColor( unpack(cWhite) )
-            rowPartner[z]:insert( lblTuks2 )
+            lblVal1:setFillColor( unpack(cWhite) )
+            rowPartner[z]:insert( lblVal1 )
+            local lblVal2 = display.newText({
+                text = items[z].posible..'/'..items[z].rewards, 
+                x = 100, y = 5,
+                font = fontSemiBold, width = 200, 
+                fontSize = 30, align = "right"
+            })
+            lblVal2:setFillColor( unpack(cWhite) )
+            rowPartner[z]:insert( lblVal2 )
+            
+        local lnDot = display.newImage("img/deco/lnDot.png")
+        lnDot:translate( 0, 80 )
+        rowPartner[z]:insert( lnDot )
 
         end
         -- Set new scroll position
-        scrViewP:setScrollHeight(lastYP + (95 * #items) + 70)
+        scrViewP:setScrollHeight(lastYP + (164 * #items) + 70)
     end
     tools:setLoading(false)
 end
@@ -200,12 +202,11 @@ function scene:create( event )
     
     tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
-    local initY = h + 140 -- inicio en Y del worksite
-    local hWorkSite = intH - (h + 220)
+    local initY = h + 60 -- inicio en Y del worksite
+    local hWorkSite = intH - (h + 120)
     
     scrViewP = widget.newScrollView
 	{

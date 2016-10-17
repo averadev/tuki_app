@@ -23,7 +23,7 @@ local intW = display.contentWidth
 local intH = display.contentHeight
 local midW = display.contentWidth / 2
 local h = display.topStatusBarContentHeight 
-local btnCatBg1, btnCatBg2
+local btnCatBg1
 local btns = {}
 
 
@@ -31,7 +31,7 @@ local btns = {}
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 function goToEnd(event)
-    if btnCatBg1.isActive then
+    if btnCatBg1.alpha == 0 then
         -- Send filter
         local txtFil = ''
         for z = 1, #btns, 1 do 
@@ -103,16 +103,12 @@ function tapWelcomeFilter(event)
         end
     end
     if isReady then
-        if not (btnCatBg1.isActive) then
-            btnCatBg1.isActive = true
-            btnCatBg1:setFillColor( unpack(cTurquesa) )
-            btnCatBg2:setFillColor( unpack(cBlue) )
+        if btnCatBg1.alpha == 1 then
+            btnCatBg1.alpha = 0
         end
     else
-        if btnCatBg1.isActive then
-            btnCatBg1.isActive = false
-            btnCatBg1:setFillColor( unpack(cGrayM) )
-            btnCatBg2:setFillColor( unpack(cGrayM) )
+        if btnCatBg1.alpha == 0 then
+            btnCatBg1.alpha = 1
         end
     end
 end
@@ -129,7 +125,7 @@ function scene:create( event )
         font = fontBold,   
         fontSize = 30, align = "center"
     })
-    txt1:setFillColor( unpack(cGrayXH) )
+    txt1:setFillColor( unpack(cBlueH) )
     screen:insert( txt1 )
     
     txtW2 = display.newText({
@@ -138,7 +134,7 @@ function scene:create( event )
         font = fontLight,   
         fontSize = 20, align = "center"
     })
-    txtW2:setFillColor( unpack(cGrayXH) )
+    txtW2:setFillColor( unpack(cBlueH) )
     screen:insert( txtW2 )
     
     txtW3 = display.newText({
@@ -147,7 +143,7 @@ function scene:create( event )
         font = fontLight,   
         fontSize = 20, align = "center"
     })
-    txtW3:setFillColor( unpack(cGrayXH) )
+    txtW3:setFillColor( unpack(cBlueH) )
     screen:insert( txtW3 )
     
     
@@ -184,11 +180,11 @@ function scene:create( event )
         btns[idx]:addEventListener( 'tap', tapWelcomeFilter)
 
         btns[idx].bgFP1 = display.newRect(0, 0, 190, 190 )
-        btns[idx].bgFP1:setFillColor( 236/255 )
+        btns[idx].bgFP1:setFillColor( .96 )
         btns[idx]:insert( btns[idx].bgFP1 )
 
         btns[idx].bgFP2 = display.newRect(0, 0, 190, 190 )
-        btns[idx].bgFP2:setFillColor( 46/255, 190/255, 239/255 )
+        btns[idx].bgFP2:setFillColor( .90 )
         btns[idx].bgFP2.alpha = 0
         btns[idx]:insert( btns[idx].bgFP2 )
 
@@ -208,23 +204,27 @@ function scene:create( event )
         btns[idx].txt = display.newText({
             text = Globals.filtros[z][1], 
             x = xPosc, y = yPosc + 60,
-            font = fontBold,   
+            font = fontSemiBold,   
             fontSize = 16, align = "center"
         })
-        btns[idx].txt:setFillColor( .5 )
+        btns[idx].txt:setFillColor( unpack(cBlueH) )
         scrViewW2:insert( btns[idx].txt )
 
     end
     
     -- Botons
+    local btnCatBg = display.newRoundedRect( midW, intH - 45, 350, 70, 10 )
+    btnCatBg:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBBlu) }, 
+        color2 = { unpack(cBTur) },
+        direction = "right"
+    } )
+    btnCatBg:addEventListener( 'tap', goToEnd )
+    screen:insert(btnCatBg)
     btnCatBg1 = display.newRoundedRect( midW, intH - 45, 350, 70, 10 )
     btnCatBg1:setFillColor( unpack(cGrayM) )
-    btnCatBg1.isActive = false
-    btnCatBg1:addEventListener( 'tap', goToEnd )
     screen:insert(btnCatBg1)
-    btnCatBg2 = display.newRoundedRect( midW, intH - 45, 344, 64, 10 )
-    btnCatBg2:setFillColor( unpack(cGrayM) )
-    screen:insert(btnCatBg2)
     local icoWArrow = display.newImage("img/icon/icoWArrow.png")
     icoWArrow:translate( midW + 60, intH - 45 )
     screen:insert( icoWArrow )

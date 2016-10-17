@@ -7,11 +7,11 @@
 local Sprites = {}
 
 Sprites.loading = {
-  source = "img/deco/sprLoading.png",
-  frames = {width=64, height=64, numFrames=8},
+  source = "img/deco/loading.png",
+  frames = {width=167, height=178, numFrames=10},
   sequences = {
       { name = "stop", loopCount = 1, start = 1, count=1},
-      { name = "play", time=1500, start = 1, count=8}
+      { name = "play", time=1200, start = 1, count=10}
   }
 }
 

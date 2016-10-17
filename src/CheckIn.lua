@@ -52,18 +52,17 @@ function scene:create( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
     -- Positions
     local sLn = 0
     local allH = intH - h
-    local xTopCode = midH - 60
-    local xBottomCode = midH + 140
+    local xTopCode = midH - 75
+    local xBottomCode = midH + 115
     if allH > 685 and allH < 750 then
-        xTopCode = xTopCode - 20
-        xBottomCode = xBottomCode + 25
+        xTopCode = xTopCode - 30
+        xBottomCode = xBottomCode + 30
     elseif allH >= 750 then
         sLn = 10
         xTopCode = xTopCode - 50
@@ -106,23 +105,23 @@ function scene:create( event )
     
     local grpQR = display.newGroup()
     screen:insert( grpQR )
-    -- Lines
+     -- Lines
     if allH > 685 then
-        local lnRT = display.newLine( midW+(50+sLn), midH-(80+sLn), midW+(130+sLn), midH-(80+sLn), midW+(130+sLn), midH-sLn )
+        local lnRT = display.newLine( midW+(50+sLn), midH-(100+sLn), midW+(130+sLn), midH-(100+sLn), midW+(130+sLn), midH-(20+sLn) )
         lnRT.strokeWidth = 3
         screen:insert( lnRT )
-        local lnRB = display.newLine( midW+(50+sLn), midH+(180+sLn), midW+(130+sLn), midH+(180+sLn), midW+(130+sLn), midH+(100+sLn) )
+        local lnRB = display.newLine( midW+(50+sLn), midH+(160+sLn), midW+(130+sLn), midH+(160+sLn), midW+(130+sLn), midH+(80+sLn) )
         lnRB.strokeWidth = 3
         screen:insert( lnRB )
-        local lnLB = display.newLine( midW-(130+sLn), midH+(100+sLn), midW-(130+sLn), midH+(180+sLn), midW-(50+sLn), midH+(180+sLn) )
+        local lnLB = display.newLine( midW-(130+sLn), midH+(80+sLn), midW-(130+sLn), midH+(160+sLn), midW-(50+sLn), midH+(160+sLn) )
         lnLB.strokeWidth = 3
         screen:insert( lnLB )
-        local lnLT = display.newLine( midW-(130+sLn), midH+sLn, midW-(130+sLn), midH-(80+sLn), midW-(50+sLn), midH-(80+sLn) )
+        local lnLT = display.newLine( midW-(130+sLn), midH-(20+sLn), midW-(130+sLn), midH-(100+sLn), midW-(50+sLn), midH-(100+sLn) )
         lnLT.strokeWidth = 3
         screen:insert( lnLT )
     end
     
-    RestManager.retriveQR(dbConfig.id, grpQR, midW, midH + 50, 270, 270)
+    RestManager.retriveQR(dbConfig.id, grpQR, midW, midH + 30, 270, 270)
     
 end	
 -- Called immediately after scene has moved onscreen:

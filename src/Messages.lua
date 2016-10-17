@@ -51,7 +51,7 @@ end
 
 -- Creamos lista de comercios
 function setListMessages(rewards)
-    lastYP = -57
+    lastYP = -65
     local isAvailable = true
     tools:setLoading(false)
     
@@ -76,81 +76,100 @@ function setListMessages(rewards)
         for z = 1, #rewards, 1 do 
 
             -- Contenedor del Reward
-            rowReward[z] = display.newContainer( intW, 125 )
-            rowReward[z]:translate( midW, lastYP + (115*z) )
+            rowReward[z] = display.newContainer( intW, 130 )
+            rowReward[z]:translate( midW, lastYP + (130*z) )
             scrViewR:insert( rowReward[z] )
 
-            local bg2 = display.newRect(0, 0, intW, 111 )
-            bg2:setFillColor( 1 )
-            rowReward[z]:insert( bg2 )
-            bg2.idMessage = rewards[z].id
-            bg2:addEventListener( 'tap', tapMessage)
-
-            local line = display.newRect(0, 56, 450, 3 )
-            line:setFillColor( 236/255 )
-            rowReward[z]:insert( line )
-
-            --local img = display.newImage("img/icon/iconMail.png")
-            local bgImg0 = display.newRect( -178, 0, 84, 84 )
-            bgImg0:setFillColor( unpack(cGrayM) )
-            rowReward[z]:insert( bgImg0 )
-            local bgImg1 = display.newRect( -178, 0, 80, 80 )
-            bgImg1:setFillColor( unpack(cWhite) )
-            rowReward[z]:insert( bgImg1 )
-
-            -- FB image
-            if rewards[z].user and rewards[z].fbid then
-                url = "http://graph.facebook.com/"..rewards[z].fbid.."/picture?large&width=80&height=80"
-                retriveImage(rewards[z].fbid.."fbmin", url, rowReward[z], -178, 0, 80, 80)
+            local bg = display.newRect(0, 0, intW, 120 )
+            bg:setFillColor( 1 )
+            bg.idMessage = rewards[z].id
+            bg:addEventListener( 'tap', tapMessage)
+            rowReward[z]:insert( bg )
+        
+            local lnDot1 = display.newImage("img/deco/lnDot.png")
+            lnDot1:translate( 0, -60 )
+            rowReward[z]:insert( lnDot1 )
+        
+            local lnDot2 = display.newImage("img/deco/lnDot.png")
+            lnDot2:translate( 0, 60 )
+            rowReward[z]:insert( lnDot2 )
+            
+            local circleLogo = display.newImage("img/deco/circleLogo80.png")
+            circleLogo:translate( -178, 0 )
+            rowReward[z]:insert( circleLogo )
+            
+            local img
+            if rewards[z].image then
+                -- Commerce
+                img = display.newImage( rewards[z].image, system.TemporaryDirectory )
             else
-                local img
-                if rewards[z].image then
-                    -- Commerce
-                    img = display.newImage( rewards[z].image, system.TemporaryDirectory )
-                elseif rewards[z].user then
-                    -- User without FB
-                    img = display.newImage("img/icon/userMessage.png")
-                else
-                    -- Unify and Standar
-                    img = display.newImage("img/icon/tukiIcon.png")
-                end
-                img:translate( -178, 0 )
-                img.width = 80
-                img.height = 80
-                rowReward[z]:insert( img )
+                -- Unify and Standar
+                img = display.newImage("img/icon/tukiIcon.png")
             end
+            local mask = graphics.newMask( "img/deco/maskLogo80.png" )
+            img:setMask( mask )
+            img:translate( -178, 0 )
+            img.width = 80
+            img.height = 80
+            rowReward[z]:insert( img )
 
 
             local lblFecha = display.newText({
                 text = rewards[z].fecha,     
-                x = 120, y = -40, width = 200, 
-                font = fontBold,   
-                fontSize = 14, align = "right"
+                x = 55, y = -35, width = 350, 
+                font = fontRegular,   
+                fontSize = 14, align = "left"
             })
-            lblFecha:setFillColor( unpack(cTurquesa) )
+            lblFecha:setFillColor( unpack(cBlueH) )
             rowReward[z]:insert( lblFecha )
 
+            local lblTxt1 = display.newText({
+                text = "DE",     
+                x = 55, y = -10, width = 350, 
+                font = fontRegular,   
+                fontSize = 14, align = "left"
+            })
+            lblTxt1:setFillColor( unpack(cBlueH) )
+            rowReward[z]:insert( lblTxt1 )
+
             local lblFrom = display.newText({
-                text = "De: "..rewards[z].from,     
-                x = 50, y = -15, width = 350, 
-                font = fontBold,   
+                text = rewards[z].from,     
+                x = 80, y = -10, width = 350, 
+                font = fontSemiBold,   
                 fontSize = 17, align = "left"
             })
-            lblFrom:setFillColor( .6 )
+            lblFrom:setFillColor( unpack(cBlueH) )
             rowReward[z]:insert( lblFrom )
+
+            local lblTxt2 = display.newText({
+                text = "ASUNTO",     
+                x = 55, y = 20, width = 350, 
+                font = fontRegular,   
+                fontSize = 14, align = "left"
+            })
+            lblTxt2:setFillColor( unpack(cBlueH) )
+            rowReward[z]:insert( lblTxt2 )
 
             local lblName = display.newText({
                 text = rewards[z].name, 
-                x = 50, y = 15, width = 350,
-                font = fontRegular,   
-                fontSize = 19, align = "left"
+                x = 75, y = 9, width = 260,
+                font = fontSemiRegular,   
+                fontSize = 17, align = "left"
             })
-            lblName:setFillColor( .3 )
+            lblName.anchorY = 0
+            lblName:setFillColor( unpack(cBlueH) )
             rowReward[z]:insert( lblName )
 
             -- Diseño visto
             if rewards[z].status == "1" then
-                bg2:setFillColor( unpack(cTurquesaXL) )
+                local bgSel = display.newRect( midW-4, 0, 8, 120 )
+                bgSel:setFillColor( {
+                    type = 'gradient',
+                    color1 = { unpack(cBBlu) }, 
+                    color2 = { unpack(cBTur) },
+                    direction = "top"
+                } ) 
+                rowReward[z]:insert(bgSel)
             end
 
         end
@@ -167,12 +186,11 @@ function scene:create( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
-    local initY = h + 140 -- inicio en Y del worksite
-    local hWorkSite = intH - (h + 220)
+    local initY = h + 60 -- inicio en Y del worksite
+    local hWorkSite = intH - (h + 120)
     
     scrViewR = widget.newScrollView
 	{

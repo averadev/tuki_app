@@ -30,7 +30,7 @@ local scene = composer.newScene()
 -- @param event objeto del evento
 ------------------------------------
 function getQRScan(event)
-    RestManager.cardLink("1011650132002295")
+    RestManager.cardLink("1011650132082297")
     local function listQR(message)  
         tools:setLoading(true, screen)
         RestManager.cardLink(message)
@@ -70,20 +70,24 @@ function showMess(isLink, message)
     bg.alpha = .7
     grpCLMess:insert(bg)
     
-    local bgContent = display.newRoundedRect( midW, midH + 30, 400, 150, 10 )
-    bgContent:setFillColor( unpack(cGrayXXH) )
-    grpCLMess:insert(bgContent)
+    local bg1 = display.newRect( midW, midH + 30, 404, 154 )
+    bg1:setFillColor( unpack(cBPur) )
+    grpCLMess:insert(bg1)
+
+    local bg2 = display.newRect( midW, midH + 30, 400, 150 )
+    bg2:setFillColor( unpack(cWhite) )
+    grpCLMess:insert(bg2)
+    
     local titleLoading = display.newText({
         text = message,     
         x = midW, y = midH + 30, width = 380,
         font = fontBold,   
         fontSize = 25, align = "center"
     })
-    titleLoading:setFillColor( .9 )
+    titleLoading:setFillColor( unpack(cBPur) )
     grpCLMess:insert(titleLoading)
     
     if isLink then
-        disabledLink()
         audio.play(fxLink)
         transition.to( grpCLMess, { alpha = 0, time = 500, delay = 5000 , onComplete=function()
             toHome()
@@ -104,7 +108,6 @@ function scene:create( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
@@ -135,25 +138,26 @@ function scene:create( event )
     screen:insert( lblDesc2 )
     
     local bgRedem = display.newRoundedRect( midW, midH + 100, 400, 60, 10 )
-    bgRedem:setFillColor( unpack(cPurpleL) )
+    bgRedem:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBBlu) }, 
+        color2 = { unpack(cBTur) },
+        direction = "right"
+    } )
     bgRedem:addEventListener( 'tap', getQRScan)
     screen:insert(bgRedem)
-    local bgRedemR1 = display.newRoundedRect( 400, midH + 100, 80, 60, 10 )
-    bgRedemR1:setFillColor( unpack(cPurple) )
-    screen:insert(bgRedemR1)
-    local bgRedemR2 = display.newRect( 380, midH + 100, 40, 60 )
-    bgRedemR2:setFillColor( unpack(cPurple) )
-    screen:insert(bgRedemR2)
     local lblRedem = display.newText({
         text = "LIGAR TARJETA", 
-        x = midW, y = midH + 100,
+        x = midW - 30, y = midH + 100,
         font = fontBold,
         fontSize = 26, align = "center"
     })
     lblRedem:setFillColor( unpack(cWhite) )
     screen:insert( lblRedem )
-    local iconQR = display.newImage("img/icon/iconQR.png")
-    iconQR:translate( 400, midH + 100 )
+    local iconQR = display.newImage("img/icon/menuCard.png")
+    iconQR.height = 30
+    iconQR.width = 47
+    iconQR:translate( 365, midH + 100 )
     screen:insert( iconQR )
     
     tools:toFront()

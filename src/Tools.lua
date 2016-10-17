@@ -34,6 +34,16 @@ function Tools:new()
         bgShadow:setFillColor( 0 )
         self:insert(bgShadow)
         
+        local bg = display.newRect( midW, 0, intW, 60 )
+        bg.anchorY = 0
+        bg:setFillColor( {
+            type = 'gradient',
+            color1 = { unpack(cBBlu) }, 
+            color2 = { unpack(cBTur) },
+            direction = "right"
+        } ) 
+        self:insert(bg)
+        
         local toolbar = display.newRect( 0, 59, display.contentWidth, 2 )
         toolbar.anchorX = 0
         toolbar.anchorY = 0
@@ -44,12 +54,20 @@ function Tools:new()
         self:insert( headLogo )
         
         local iconLogo = display.newImage("img/icon/iconHeader.png")
-        iconLogo:translate( midW, 55 )
+        iconLogo:translate( midW, 40 )
+        iconLogo:addEventListener( 'tap', toHome)
         headLogo:insert( iconLogo )
         
         if not isWelcome then
+            if not ("src.Home" == composer.getSceneName( "current" )) then
+                local iconReturn = display.newImage("img/icon/iconReturn.png")
+                iconReturn:translate(40, 30)
+                iconReturn:addEventListener( 'tap', backScreen)
+                self:insert( iconReturn )
+            end
+            
             local headMenu = display.newImage("img/icon/headMenu.png")
-            headMenu:translate(40, 30)
+            headMenu:translate(intW-40, 30)
             headMenu:addEventListener( 'tap', showMenu)
             self:insert( headMenu )
             
@@ -138,6 +156,10 @@ function Tools:new()
         section5:addEventListener( 'tap', toScreen)
         self:insert(section5)
         
+        local lnDot = display.newImage("img/deco/lnDot.png")
+        lnDot:translate(midW, intH - 58 )
+        self:insert( lnDot )
+        
         local iconCheckIn = display.newImage("img/icon/iconCheckIn.png")
         iconCheckIn:translate(245, intH - 53 )
         iconCheckIn.screen = 'CheckIn'
@@ -216,16 +238,16 @@ function Tools:new()
         arrayObj[1] = display.newGroup()
         parent:insert(arrayObj[1])
 
-        local empty = display.newImage("img/deco/info.png")
+        local empty = display.newImage("img/deco/notRows.png")
         empty:translate( midW, (parent.height / 2) - 40 )
         arrayObj[1]:insert( empty )
         local titleLoading = display.newText({
             text = info, 
-            x = midW, y = (parent.height / 2) + 40, width = intW,
-            font = fontSemiBold,   
-            fontSize = 18, align = "center"
+            x = midW, y = (parent.height / 2) + 70,
+            font = fontRegular, width = 350,
+            fontSize = 16, align = "center"
         })
-        titleLoading:setFillColor( .3, .3, .3 )
+        titleLoading:setFillColor( unpack(cBlueH) )
         arrayObj[1]:insert(titleLoading)
     end
     
@@ -247,21 +269,36 @@ function Tools:new()
         bgShade:setFillColor( 0, 0, 0, .5 )
         grpAnimate:insert(bgShade)
         
-        local bg = display.newRoundedRect( midW, midH, 300, 350, 10 )
-        bg:setFillColor( .3, .3, .3 )
-        grpAnimate:insert(bg)
+        local bg1 = display.newRect( midW, midH, 300, 350 )
+        bg1:setFillColor( unpack(cBPur) )
+        grpAnimate:insert(bg1)
+        
+        local bg2 = display.newRect( midW, midH, 296, 346 )
+        bg2:setFillColor( unpack(cWhite) )
+        grpAnimate:insert(bg2)
         
         local iconAfilMax = display.newImage("img/icon/iconAfilMax.png")
-        iconAfilMax:translate( midW, midH - 50 )
+        iconAfilMax:translate( midW, midH - 55 )
         grpAnimate:insert( iconAfilMax )
         
         local txt1 = display.newText( {
-            text = "Gracias por Afiliarte",
-            x = midW, y = midH + 125,
+            text = "¡GRACIAS POR",
+            x = midW, y = midH + 55,
 			align = "center", width = 250,
-            font = "Lato-Heavy", fontSize = 24
+            font = "Lato-Heavy", fontSize = 28
         })
+        txt1:setFillColor( unpack(cBPur) )
         grpAnimate:insert(txt1)
+        
+        local txt2 = display.newText( {
+            text = "AFILIARTE!",
+            x = midW, y = midH + 95,
+			align = "center", width = 250,
+            font = "Lato-Heavy", fontSize = 37
+        })
+        txt2:setFillColor( unpack(cBPur) )
+        grpAnimate:insert(txt2)
+        
         return true
     end
     
@@ -284,9 +321,8 @@ function Tools:new()
             end
             local bg = display.newRect( (display.contentWidth / 2), (parent.height / 2), 
                 display.contentWidth, parent.height )
-            bg:setFillColor( .85 )
+            bg:setFillColor( 1 )
             bg:addEventListener( 'tap', setDes)
-            bg.alpha = .3
             grpLoading:insert(bg)
             local sheet = graphics.newImageSheet(Sprites.loading.source, Sprites.loading.frames)
             local loading = display.newSprite(sheet, Sprites.loading.sequences)
@@ -297,7 +333,7 @@ function Tools:new()
             loading:play()
             local titleLoading = display.newText({
                 text = "Loading...",     
-                x = (display.contentWidth / 2) + 5, y = (parent.height / 2) + 60, width = intW,
+                x = (display.contentWidth / 2) + 5, y = (parent.height / 2) + 120, width = intW,
                 font = fontSemiBold,   
                 fontSize = 18, align = "center"
             })
@@ -327,11 +363,11 @@ function Tools:new()
         scrViewF = widget.newScrollView
         {
             top = 0,
-            left = 10,
-            width = display.contentWidth - 20,
+            left = 0,
+            width = display.contentWidth,
             height = 120,
             verticalScrollDisabled = true,
-            backgroundColor = { 1 }
+            backgroundColor = { unpack(cGrayXXL) }
         }
         parent:insert(scrViewF)
         
@@ -348,46 +384,31 @@ function Tools:new()
                     return
                 end
                 t.active = true
-                t.bgFP1:setFillColor( unpack(cTurquesa) )
-                t.bgFP2:setFillColor( unpack(cBlueH) )
                 t.iconOn.alpha = 1
                 t.iconOff.alpha = 0
-                t.txt:setFillColor( 1 )
                 for z = 2, #filters, 1 do 
                     if filters[z].active then
                         filters[z].active = false
-                        filters[z].bgFP1:setFillColor( unpack(cGrayL) )
-                        filters[z].bgFP2:setFillColor( unpack(cWhite) )
                         filters[z].iconOn.alpha = 0
                         filters[z].iconOff.alpha = 1
-                        filters[z].txt:setFillColor( .5 )
                     end
                 end
             else
                 -- Desactivar boton TODOS
                 if filters[1].active then
                     filters[1].active = false
-                    filters[1].bgFP1:setFillColor( unpack(cGrayL) )
-                    filters[1].bgFP2:setFillColor( unpack(cWhite) )
                     filters[1].iconOn.alpha = 0
                     filters[1].iconOff.alpha = 1
-                    filters[1].txt:setFillColor( .5 )
                 end
                 -- Activar botones secundarios
                 if t.active then
                     t.active = false
-                    t.bgFP1:setFillColor( unpack(cGrayL) )
-                    t.bgFP2:setFillColor( unpack(cWhite) )
                     t.iconOn.alpha = 0
                     t.iconOff.alpha = 1
-                    t.txt:setFillColor( .5 )
                 else
                     t.active = true
-                    t.bgFP1:setFillColor( unpack(cTurquesa) )
-                    t.bgFP2:setFillColor( unpack(cBlueH) )
                     t.iconOn.alpha = 1
                     t.iconOff.alpha = 0
-                    t.txt:setFillColor( 1 )
                 end
             end
             
@@ -404,23 +425,16 @@ function Tools:new()
             doFilter(txtFil)
         end
 
+        
         for z = 1, #Globals.filtros, 1 do 
-            local xPosc = (z * 94) - 50
+            local xPosc = (z * 93) - 45
 
-            filters[z] = display.newContainer( 90, 90 )
+            filters[z] = display.newContainer( 93, 110 )
             filters[z].idx = z
             filters[z].active = false
             filters[z]:translate( xPosc, 60 )
             scrViewF:insert( filters[z] )
             filters[z]:addEventListener( 'tap', tapFilter)
-
-            filters[z].bgFP1 = display.newRect(0, 0, 90, 90 )
-            filters[z].bgFP1:setFillColor( unpack(cGrayL) )
-            filters[z]:insert( filters[z].bgFP1 )
-
-            filters[z].bgFP2 = display.newRect(0, 0, 80, 80 )
-            filters[z].bgFP2:setFillColor( unpack(cWhite) )
-            filters[z]:insert( filters[z].bgFP2 )
 
             filters[z].iconOn = display.newImage("img/icon/"..Globals.filtros[z][2].."2.png")
             filters[z].iconOn:translate(0, -10)
@@ -431,27 +445,24 @@ function Tools:new()
             filters[z].iconOff:translate(0, -10)
             filters[z]:insert( filters[z].iconOff )
 
-            filters[z].txt = display.newText({
+            local txt = display.newText({
                 text = Globals.filtros[z][1], 
-                x = xPosc, y = 90, width = 85,
+                x = xPosc, y = 100, width = 85,
                 font = fontSemiBold,   
-                fontSize = 10, align = "center"
+                fontSize = 9, align = "center"
             })
-            filters[z].txt:setFillColor( .5 )
-            scrViewF:insert( filters[z].txt )
+            txt:setFillColor( .2 )
+            scrViewF:insert( txt )
 
             -- Activate All
             if z == 1 then
                 filters[z].active = true
-                filters[z].bgFP1:setFillColor( unpack(cTurquesa) )
-                filters[z].bgFP2:setFillColor( unpack(cBlueH) )
                 filters[z].iconOn.alpha = 1
                 filters[z].iconOff.alpha = 0
-                filters[z].txt:setFillColor( 1 )
             end
         end
         -- Set new scroll position
-        scrViewF:setScrollWidth((94 * #Globals.filtros) - 10)
+        scrViewF:setScrollWidth((93 * #Globals.filtros))
     end 
     
     -- Muestra el menu

@@ -29,7 +29,7 @@ local minNum = 0
 local rowPartner = {}
 local bigList = true
 local readyNext = false
-local tools, scrViewWL, txtW2, txtW3, txtNumber, btnNearBg1, btnNearBg2
+local tools, scrViewWL, txtW2, txtW3, txtNumber, btnNearBg1
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
@@ -79,26 +79,22 @@ function wAfiliate(event)
             txtNumber.text = "1"
             txtW2.text = "Para comenzar afiliate a minimo"
             txtW3.text = "  de nuestros comercios inscritos."
-            btnNearBg1:setFillColor( unpack(cGrayM) )
-            btnNearBg2:setFillColor( unpack(cGrayM) )
+            btnNearBg1.alpha = 1
             readyNext = false
         else 
             txtNumber.text = "" 
             txtW2.text = "Mientras mas afiliaciones tengas"
             txtW3.text = "mas recompensas podrás obtener."
-            btnNearBg1:setFillColor( unpack(cTurquesa) )
-            btnNearBg2:setFillColor( unpack(cBlue) )
+            btnNearBg1.alpha = 0
             readyNext = true
         end
     else
         -- Activar boton next
         if rowPartner[idx].bgActive.alpha == 1 then
-            btnNearBg1:setFillColor( unpack(cTurquesa) )
-            btnNearBg2:setFillColor( unpack(cBlue) )
+            btnNearBg1.alpha = 0
             readyNext = true
         else
-            btnNearBg1:setFillColor( unpack(cGrayM) )
-            btnNearBg2:setFillColor( unpack(cGrayM) )
+            btnNearBg1.alpha = 1
             readyNext = false
         end
     end
@@ -121,7 +117,7 @@ end
 function setListWelcome(items)
     -- Valida registros vacios
     if #items == 0 then
-        tools:setEmpty(rowPartner, scrViewWL, "No existen comercios para los filtros seleccionados")
+        tools:setEmpty(rowPartner, scrViewWL, "No existen comercios con tu selección")
     end
     
     if #items == 0 then
@@ -134,72 +130,68 @@ function setListWelcome(items)
         end
         
         -- Recorre registros y arma lista
-        local lastYP = -40
+        local lastYP = -50
         for z = 1, #items, 1 do 
-            rowPartner[z] = display.newContainer( 480, 95 )
-            rowPartner[z]:translate( midW, lastYP + (95*z) )
+            rowPartner[z] = display.newContainer( 480, 105 )
+            rowPartner[z]:translate( midW, lastYP + (105*z) )
             scrViewWL:insert( rowPartner[z] )
 
-            -- Fondo
-            local bg1 = display.newRect( 0, 0, 460, 80 )
-            bg1:setFillColor( unpack(cGrayXL) )
-            rowPartner[z]:insert( bg1 )
-            local bg2 = display.newRect( 0, 0, 456, 76 )
-            bg2:setFillColor( unpack(cWhite) )
-            bg2.partner = items[z]
-            rowPartner[z]:insert( bg2 )
-
-            -- Imagen Comercio
-            local bgImg0 = display.newRect( -188, 0, 85, 85 )
-            bgImg0:setFillColor( unpack(cGrayH) )
-            rowPartner[z]:insert( bgImg0 )
-            local bgImg = display.newRect( -188, 0, 80, 80 )
-            bgImg:setFillColor( tonumber(items[z].colorA1)/255, tonumber(items[z].colorA2)/255, tonumber(items[z].colorA3)/255 )
-            rowPartner[z]:insert( bgImg )
-            local img = display.newImage( items[z].image, system.TemporaryDirectory )
-            img:translate( -188, 0 )
-            img.width = 70
-            img.height = 70
-            rowPartner[z]:insert( img )
-
             -- Boton Afiliar
-            local bgBtn1 = display.newRect( 190, 0, 80, 80 )
-            bgBtn1:setFillColor( unpack(cGrayXL) )
+            local bgBtn1 = display.newRect( 0, 0, 440, 80 )
+            bgBtn1:setFillColor( unpack(cWhite) )
             bgBtn1.idx = z
             bgBtn1:addEventListener( 'tap', wAfiliate )
             rowPartner[z]:insert( bgBtn1 )
-            local icoWPlus = display.newImage("img/icon/icoWPlus.png")
-            icoWPlus:translate( 190, 0 )
-            rowPartner[z]:insert( icoWPlus )
+
+            -- Imagen Comercio
+            local fbFrame = display.newImage("img/deco/circleLogo80.png")
+            fbFrame:translate( -170, 0)
+            rowPartner[z]:insert( fbFrame )
+            local mask = graphics.newMask( "img/deco/maskLogo80.png" )
+            local img = display.newImage( items[z].image, system.TemporaryDirectory )
+            img:setMask( mask )
+            img:translate( -170, 0 )
+            img.width = 80
+            img.height = 80
+            rowPartner[z]:insert( img )
 
             -- Boton Afiliar
-            rowPartner[z].bgActive = display.newRect( 190, 0, 80, 80 )
-            rowPartner[z].bgActive:setFillColor( unpack(cPurple) )
+            local icoWPlus = display.newImage("img/icon/icoWPlus.png")
+            icoWPlus:translate( 180, 0 )
+            rowPartner[z]:insert( icoWPlus )
+            rowPartner[z].bgActive = display.newRect( 180, 0, 80, 80 )
+            rowPartner[z].bgActive:setFillColor( unpack(cWhite) )
             rowPartner[z].bgActive.idCommerce = items[z].id
             rowPartner[z].bgActive.alpha = 0
             rowPartner[z]:insert( rowPartner[z].bgActive )
             rowPartner[z].icoActive = display.newImage("img/icon/icoWCheck.png")
-            rowPartner[z].icoActive:translate( 190, 0 )
+            rowPartner[z].icoActive:translate( 180, 0 )
             rowPartner[z].icoActive.alpha = 0
             rowPartner[z]:insert( rowPartner[z].icoActive )
 
             -- Textos
             local name = display.newText({
                 text = items[z].name,     
-                x = poscLabels, y = -15, width = 270, 
+                x = poscLabels, y = 0, width = 230, 
                 font = fontBold,   
                 fontSize = 22, align = "left"
             })
-            name:setFillColor( unpack(cGrayXH) )
+            name.anchorY = 1
+            name:setFillColor( unpack(cBlueH) )
             rowPartner[z]:insert( name )
             local concept = display.newText({
                 text = items[z].description, 
-                x = poscLabels, y = 10, width = 270, 
+                x = poscLabels, y = 3, width = 230, 
                 font = fontRegular,   
                 fontSize = 16, align = "left"
             })
-            concept:setFillColor( unpack(cGrayH) )
+            concept.anchorY = 0
+            concept:setFillColor( unpack(cBlueH) )
             rowPartner[z]:insert( concept )
+            
+            local lnDot = display.newImage("img/deco/lnDot.png")
+            lnDot:translate( 0, 51 )
+            rowPartner[z]:insert( lnDot )
 
         end
     end
@@ -228,7 +220,7 @@ function scene:create( event )
         font = fontBold,   
         fontSize = 30, align = "center"
     })
-    txt1:setFillColor( unpack(cGrayXH) )
+    txt1:setFillColor( unpack(cBlueH) )
     screen:insert( txt1 )
     
     txtW2 = display.newText({
@@ -237,16 +229,16 @@ function scene:create( event )
         font = fontLight,   
         fontSize = 20, align = "center"
     })
-    txtW2:setFillColor( unpack(cGrayXH) )
+    txtW2:setFillColor( unpack(cBlueH) )
     screen:insert( txtW2 )
     
     txtNumber = display.newText({
         text = "3",
-        x = midW - 148, y = h + 84,
+        x = midW - 155, y = h + 81,
         font = fontBold,   
         fontSize = 25, align = "center"
     })
-    txtNumber:setFillColor( unpack(cGrayXH) )
+    txtNumber:setFillColor( unpack(cBlueH) )
     screen:insert( txtNumber )
     
     txtW3 = display.newText({
@@ -255,7 +247,7 @@ function scene:create( event )
         font = fontLight,   
         fontSize = 20, align = "center"
     })
-    txtW3:setFillColor( unpack(cGrayXH) )
+    txtW3:setFillColor( unpack(cBlueH) )
     screen:insert( txtW3 )
     
     scrViewWL = widget.newScrollView
@@ -269,13 +261,18 @@ function scene:create( event )
 	screen:insert(scrViewWL)
     
     -- Botons
+    local btnNearBg = display.newRoundedRect( midW, intH - 45, 350, 70, 10 )
+    btnNearBg:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBBlu) }, 
+        color2 = { unpack(cBTur) },
+        direction = "right"
+    } )
+    btnNearBg:addEventListener( 'tap', goToEnd )
+    screen:insert(btnNearBg)
     btnNearBg1 = display.newRoundedRect( midW, intH - 45, 350, 70, 10 )
     btnNearBg1:setFillColor( unpack(cGrayM) )
-    btnNearBg1:addEventListener( 'tap', goToEnd )
     screen:insert(btnNearBg1)
-    btnNearBg2 = display.newRoundedRect( midW, intH - 45, 344, 64, 10 )
-    btnNearBg2:setFillColor( unpack(cGrayM) )
-    screen:insert(btnNearBg2)
     local icoWArrow = display.newImage("img/icon/icoWArrow.png")
     icoWArrow:translate( midW + 60, intH - 45 )
     screen:insert( icoWArrow )

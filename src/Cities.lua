@@ -93,7 +93,7 @@ function showCities(items)
             width = 300, font = fLato,   
             fontSize = 20, align = "left"
         })
-        lblInfo:setFillColor( unpack(cGrayXXH) )
+        lblInfo:setFillColor( unpack(cBlueH) )
         rowCity[z]:insert( lblInfo )
         
         local lineRow = display.newRect( 0, 32, intW, 1 )
@@ -111,12 +111,11 @@ function scene:create( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
-    local initY = h + 140 -- inicio en Y del worksite
-    local hWorkSite = intH - (h + 220)
+    local initY = h + 60 -- inicio en Y del worksite
+    local hWorkSite = intH - (h + 120)
     
     local bgSearch = display.newRect( midW, initY + 40, intW, 80 )
     bgSearch:setFillColor( unpack(cGrayL) )
@@ -147,7 +146,7 @@ function scene:create( event )
 		--backgroundColor = { unpack(cGrayXL) }
 	}
 	screen:insert(scrCities)
-    
+    tools:toFront()
     tools:setLoading(true, screen)
     getCities()
 end	

@@ -50,40 +50,42 @@ function scene:create( event )
     screen:insert( logoBig )
     
     local txt1 = display.newText({
-        text = "¡LISTO!",
+        text = "¡ LISTO !",
         x = midW, y = midH - 50,
         font = fontBold,   
         fontSize = 30, align = "center"
     })
-    txt1:setFillColor( unpack(cGrayXH) )
+    txt1:setFillColor( unpack(cBlueH) )
     screen:insert( txt1 )
     
     local txt2 = display.newText({
         text = "Ahora puedes comenzar",
         x = midW, y = midH-15,
-        font = fontBold,   
+        font = fontSemiBold,   
         fontSize = 23, align = "center"
     })
-    txt2:setFillColor( unpack(cGrayXH) )
+    txt2:setFillColor( unpack(cBlueH) )
     screen:insert( txt2 )
     
     local txt3 = display.newText({
         text = "a ganar recompensas por tus visitas",
         x = midW, y = midH+15,
-        font = fontBold,   
+        font = fontSemiBold,   
         fontSize = 23, align = "center"
     })
-    txt3:setFillColor( unpack(cGrayXH) )
+    txt3:setFillColor( unpack(cBlueH) )
     screen:insert( txt3 )
     
     
     local btnInterBg1 = display.newRoundedRect( midW, midH + 120, 350, 70, 10 )
-    btnInterBg1:setFillColor( unpack(cPurpleL) )
+    btnInterBg1:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBBlu) }, 
+        color2 = { unpack(cBTur) },
+        direction = "right"
+    } )
     btnInterBg1:addEventListener( 'tap', goToHome )
     screen:insert(btnInterBg1)
-    local btnInterBg2 = display.newRoundedRect( midW, midH + 120, 344, 64, 10 )
-    btnInterBg2:setFillColor( unpack(cPurple) )
-    screen:insert(btnInterBg2)
     local icoWArrow = display.newImage("img/icon/icoWArrow.png")
     icoWArrow:translate( midW + 60, midH + 118 )
     screen:insert( icoWArrow )

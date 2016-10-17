@@ -63,117 +63,153 @@ function tapReward(event)
     composer.gotoScene("src.Reward", { time = 400, effect = "slideLeft", params = { idReward = t.idReward, giftReden = isReden } } )
 end
 
+-- Agregamos lista de comercios
+function setWalletLogos(rewards)
+    for z = 1, #rewards, 1 do 
+        if rowReward[z] then
+            local circleLogo = display.newImage("img/deco/circleLogo.png")
+            circleLogo:translate(-130, -50 )
+            rowReward[z]:insert( circleLogo )
+            
+            local mask = graphics.newMask( "img/deco/maskLogo.png" )
+            local img = display.newImage( rewards[z].image, system.TemporaryDirectory )
+            img:setMask( mask )
+            img:translate( -130, -50 )
+            img.width = 150
+            img.height = 150
+            rowReward[z]:insert( img )
+        end
+    end
+end 
+
 -- Creamos lista de comercios
 function setListWallet(rewards)
-    lastYP = -50
+    lastYP = 100
     local isAvailable = true
     tools:setLoading(false)
     
     if #rewards == 0 then
         tools:setEmpty(rowReward, scrViewR, "No cuentas con regalos recibidos")
     else
-        local function setInfoBar(yPosc, txtInfo)
-            local bg1 = display.newRect(midW, yPosc, 462, 30 )
-            bg1:setFillColor( unpack(cBlueH) )
-            scrViewR:insert( bg1 )
-
-            local lblInfo = display.newText({
-                text = txtInfo,     
-                x = 180, y = yPosc, width = 300, 
-                font = fontBold,   
-                fontSize = 17, align = "left"
-            })
-            lblInfo:setFillColor( unpack(cWhite) )
-            scrViewR:insert( lblInfo )
-        end
-
+        
+        local iconGift = display.newImage("img/icon/iconGift.png")
+        iconGift:translate( 40, 40 )
+        scrViewR:insert( iconGift )
+        
+        local lblInfo1 = display.newText({
+            text = "¡FELICIDADES TUKER!",     
+            x = 280, y = 30, width = 400, 
+            font = fontSemiBold,   
+            fontSize = 15, align = "left"
+        })
+        lblInfo1:setFillColor( unpack(cBBlu) )
+        scrViewR:insert( lblInfo1 )
+        
+        local lblInfo2 = display.newText({
+            text = "TUS COMERCIOS FAVORITOS TE REGALAN:",     
+            x = 280, y = 50, width = 400, 
+            font = fontSemiBold,   
+            fontSize = 15, align = "left"
+        })
+        lblInfo2:setFillColor( unpack(cBBlu) )
+        scrViewR:insert( lblInfo2 )
+        
+        lastYP = -90
         for z = 1, #rewards, 1 do 
 
-            -- Mostrar separadores
-            if z == 1 then
-                if rewards[z].status == "1" or rewards[z].status == "2" then
-                    setInfoBar(30, "Regalos obtenidos")
-                    lastYP = lastYP + 40
-                else
-                    setInfoBar(30, "Regalos canjeados")
-                    isAvailable = false
-                    lastYP = lastYP + 40
-                end
-            elseif isAvailable then
-                if not (rewards[z-1].status == rewards[z].status) and rewards[z].status == "3" then
-                    setInfoBar((125*z) - 50, "Regalos canjeados")
-                    isAvailable = false
-                    lastYP = lastYP + 40
-                end
-            end
-
             -- Contenedor del Reward
-            rowReward[z] = display.newContainer( 462, 125 )
-            rowReward[z]:translate( midW, lastYP + (125*z) )
+            rowReward[z] = display.newContainer( 480, 330 )
+            rowReward[z]:translate( midW, lastYP + (330*z) )
             scrViewR:insert( rowReward[z] )
-
-            local bg1 = display.newRect(0, 0, intW - 20, 110 )
-            bg1:setFillColor( 236/255 )
-            rowReward[z]:insert( bg1 )
-            local bg2 = display.newRect(0, 0, intW - 24, 106 )
-            bg2:setFillColor( 1 )
-            rowReward[z]:insert( bg2 )
-            bg2.idReward = rewards[z].id
-            bg2.status = rewards[z].status
-            bg2:addEventListener( 'tap', tapReward)
+        
+            local lnDot = display.newImage("img/deco/lnDot.png")
+            lnDot:translate( 0, -160 )
+            rowReward[z]:insert( lnDot )
             
-            -- Border Right
-            if rewards[z].status == "1" then
-                bg2.border = display.newRect( midW - 14, 0, 6, 110 )
-                bg2.border:setFillColor( {
-                    type = 'gradient',
-                    color1 = { .49, .81, .96, .7 }, 
-                    color2 = { .96, .99, 1, .2 },
-                    direction = "left"
-                } ) 
-                rowReward[z]:insert(bg2.border)
-            end
-
+            local dotSquare = display.newImage("img/deco/dotSquare.png")
+            dotSquare:translate( 0, -50 )
+            rowReward[z]:insert( dotSquare )
+            
+            local bgImg = display.newRect( 90, -50, 266, 200 )
+            bgImg:setFillColor( unpack(cBTur) )
+            rowReward[z]:insert( bgImg )
+            
+            local bgImg = display.newRect( 0, 100, 440, 80 )
+            bgImg.idReward = rewards[z].id
+            bgImg.status = rewards[z].status
+            bgImg:addEventListener( 'tap', tapReward)
+            rowReward[z]:insert( bgImg )
+            
             local img = display.newImage( rewards[z].image, system.TemporaryDirectory )
-            img:translate( -165, 0 )
-            img.width = 140
-            img.height = 105
+            img:translate( 90, -50 )
+            img.width = 262
+            img.height = 196
+            img.idReward = rewards[z].id
+            img.status = rewards[z].status
+            img:addEventListener( 'tap', tapReward)
             rowReward[z]:insert( img )
-
-            local lblFecha = display.newText({
-                text = rewards[z].fecha,     
-                x = 120, y = -40, width = 200, 
-                font = fontRegular,   
-                fontSize = 14, align = "right"
-            })
-            lblFecha:setFillColor( .6 )
-            rowReward[z]:insert( lblFecha )
-
+            
             local lblCommerce = display.newText({
                 text = rewards[z].commerce,     
-                x = 65, y = -15, width = 300, 
-                font = fontBold,   
-                fontSize = 17, align = "left"
+                x = 0, y = 73, width = 400, 
+                font = fontSemiBold,   
+                fontSize = 20, align = "left"
             })
-            lblCommerce:setFillColor( .6 )
+            lblCommerce:setFillColor( unpack(cBBlu) )
             rowReward[z]:insert( lblCommerce )
-
-            local lblName = display.newText({
-                text = rewards[z].name, 
-                x = 65, y = 15, width = 300,
-                font = fontRegular,   
-                fontSize = 19, align = "left"
-            })
-            lblName:setFillColor( .3 )
-            rowReward[z]:insert( lblName )
             
-
+            local lblGift1 = display.newText({
+                text = "TE REGALA: ",     
+                x = 0, y = 100, width = 400, 
+                font = fontRegular,   
+                fontSize = 12, align = "left"
+            })
+            lblGift1:setFillColor( unpack(cBBlu) )
+            rowReward[z]:insert( lblGift1 )
+            
+            local lblGift1 = display.newText({
+                text = rewards[z].name..' '..rewards[z].name,     
+                x = 20, y = 100, width = 300, 
+                font = fontSemiBold, height = 23,   
+                fontSize = 18, align = "left"
+            })
+            lblGift1:setFillColor( unpack(cBBlu) )
+            rowReward[z]:insert( lblGift1 )
+            
+            local lblGift2 = display.newText({
+                text = "Valido al  "..rewards[z].vigency,     
+                x = 0, y = 120, width = 400, 
+                font = fontRegular,   
+                fontSize = 12, align = "left"
+            })
+            lblGift2:setFillColor( unpack(cBBlu) )
+            rowReward[z]:insert( lblGift2 )
+            
+            local iconArrowR = display.newImage("img/icon/iconArrowR.png")
+            iconArrowR:translate( 200, 105 )
+            rowReward[z]:insert( iconArrowR )
+            
+            local lnDot1 = display.newImage("img/deco/lnDot.png")
+            lnDot1:translate( 0, 140 )
+            rowReward[z]:insert( lnDot1 )
+            
+            local bgFoot = display.newRect( 0, 155, 480, 10 )
+            bgFoot:setFillColor( {
+                type = 'gradient',
+                color1 = { unpack(cBBlu) }, 
+                color2 = { unpack(cBTur) },
+                direction = "right"
+            } ) 
+            rowReward[z]:insert( bgFoot )
+            
         end
         -- Set new scroll position
-        scrViewR:setScrollHeight((125 * #rewards) + lastYP + 80)
+        scrViewR:setScrollHeight((330 * #rewards) + 90)
+        for z = 1, #rewards, 1 do 
+            rewards[z].image = rewards[z].logo
+        end
+        loadImage({idx = 0, name = "WalletLogos", path = "assets/img/api/commerce/", items = rewards})
     end
-    
-    
 end
 
 ---------------------------------------------------------------------------------
@@ -184,12 +220,11 @@ function scene:create( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
-    local initY = h + 140 -- inicio en Y del worksite
-    local hWorkSite = intH - (h + 220)
+    local initY = h + 60 -- inicio en Y del worksite
+    local hWorkSite = intH - (h + 120)
     
     scrViewR = widget.newScrollView
 	{

@@ -56,40 +56,42 @@ function scene:create( event )
     screen:insert( logoBig )
     
     local txt1 = display.newText({
-        text = "¡BIENVENIDO!",
+        text = "¡ BIENVENIDO !",
         x = midW, y = midH - 50,
         font = fontBold,   
         fontSize = 30, align = "center"
     })
-    txt1:setFillColor( unpack(cGrayXH) )
+    txt1:setFillColor( unpack(cBlueH) )
     screen:insert( txt1 )
     
     local txt2 = display.newText({
         text = "Comienza buscando",
         x = midW, y = midH-15,
-        font = fontBold,   
+        font = fontSemiBold,   
         fontSize = 25, align = "center"
     })
-    txt2:setFillColor( unpack(cGrayXH) )
+    txt2:setFillColor( unpack(cBlueH) )
     screen:insert( txt2 )
     
     local txt3 = display.newText({
         text = "los comercios afiliados",
         x = midW, y = midH+15,
-        font = fontBold,   
+        font = fontSemiBold,   
         fontSize = 25, align = "center"
     })
-    txt3:setFillColor( unpack(cGrayXH) )
+    txt3:setFillColor( unpack(cBlueH) )
     screen:insert( txt3 )
     
     -- Botons
     local btnNearBg1 = display.newRoundedRect( midW, midH + 120, 350, 70, 10 )
-    btnNearBg1:setFillColor( unpack(cTurquesa) )
+    btnNearBg1:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBBlu) }, 
+        color2 = { unpack(cBTur) },
+        direction = "right"
+    } )
     btnNearBg1:addEventListener( 'tap', goToList )
     screen:insert(btnNearBg1)
-    local btnNearBg2 = display.newRoundedRect( midW, midH + 120, 344, 64, 10 )
-    btnNearBg2:setFillColor( unpack(cBlue) )
-    screen:insert(btnNearBg2)
     local icoWLocation = display.newImage("img/icon/icoWLocation.png")
     icoWLocation:translate( midW - 120, midH + 120 )
     screen:insert( icoWLocation )
@@ -103,12 +105,14 @@ function scene:create( event )
     screen:insert( txtNear2 )
     
     local btnInterBg1 = display.newRoundedRect( midW, midH + 210, 350, 70, 10 )
-    btnInterBg1:setFillColor( unpack(cPurpleL) )
+    btnInterBg1:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBBlu) }, 
+        color2 = { unpack(cBTur) },
+        direction = "right"
+    } )
     btnInterBg1:addEventListener( 'tap', goToWCat )
     screen:insert(btnInterBg1)
-    local btnInterBg2 = display.newRoundedRect( midW, midH + 210, 344, 64, 10 )
-    btnInterBg2:setFillColor( unpack(cPurple) )
-    screen:insert(btnInterBg2)
     local icoWCategories = display.newImage("img/icon/icoWCategories.png")
     icoWCategories:translate( midW - 120, midH + 210 )
     screen:insert( icoWCategories )

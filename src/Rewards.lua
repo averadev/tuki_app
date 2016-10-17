@@ -42,25 +42,6 @@ local txtBg, txtFiltro, fpRows = {}, {}, {}
 ---------------------------------------------------------------------------------
 
 -------------------------------------
--- Filtro de recompensas
--- @param event objeto evento
--------------------------------------
-function tapFilter(event)
-    local t = event.target
-    if t.bgFP2.alpha == 0 then
-        t.bgFP2.alpha = 1
-        t.iconOn.alpha = 1
-        t.iconOff.alpha = 0
-        t.txt:setFillColor( 1 )
-    else
-        t.bgFP2.alpha = 0
-        t.iconOn.alpha = 0
-        t.iconOff.alpha = 1
-        t.txt:setFillColor( .5 )
-    end
-end
-
--------------------------------------
 -- Consulta pantalla Reward
 -- @param event objeto evento
 -------------------------------------
@@ -81,12 +62,10 @@ function tapFavRew(event)
     if t.iconHeart1.alpha == 0  then
         t.iconHeart1.alpha = 1
         t.iconHeart2.alpha = 0
-        t:setFillColor( 236/255 )
         RestManager.setRewardFav(t.idReward, 0)
     else
         t.iconHeart1.alpha = 0
         t.iconHeart2.alpha = 1
-        t:setFillColor( 46/255, 190/255, 239/255 )
         RestManager.setRewardFav(t.idReward, 1)
     end
     return true
@@ -108,7 +87,7 @@ function doFilter(txtFil)
     end
     
     if txtFil == '' then
-        tools:setEmpty(rowCom, scrViewR, "No tenemos recompensas para el filtro seleccionado")
+        tools:setEmpty(rowCom, scrViewR, "No tenemos recompensas con tu selección")
     else
         tools:setLoading(true, scrViewR)
         RestManager.getRewards(txtFil)
@@ -150,23 +129,21 @@ end
 -- @param cpoints puntos del comercio
 ------------------------------------
 function getRowRew(parent, reward, cpoints)
-    local bg1 = display.newRect(midW, 0, intW - 20, 70 )
-    bg1:setFillColor( 236/255 )
-    parent:insert( bg1 )
-    local bg2 = display.newRect(midW, 0, intW - 24, 66 )
-    bg2:setFillColor( 1 )
-    parent:insert( bg2 )
+    local bg2 = display.newRect(265, 0, 380, 76)
+    bg2:setFillColor( unpack(cWhite) )
     bg2.idReward = reward.id
     bg2:addEventListener( 'tap', tapReward)
+    parent:insert( bg2 )
 
     local bgFav = display.newRect(42, 0, 60, 64 )
-    bgFav:setFillColor( 236/255 )
+    bgFav:setFillColor( unpack(cWhite) )
     parent:insert( bgFav )
     bgFav.idReward = reward.id 
     bgFav:addEventListener( 'tap', tapFavRew)
-    local bgPoints = display.newRect(110, 0, 80, 64 )
-    bgPoints:setFillColor( .21 )
-    parent:insert( bgPoints ) 
+    
+    local bgPoints = display.newImage("img/deco/bgPoints80.png")
+    bgPoints:translate( 110, 0 )
+    parent:insert( bgPoints )
 
     bgFav.iconHeart1 = display.newImage("img/icon/iconRewardHeart1.png")
     bgFav.iconHeart1:translate( 42, 0 )
@@ -179,7 +156,6 @@ function getRowRew(parent, reward, cpoints)
     -- Fav actions
     if reward.id == reward.fav  then
         bgFav.id = reward.id 
-        bgFav:setFillColor( 46/255, 190/255, 239/255 )
         bgFav.iconHeart1.alpha = 0
     else
         bgFav.iconHeart2.alpha = 0
@@ -190,8 +166,8 @@ function getRowRew(parent, reward, cpoints)
         local points = display.newText({
             text = "GRATIS", 
             x = 110, y = 0,
-            font = fontBold,   
-            fontSize = 20, align = "center"
+            font = fontSemiBold,   
+            fontSize = 18, align = "center"
         })
         points:rotate( -45 )
         points:setFillColor( 1 )
@@ -199,16 +175,16 @@ function getRowRew(parent, reward, cpoints)
     else
         local points = display.newText({
             text = reward.points, 
-            x = 110, y = -7,
+            x = 110, y = -12,
             font = fontBold,   
-            fontSize = 26, align = "center"
+            fontSize = 32, align = "center"
         })
         points:setFillColor( 1 )
         parent:insert( points )
         local points2 = display.newText({
             text = "TUKS", 
-            x = 110, y = 18,
-            font = fontBold,   
+            x = 110, y = 15,
+            font = fontSemiBold,   
             fontSize = 16, align = "center"
         })
         points2:setFillColor( 1 )
@@ -221,7 +197,7 @@ function getRowRew(parent, reward, cpoints)
         font = fontRegular,   
         fontSize = 19, align = "left"
     })
-    name:setFillColor( .3 )
+    name:setFillColor( unpack(cBlueH) )
     parent:insert( name )
 
     -- Set value Progress Bar
@@ -247,30 +223,17 @@ function getRowRew(parent, reward, cpoints)
             -- Todos los puntos                
             if points <= userPoints  then
                 porcentaje = 1
-                color1 = { 157/255, 210/255, 25/255, 1 }
-                color2 = { 140/255, 242/255, 14/255, .3 }
             else
                 porcentaje  = userPoints/points
-                -- Colores
-                if porcentaje <= .33 then
-                    color1 = { 210/255, 70/255, 27/255, 1 }
-                    color2 = { 242/255, 34/255, 12/255, .3 }
-                elseif porcentaje <= .66 then
-                    color1 = { 242/255, 112/255, 12/255, 1 }
-                    color2 = { 210/255, 141/255, 27/255, .3 }
-                elseif porcentaje > .66 then
-                    color1 = { 250/255, 214/255, 67/255, 1 }
-                    color2 = { 202/255, 127/255, 13/255, .3 }
-                end
             end
 
             local progressBar2 = display.newRect( 0, 0, 300*porcentaje, 5 )
             progressBar2:setFillColor( {
-                type = 'gradient',
-                color1 = color1, 
-                color2 = color2,
-                direction = "top"
-            } ) 
+                    type = 'gradient',
+                    color1 = { unpack(cBTur) }, 
+                    color2 = { unpack(cBBlu) },
+                    direction = "top"
+                } ) 
             progressBar2.anchorX = 0
             progressBar2:translate( 160, 30 )
             parent:insert(progressBar2)
@@ -283,11 +246,11 @@ end
 -- @param commerces lista de comercios
 ------------------------------------
 function setListReward(commerces)
-    lastYP = 140
+    lastYP = 155
     tools:setLoading(false)
     
     if #commerces == 0 then
-        tools:setEmpty(rowCom, scrViewR, "No tenemos recompensas para el filtro seleccionado")
+        tools:setEmpty(rowCom, scrViewR, "No tenemos recompensas con tu selección")
     else
         for z = 1, #commerces, 1 do 
 
@@ -296,19 +259,19 @@ function setListReward(commerces)
             scrViewR:insert( rowCom[z] )
 
             local bgC1 = display.newRect(midW, 0, intW - 20, 40 )
-            bgC1:setFillColor( unpack(cTurquesa) )
+            bgC1:setFillColor( unpack(cBTur) )
             rowCom[z]:insert( bgC1 )
             local bgC2 = display.newRect(midW, 0, intW - 24, 36 )
-            bgC2:setFillColor( unpack(cBlueH) )
+            bgC2:setFillColor( unpack(cWhite) )
             rowCom[z]:insert( bgC2 )
 
             local titleC = display.newText({
                 text = commerces[z].name, 
                 x = midW, y = 0, width = 420,
-                font = fontBold,   
+                font = fontSemiBold,   
                 fontSize = 18, align = "left"
             })
-            titleC:setFillColor( 1 )
+            titleC:setFillColor( unpack(cBlueH) )
             rowCom[z]:insert( titleC )
 
             local rewards = commerces[z].rewards
@@ -324,24 +287,29 @@ function setListReward(commerces)
 
             if #rewards > 3 then 
                 local more = display.newGroup()
-                more.y = (4 * 80) - 35
+                more.y = (4 * 80) - 30
                 rowCom[z]:insert( more )
 
-                local bg1 = display.newRoundedRect(midW, 0, 180, 30, 10 )
+                local bg1 = display.newRoundedRect(midW, 0, 130, 30, 10 )
                 bg1.idxCom = z
                 bg1.pointsCom = commerces[z].points
                 bg1.rewards = rewards
                 bg1:addEventListener( 'tap', loadMore)
-                bg1:setFillColor( unpack(cGrayL) )
+                bg1:setFillColor( {
+                    type = 'gradient',
+                    color1 = { unpack(cBBlu) }, 
+                    color2 = { unpack(cBTur) },
+                    direction = "right"
+                } )
                 more:insert( bg1 )
 
-                local c1 = display.newRoundedRect(midW - 25, 0, 15, 15, 7 )
+                local c1 = display.newRoundedRect(midW - 25, 0, 10, 10, 5 )
                 c1:setFillColor( unpack(cWhite) )
                 more:insert( c1 )
-                local c2 = display.newRoundedRect(midW, 0, 15, 15, 7 )
+                local c2 = display.newRoundedRect(midW, 0, 10, 10, 5 )
                 c2:setFillColor( unpack(cWhite) )
                 more:insert( c2 )
-                local c3 = display.newRoundedRect(midW + 25, 0, 15, 15, 7 )
+                local c3 = display.newRoundedRect(midW + 25, 0, 10, 10, 5 )
                 c3:setFillColor( unpack(cWhite) )
                 more:insert( c3 )
 
@@ -349,7 +317,7 @@ function setListReward(commerces)
 
             end
 
-            lastYP = lastYP + 55 + (limitRow * 80)
+            lastYP = lastYP + 55 + (limitRow * 85)
         end
     end
     -- Set new scroll position
@@ -369,12 +337,11 @@ function scene:create( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
-    local initY = h + 140 -- inicio en Y del worksite
-    local hWorkSite = intH - (h + 220)
+    local initY = h + 60 -- inicio en Y del worksite
+    local hWorkSite = intH - (h + 120)
     
     scrViewR = widget.newScrollView
 	{

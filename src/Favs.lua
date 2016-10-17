@@ -48,12 +48,10 @@ function tapFavFavs(event)
     if t.iconHeart1.alpha == 0  then
         t.iconHeart1.alpha = 1
         t.iconHeart2.alpha = 0
-        t:setFillColor( 236/255 )
         RestManager.setRewardFav(t.idReward, 0)
     else
         t.iconHeart1.alpha = 0
         t.iconHeart2.alpha = 1
-        t:setFillColor( 46/255, 190/255, 239/255 )
         RestManager.setRewardFav(t.idReward, 1)
     end
     return true
@@ -71,7 +69,7 @@ function doFilter(txtFil)
     end
     
     if txtFil == '' then
-        tools:setEmpty(rowReward, scrViewR, "No tienes recompensas con el filtro seleccionado")
+        tools:setEmpty(rowReward, scrViewR, "No tienes recompensas favoritas con tu selección")
     else
         lastYP = 80
         tools:setLoading(true, scrViewR)
@@ -79,21 +77,6 @@ function doFilter(txtFil)
     end
 end
 
--- Tap filter event
-function tapFilter(event)
-    local t = event.target
-    if t.bgFP2.alpha == 0 then
-        t.bgFP2.alpha = 1
-        t.iconOn.alpha = 1
-        t.iconOff.alpha = 0
-        t.txt:setFillColor( 1 )
-    else
-        t.bgFP2.alpha = 0
-        t.iconOn.alpha = 0
-        t.iconOff.alpha = 1
-        t.txt:setFillColor( .5 )
-    end
-end
 -- Tap toggle event
 function tapToggle(event)
     local t = event.target
@@ -127,43 +110,41 @@ function setListReward(rewards)
     tools:setLoading(false)
     
     if #rewards == 0 then
-        tools:setEmpty(rowReward, scrViewR, "No cuentas con recompensas favoritas con el filtro seleccionado")
+        tools:setEmpty(rowReward, scrViewR, "No tienes recompensas favoritas con tu selección")
     else
         for z = 1, #rewards, 1 do 
-            rowReward[z] = display.newContainer( 462, 95 )
-            rowReward[z]:translate( midW, lastYP + (95*z) )
+            
+            rowReward[z] = display.newContainer( 462, 105 )
+            rowReward[z]:translate( midW, lastYP + (105*z) )
             scrViewR:insert( rowReward[z] )
 
-            local bg1 = display.newRect(0, 0, intW - 20, 80 )
-            bg1:setFillColor( 236/255 )
-            rowReward[z]:insert( bg1 )
-            local bg2 = display.newRect(0, 0, intW - 24, 76 )
-            bg2:setFillColor( 1 )
+            local bg2 = display.newRect(10, 0, 380, 76 )
+            bg2:setFillColor( unpack(cWhite) )
             rowReward[z]:insert( bg2 )
             bg2.idReward = rewards[z].id
             bg2:addEventListener( 'tap', tapReward)
 
-            local bgFav = display.newRect(-196, 0, 60, 74 )
-            bgFav:setFillColor( 236/255 )
+            local bgFav = display.newRect(-205, 0, 40, 74 )
+            bgFav:setFillColor( unpack(cWhite) )
             rowReward[z]:insert( bgFav )
             bgFav.idReward = rewards[z].id
             bgFav:addEventListener( 'tap', tapFavFavs)
-            local bgPoints = display.newRect(-126, 0, 80, 74 )
-            bgPoints:setFillColor( unpack(cBlueH) )
+            
+            local bgPoints = display.newImage("img/deco/bgPoints80.png")
+            bgPoints:translate( -140, 0 )
             rowReward[z]:insert( bgPoints )
 
             bgFav.iconHeart1 = display.newImage("img/icon/iconRewardHeart1.png")
-            bgFav.iconHeart1:translate( -196, 0 )
+            bgFav.iconHeart1:translate( -205, 0 )
             rowReward[z]:insert( bgFav.iconHeart1 )
 
             bgFav.iconHeart2 = display.newImage("img/icon/iconRewardHeart2.png")
-            bgFav.iconHeart2:translate( -196, 0 )
+            bgFav.iconHeart2:translate( -205, 0 )
             rowReward[z]:insert( bgFav.iconHeart2 )
 
             -- Fav actions
             if rewards[z].id == rewards[z].fav  then
                 bgFav.id = rewards[z].id 
-                bgFav:setFillColor( 46/255, 190/255, 239/255 )
                 bgFav.iconHeart1.alpha = 0
             else
                 bgFav.iconHeart2.alpha = 0
@@ -173,9 +154,9 @@ function setListReward(rewards)
             if rewards[z].points == 0 or rewards[z].points == "0" then
                 local points = display.newText({
                     text = "GRATIS", 
-                    x = -127, y = 0,
-                    font = fontBold,   
-                    fontSize = 20, align = "center"
+                    x = -140, y = 0,
+                    font = fontSemiBold,   
+                    fontSize = 18, align = "center"
                 })
                 points:rotate( -45 )
                 points:setFillColor( 1 )
@@ -183,55 +164,46 @@ function setListReward(rewards)
             else
                 local points = display.newText({
                     text = rewards[z].points, 
-                    x = -126, y = -7,
+                    x = -140, y = -12,
                     font = fontBold,   
-                    fontSize = 26, align = "center"
+                    fontSize = 32, align = "center"
                 })
                 points:setFillColor( 1 )
                 rowReward[z]:insert( points )
                 local points2 = display.newText({
-                    text = "PUNTOS", 
-                    x = -126, y = 18,
-                    font = fontBold,   
-                    fontSize = 14, align = "center"
+                    text = "TUKS", 
+                    x = -140, y = 15,
+                    font = fontSemiBold,   
+                    fontSize = 16, align = "center"
                 })
                 points2:setFillColor( 1 )
                 rowReward[z]:insert( points2 )
             end
 
-            local commerce = display.newText({
-                text = rewards[z].commerce,     
-                x = 70, y = -15, width = 300, 
-                font = fontBold,   
-                fontSize = 17, align = "left"
-            })
-            commerce:setFillColor( .6 )
-            rowReward[z]:insert( commerce )
-
             local name = display.newText({
                 text = rewards[z].name, 
-                x = 70, y = 10, width = 300,
+                x = 60, y = 0, width = 280,
                 font = fontRegular,   
                 fontSize = 19, align = "left"
             })
-            name:setFillColor( .3 )
+            name:setFillColor( unpack(cBlueH) )
             rowReward[z]:insert( name )
-
-            if name.height > 25 then
-                name.height = 25
-                name.text = string.sub(name.text, 0, 30).."..."
-                if name.height > 25 then
-                    name.text = string.sub(name.text, 0, 27).."..."
-                    if name.height > 25 then
-                        name.text = string.sub(name.text, 0, 24).."..."
-                    end
-                end
+            
+            if z < #rewards then
+                local lnDot480 = display.newImage("img/deco/dot400Gray.png")
+                lnDot480.width = 480
+                lnDot480:translate( 0, 51 )
+                rowReward[z]:insert( lnDot480 )
             end
-
+            
             -- Set value Progress Bar
+            local usrPoints
             if rewards[z].userPoints then
+                usrPoints = tonumber(rewards[z].userPoints)
+            end
+            if usrPoints then
                 -- Progress Bar
-                local progressBar = display.newRect( 0, 0, 300, 5 )
+                local progressBar = display.newRect( -10, 0, 300, 7 )
                 progressBar:setFillColor( {
                     type = 'gradient',
                     color1 = { .6, .5 }, 
@@ -242,37 +214,22 @@ function setListReward(rewards)
                 rowReward[z]:insert(progressBar)
 
                 local points = tonumber(rewards[z].points)
-                local userPoints = tonumber(rewards[z].userPoints)
-
                 -- Usuario con puntos
-                if userPoints > 0 or points == 0  then
+                if usrPoints > 0 or points == 0  then
                     local porcentaje, color1, color2
 
                     -- Todos los puntos                
-                    if points <= userPoints  then
+                    if points <= usrPoints  then
                         porcentaje = 1
-                        color1 = { 157/255, 210/255, 25/255, 1 }
-                        color2 = { 140/255, 242/255, 14/255, .3 }
                     else
-                        porcentaje  = userPoints/points
-                        -- Colores
-                        if porcentaje <= .33 then
-                            color1 = { 210/255, 70/255, 27/255, 1 }
-                            color2 = { 242/255, 34/255, 12/255, .3 }
-                        elseif porcentaje <= .66 then
-                            color1 = { 242/255, 112/255, 12/255, 1 }
-                            color2 = { 210/255, 141/255, 27/255, .3 }
-                        elseif porcentaje > .66 then
-                            color1 = { 250/255, 214/255, 67/255, 1 }
-                            color2 = { 202/255, 127/255, 13/255, .3 }
-                        end
+                        porcentaje  = usrPoints/points
                     end
 
-                    local progressBar2 = display.newRect( 0, 0, 300*porcentaje, 5 )
+                    local progressBar2 = display.newRect( -10, 0, 300*porcentaje, 7 )
                     progressBar2:setFillColor( {
                         type = 'gradient',
-                        color1 = color1, 
-                        color2 = color2,
+                        color1 = { unpack(cBTur) }, 
+                        color2 = { unpack(cBBlu) },
                         direction = "top"
                     } ) 
                     progressBar2.anchorX = 0
@@ -280,10 +237,11 @@ function setListReward(rewards)
                     rowReward[z]:insert(progressBar2)
                 end
             end
+            
 
         end
         -- Set new scroll position
-        scrViewR:setScrollHeight(lastYP + (95 * #rewards) + 65)
+        scrViewR:setScrollHeight(lastYP + (106 * #rewards) + 65)
     end
     
 end
@@ -296,12 +254,11 @@ function scene:create( event )
     
 	tools = Tools:new()
     tools:buildHeader()
-    tools:buildNavBar()
     tools:buildBottomBar()
     screen:insert(tools)
     
-    local initY = h + 140 -- inicio en Y del worksite
-    local hWorkSite = intH - (h + 220)
+    local initY = h + 60 -- inicio en Y del worksite
+    local hWorkSite = intH - (h + 110)
     
     scrViewR = widget.newScrollView
 	{
