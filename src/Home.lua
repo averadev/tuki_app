@@ -57,13 +57,13 @@ function tapFavHome(event)
     local t = event.target
     audio.play( fxFav )
     if rewardsH[idxA].id == rewardsH[idxA].fav  then
-        favOff.alpha = .7
+        favOff.alpha = .8
         favOn.alpha = 0
         rewardsH[idxA].fav = nil
         RestManager.setRewardFav(rewardsH[idxA].id, 0)
     else
         favOff.alpha = 0
-        favOn.alpha = .7
+        favOn.alpha = .8
         rewardsH[idxA].fav = rewardsH[idxA].id
         RestManager.setRewardFav(rewardsH[idxA].id, 1)
     end
@@ -430,7 +430,6 @@ function scene:create( event )
         isFooter = false
     end
     -- Resize Cmp
-    print(allH)
     if allH <= 685 then
         wCTitle, rLRest, hHPoints, yHPoints, hHTuks, xxLCircle = 100, 30, 15, 10, 8, 20
         wCmp, hCmp, hHPoints = 320, 240, 20
@@ -487,9 +486,9 @@ function scene:create( event )
     favH:insert( bgFav )
     favOn = display.newImage("img/icon/iconRewardHeart2.png")
     favOn:scale( 1.4, 1.5 )
-    favOn.alpha = .4
+    favOn.alpha = .8
     favH:insert( favOn )
-    favOff = display.newImage("img/icon/iconRewardBig1.png")
+    favOff = display.newImage("img/icon/iconRewardHeart3.png")
     favOff:scale( 1.4, 1.5 )
     favH:insert( favOff )
     
@@ -502,7 +501,7 @@ function scene:create( event )
         local bgBottom = display.newRect(midW, initHY - 10, wCmp + 4, 60 )
         bgBottom.anchorY = 1
         bgBottom:setFillColor( 0 )
-        bgBottom.alpha = .5
+        bgBottom.alpha = .8
         workSite:insert( bgBottom )
     end
     

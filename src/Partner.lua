@@ -139,8 +139,8 @@ function setCommerce(item, branchs, rewards)
     scrViewPa:insert( bottomRounded )
     
     local bgBottom = display.newRect(midW, yPosc + 80, 440, 90 )
-    bgBottom:setFillColor( .19, 0, .29 )
-    bgBottom.alpha = .5
+    bgBottom:setFillColor( 0 )
+    bgBottom.alpha = .6
     scrViewPa:insert( bgBottom )
     
     local circleLogo = display.newImage("img/deco/circleLogo.png")
@@ -178,26 +178,29 @@ function setCommerce(item, branchs, rewards)
     -- Detalle afiliado
     yPosc = yPosc + 290
     if item.points then
-        local container = display.newContainer( 440, 125 )
+        local container = display.newContainer( 440, 114 )
         container.anchorY = 0
         container:translate( midW, yPosc )
         scrViewPa:insert( container )
         
-        local bgCom1 = display.newRect(-95, -10, 312, 94 )
+        local bgCom1 = display.newRect(0, -10, intW - 40, 94 )
         bgCom1:setFillColor( unpack(cBTur) )
-        bgCom1.anchorX = 0
         container:insert(bgCom1)
-        local bgCom2 = display.newRect(-93, -10, 308, 90 )
+        local bgCom2 = display.newRect(0, -10, intW - 44, 90 )
         bgCom2:setFillColor( unpack(cWhite) )
-        bgCom2.anchorX = 0
         container:insert(bgCom2)
         local bgCom2 = display.newRect(70, -10, 2, 80 )
         bgCom2:setFillColor( unpack(cGrayXXL) )
         container:insert(bgCom2)
 
-        local bgTuks = display.newImage("img/deco/bgPoints120.png")
-        bgTuks:translate( -160, 0 )
-        container:insert( bgTuks )
+        local bgTuks1 = display.newRoundedRect(-160, 0, 120, 114, 5 )
+        bgTuks1:setFillColor( {
+            type = 'gradient',
+            color1 = { unpack(cBTur) }, 
+            color2 = { unpack(cBBlu) },
+            direction = "top"
+        } )
+        container:insert(bgTuks1)
 
         -- Descripciones
         local lblDescT = display.newText({

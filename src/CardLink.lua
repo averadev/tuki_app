@@ -111,33 +111,27 @@ function scene:create( event )
     tools:buildBottomBar()
     screen:insert(tools)
     
+    local linkCard = display.newImage("img/deco/linkCard.png")
+    linkCard:translate( midW, midH - 85 )
+    screen:insert( linkCard )
+    
     local lblTitle = display.newText({
-        text = "¡Liga una tarjeta TUKI a tu cuenta y LLEVALA SIEMPRE CONTIGO!", 
-        x = midW, y = midH - 100, width = 440, 
-        font = fontBold, fontSize = 26, align = "center"
+        text = "¡LIGA TU TARJETA A TU CUENTA Y LLEVA TUS TUKS A TODOS LADOS!", 
+        x = midW, y = midH + 85, width = 440, 
+        font = fontBold, fontSize = 24, align = "center"
     })
     lblTitle:setFillColor( unpack(cBlueH) )
     screen:insert( lblTitle )
     
-    local txtDesc1 = "Liga una tarjeta a tu cuenta y automaticamente llevarás todos tus puntos contigo."
-    local txtDesc2 = "¡Sin necesidad de traer la tarjeta contigo!"
-         
-    local lblDesc1 = display.newText({
-        text = txtDesc1, 
-        x = midW, y = midH - 20, width = 400, 
-        font = fontRegular, fontSize = 18
+    local lblDesc = display.newText({
+        text = "¡Sin necesidad de traer la tarjeta contigo!", 
+        x = midW, y = midH + 130, width = 400, 
+        font = fontBold, fontSize = 18, align = "center"
     })
-    lblDesc1:setFillColor( unpack(cBlueH) )
-    screen:insert( lblDesc1 )
-    local lblDesc2 = display.newText({
-        text = txtDesc2, 
-        x = midW, y = midH + 20, width = 400, 
-        font = fontBold, fontSize = 18
-    })
-    lblDesc2:setFillColor( unpack(cBlueH) )
-    screen:insert( lblDesc2 )
+    lblDesc:setFillColor( unpack(cBlueH) )
+    screen:insert( lblDesc )
     
-    local bgRedem = display.newRoundedRect( midW, midH + 100, 400, 60, 10 )
+    local bgRedem = display.newRoundedRect( midW, midH + 190, 400, 60, 10 )
     bgRedem:setFillColor( {
         type = 'gradient',
         color1 = { unpack(cBBlu) }, 
@@ -148,7 +142,7 @@ function scene:create( event )
     screen:insert(bgRedem)
     local lblRedem = display.newText({
         text = "LIGAR TARJETA", 
-        x = midW - 30, y = midH + 100,
+        x = midW - 30, y = midH + 190,
         font = fontBold,
         fontSize = 26, align = "center"
     })
@@ -157,8 +151,15 @@ function scene:create( event )
     local iconQR = display.newImage("img/icon/menuCard.png")
     iconQR.height = 30
     iconQR.width = 47
-    iconQR:translate( 365, midH + 100 )
+    iconQR:translate( 365, midH + 190 )
     screen:insert( iconQR )
+    
+    -- Ajust by ratio
+    if allH > 685 then
+        linkCard.y = midH - 110
+        lblTitle.y = midH + 75
+        lblDesc.y = midH + 120
+    end
     
     tools:toFront()
     

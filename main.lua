@@ -44,6 +44,6 @@ if dbConfig.id == '' then
 elseif dbConfig.afiliated == 0 then
     composer.gotoScene("src.WelcomeHome")
 else
-    composer.gotoScene("src.Partners")
+    composer.gotoScene("src.Home")
     --composer.gotoScene("src.WelcomeList", { params = { filter = '1' } } )
 end
