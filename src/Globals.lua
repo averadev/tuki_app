@@ -43,6 +43,7 @@ fontBold = 'Raleway ExtraBold'
 myTuks = ''
 myWallet = 0
 locIdCity = 0
+oneSignalId = 0
 local Globals = {}
 Globals.filtros = {
     {"TODO", "iconFilterA"}, 

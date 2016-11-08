@@ -116,9 +116,9 @@ function setListMessages(rewards)
 
             local lblFecha = display.newText({
                 text = rewards[z].fecha,     
-                x = 55, y = -35, width = 350, 
+                x = 35, y = -35, width = 350, 
                 font = fontRegular,   
-                fontSize = 14, align = "left"
+                fontSize = 14, align = "right"
             })
             lblFecha:setFillColor( unpack(cBlueH) )
             rowReward[z]:insert( lblFecha )
@@ -133,10 +133,10 @@ function setListMessages(rewards)
             rowReward[z]:insert( lblTxt1 )
 
             local lblFrom = display.newText({
-                text = rewards[z].from,     
+                text = rewards[z].commerce,     
                 x = 80, y = -10, width = 350, 
                 font = fontSemiBold,   
-                fontSize = 17, align = "left"
+                fontSize = 20, align = "left"
             })
             lblFrom:setFillColor( unpack(cBlueH) )
             rowReward[z]:insert( lblFrom )
@@ -153,7 +153,7 @@ function setListMessages(rewards)
             local lblName = display.newText({
                 text = rewards[z].name, 
                 x = 75, y = 9, width = 260,
-                font = fontSemiRegular,   
+                font = fontRegular,   
                 fontSize = 17, align = "left"
             })
             lblName.anchorY = 0
@@ -205,7 +205,7 @@ function scene:create( event )
     scrViewR:toBack()
     
     tools:setLoading(true, scrViewR)
-    RestManager.getMessages()
+    RestManager.getMessagesSeg()
     
 end	
 -- Called immediately after scene has moved onscreen:

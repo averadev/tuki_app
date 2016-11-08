@@ -124,18 +124,17 @@ function scene:create( event )
     -- Agregamos el home
 	screen = self.view
     
-    local bg = display.newRect( midW, h, intW, intH - h )
+    local bg = display.newRect( midW, h, intW, intH )
     bg.anchorY = 0
-    bg:setFillColor( .95 )
+    bg:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBTur) }, 
+        color2 = { unpack(cBBlu) },
+        direction = "top"
+    } ) 
     screen:insert(bg)
-    
-    local bgSplash = display.newImage("img/deco/bgSplashTall.png")
-    bgSplash.y = h
-    bgSplash.x = midW
-    bgSplash.anchorY = 0
-    screen:insert( bgSplash )
         
-    imgLogo = display.newImage("img/deco/splash1.png", true) 
+    imgLogo = display.newImage("img/deco/logoWhite.png", true) 
 	imgLogo.x = midW
 	imgLogo.y = midH / 2
 	screen:insert(imgLogo)
@@ -147,26 +146,42 @@ function scene:create( event )
 	screen:insert(groupCreate)
 
     -- Bg TextFields
-    local bgSignEmail = display.newImage("img/deco/usuario.png", true) 
-    bgSignEmail.x = midW
-    bgSignEmail.y = midH - 45
-    groupSign:insert(bgSignEmail)
-    local bgSignPass = display.newImage("img/deco/contrasenia.png", true) 
-    bgSignPass.x = midW
-    bgSignPass.y = midH + 45
-    groupSign:insert(bgSignPass)
+    local bg1 = display.newRoundedRect( midW, midH - 40, 350, 55, 5 )
+	bg1:setFillColor( unpack(cTurquesa) )
+	groupSign:insert(bg1)
+    local bg2 = display.newRoundedRect( midW, midH - 40, 344, 51, 5 )
+	bg2:setFillColor( unpack(cWhite) )
+	groupSign:insert(bg2)
+    local bg3 = display.newRoundedRect( midW, midH + 40, 350, 55, 5 )
+	bg3:setFillColor( unpack(cTurquesa) )
+	groupSign:insert(bg3)
+    local bg4 = display.newRoundedRect( midW, midH + 40, 350, 51, 5 )
+	bg4:setFillColor( unpack(cWhite) )
+	groupSign:insert(bg4)
+    local bg5 = display.newRoundedRect( midW, midH + 120, 350, 55, 5 )
+	bg5:setFillColor( unpack(cTurquesa) )
+    bg5:addEventListener( "tap", doSignIn )
+	groupSign:insert(bg5)
+    local bg6 = display.newRoundedRect( midW, midH + 200, 350, 55, 5 )
+	bg6:setFillColor( unpack(cBPur) )
+    bg6:addEventListener( "tap", showCreate )
+	groupSign:insert(bg6)
+    local btnDoReturn = display.newRect( midW - 90, midH + 270, 160, 40 )
+    btnDoReturn.alpha = .01
+    btnDoReturn:addEventListener( "tap", getReturnSplash )
+	groupSign:insert(btnDoReturn)
     
     -- TextFields Sign In
-    txtSignEmail = native.newTextField( midW + 25, midH - 45, 300, 45 )
-    txtSignEmail.size = 20
+    txtSignEmail = native.newTextField( midW + 25, midH - 40, 300, 45 )
+    txtSignEmail.size = 24
     txtSignEmail.method = "signin"
     txtSignEmail.inputType = "email"
     txtSignEmail.hasBackground = false
     txtSignEmail.placeholder = "Email"
     txtSignEmail:addEventListener( "userInput", onTxtFocus )
 	groupSign:insert(txtSignEmail)
-    txtSignPass = native.newTextField( midW + 25, midH + 45, 300, 45 )
-    txtSignPass.size = 20
+    txtSignPass = native.newTextField( midW + 25, midH + 40, 300, 45 )
+    txtSignPass.size = 24
     txtSignPass.method = "signin"
     txtSignPass.isSecure = true
     txtSignPass.hasBackground = false
@@ -174,61 +189,67 @@ function scene:create( event )
     txtSignPass:addEventListener( "userInput", onTxtFocus )
 	groupSign:insert(txtSignPass)
     
-    local bgBtn = display.newRoundedRect( midW, midH + 130, 350, 55, 10 )
-	bgBtn:setFillColor( 0 )
-	groupSign:insert(bgBtn)
-    local btn = display.newRoundedRect( midW, midH + 130, 348, 53, 10 )
-	btn:setFillColor( unpack(cPurple) )
-    btn:addEventListener( "tap", doSignIn )
-	groupSign:insert(btn)
-    
-    local txtDoSignIn = display.newText( {
-        text = "Ingresar",
-        x = midW, y = midH + 130,
-        font = "Lato",  fontSize = 24, align = "center"
+    local txt1 = display.newText( {
+        text = "ENTRAR",
+        x = midW, y = midH + 120,
+        font = fontSemiBold,  fontSize = 24, align = "center"
     })
-    groupSign:insert(txtDoSignIn)
-    
-    local btnDoReturn = display.newRoundedRect( midW - 100, midH + 215, 150, 50, 10 )
-	btnDoReturn:setFillColor( 0, 51/255, 86/255 )
-    btnDoReturn.alpha = .3
-    btnDoReturn:addEventListener( "tap", getReturnSplash )
-	groupSign:insert(btnDoReturn)
-    local txtDoReturn = display.newText( {
+    groupSign:insert(txt1)
+    local txt2 = display.newText( {
+        text = "CREAR CUENTA",
+        x = midW, y = midH + 200,
+        font = fontSemiBold,  fontSize = 24, align = "center"
+    })
+    groupSign:insert(txt2)
+    local txt3 = display.newText( {
         text = "Regresar",
-        x = midW - 100, y = midH + 215,
-        font = "Lato",  fontSize = 20, align = "left"
+        x = midW - 90, y = midH + 270,
+        font = fontSemiBold, fontSize = 20, align = "left"
     })
-    groupSign:insert(txtDoReturn)
+    groupSign:insert(txt3)
     
-    local btnDoCreateIt = display.newRoundedRect( midW + 100, midH + 215, 150, 50, 10 )
-	btnDoCreateIt:setFillColor( 0, 51/255, 86/255 )
-    btnDoCreateIt.alpha = .3
-    btnDoCreateIt:addEventListener( "tap", showCreate )
-	groupSign:insert(btnDoCreateIt)
-    local txtDoCreateIt = display.newText( {
-        text = "Crear Cuenta",
-        x = midW + 100, y = midH + 215,
-        font = "Lato",  fontSize = 20, align = "right"
-    })
-    groupSign:insert(txtDoCreateIt)
+    -- Icons
+    local icon1 = display.newImage("img/icon/icoEmail.png", true) 
+    icon1:translate(midW - 145, midH - 40)
+    groupSign:insert(icon1)
+    local icon2 = display.newImage("img/icon/iconCandado.png", true) 
+    icon2:translate(midW - 145, midH + 40)
+    groupSign:insert(icon2)
+    local icon3 = display.newImage("img/icon/iconPrev.png", true) 
+    icon3:translate(midW - 155, midH + 270)
+    groupSign:insert(icon3)
         
     -- Bg TextFields
-    local bgCreateEmail = display.newImage("img/deco/usuario.png", true) 
-    bgCreateEmail.x = midW
-    bgCreateEmail.y = midH - 75
-    groupCreate:insert(bgCreateEmail)
-    local bgCreatePass = display.newImage("img/deco/contrasenia.png", true) 
-    bgCreatePass.x = midW
-    bgCreatePass.y = midH + 05
-    groupCreate:insert(bgCreatePass)
-    local bgCreateRePass = display.newImage("img/deco/contrasenia.png", true) 
-    bgCreateRePass.x = midW
-    bgCreateRePass.y = midH + 85
-    groupCreate:insert(bgCreateRePass)
+    local bg7 = display.newRoundedRect( midW, midH - 40, 350, 55, 5 )
+	bg7:setFillColor( unpack(cTurquesa) )
+	groupCreate:insert(bg7)
+    local bg8 = display.newRoundedRect( midW, midH - 40, 344, 51, 5 )
+	bg8:setFillColor( unpack(cWhite) )
+	groupCreate:insert(bg8)
+    local bg9 = display.newRoundedRect( midW, midH + 40, 350, 55, 5 )
+	bg9:setFillColor( unpack(cTurquesa) )
+	groupCreate:insert(bg9)
+    local bg10 = display.newRoundedRect( midW, midH + 40, 350, 51, 5 )
+	bg10:setFillColor( unpack(cWhite) )
+	groupCreate:insert(bg10)
+    local bg11 = display.newRoundedRect( midW, midH + 120, 350, 55, 5 )
+	bg11:setFillColor( unpack(cTurquesa) )
+	groupCreate:insert(bg11)
+    local bg12 = display.newRoundedRect( midW, midH + 120, 350, 51, 5 )
+	bg12:setFillColor( unpack(cWhite) )
+	groupCreate:insert(bg12)
+    local bg13 = display.newRoundedRect( midW, midH + 200, 350, 55, 5 )
+	bg13:setFillColor( unpack(cBPur) )
+    bg13:addEventListener( "tap", doCreate )
+	groupCreate:insert(bg13)
+    local btnDoReturn2 = display.newRect( midW - 90, midH + 270, 160, 40 )
+    btnDoReturn2.alpha = .01
+    btnDoReturn2:addEventListener( "tap", hideCreate )
+	groupCreate:insert(btnDoReturn2)
+    
     
     -- TextFields Create
-    txtCreateEmail = native.newTextField( midW + 25, midH - 75, 300, 45 )
+    txtCreateEmail = native.newTextField( midW + 25, midH - 40, 300, 45 )
     txtCreateEmail.size = 20
     txtCreateEmail.method = "create"
     txtCreateEmail.inputType = "email"
@@ -236,7 +257,7 @@ function scene:create( event )
     txtCreateEmail.placeholder = "Email"
 	groupCreate:insert(txtCreateEmail)
     txtCreateEmail:addEventListener( "userInput", onTxtFocus )
-    txtCreatePass = native.newTextField( midW + 25, midH + 05, 300, 45 )
+    txtCreatePass = native.newTextField( midW + 25, midH + 40, 300, 45 )
     txtCreatePass.size = 20
     txtCreatePass.method = "create"
     txtCreatePass.isSecure = true
@@ -244,7 +265,7 @@ function scene:create( event )
     txtCreatePass.placeholder = "Password"
 	groupCreate:insert(txtCreatePass)
     txtCreatePass:addEventListener( "userInput", onTxtFocus )
-    txtCreateRePass = native.newTextField( midW + 25, midH + 85, 300, 45 )
+    txtCreateRePass = native.newTextField( midW + 25, midH + 120, 300, 45 )
     txtCreateRePass.size = 20
     txtCreateRePass.method = "create"
     txtCreateRePass.isSecure = true
@@ -253,32 +274,34 @@ function scene:create( event )
 	groupCreate:insert(txtCreateRePass)
     txtCreateRePass:addEventListener( "userInput", onTxtFocus )
     
-    local bgBtn2 = display.newRoundedRect( midW, midH + 170, 350, 55, 10 )
-	bgBtn2:setFillColor( 0 )
-	groupCreate:insert(bgBtn2)
-    local btn2 = display.newRoundedRect( midW, midH + 170, 348, 53, 10 )
-	btn2:setFillColor( unpack(cPurple) )
-    btn2:addEventListener( "tap", doCreate )
-	groupCreate:insert(btn2)
-    
-    local txtDoSignIn2 = display.newText( {
-        text = "Crear Cuenta",
-        x = midW, y = midH + 170,
-        font = "Lato",  fontSize = 24, align = "center"
+    -- Text
+    local txt2 = display.newText( {
+        text = "CREAR CUENTA",
+        x = midW, y = midH + 200,
+        font = fontSemiBold,  fontSize = 24, align = "center"
     })
-    groupCreate:insert(txtDoSignIn2)
-    
-    local btnDoReturn2 = display.newRoundedRect(  midW - 100, midH + 250, 150, 50, 10 )
-	btnDoReturn2:setFillColor( 0, 51/255, 86/255 )
-    btnDoReturn2.alpha = .3
-    btnDoReturn2:addEventListener( "tap", hideCreate )
-	groupCreate:insert(btnDoReturn2)
-    local txtDoReturn2 = display.newText( {
+    groupCreate:insert(txt2)
+    local txt3 = display.newText( {
         text = "Regresar",
-        x = midW - 100, y = midH + 250,
-        font = "Lato",  fontSize = 20, align = "left"
+        x = midW - 90, y = midH + 270,
+        font = fontSemiBold, fontSize = 20, align = "left"
     })
-    groupCreate:insert(txtDoReturn2)
+    groupCreate:insert(txt3)
+    
+    -- Icons
+    local icon4 = display.newImage("img/icon/icoEmail.png", true) 
+    icon4:translate(midW - 145, midH - 40)
+    groupCreate:insert(icon4)
+    local icon5 = display.newImage("img/icon/iconCandado.png", true) 
+    icon5:translate(midW - 145, midH + 40)
+    groupCreate:insert(icon5)
+    local icon6 = display.newImage("img/icon/iconCandado.png", true) 
+    icon6:translate(midW - 145, midH + 120)
+    groupCreate:insert(icon6)
+    local icon7 = display.newImage("img/icon/iconPrev.png", true) 
+    icon7:translate(midW - 155, midH + 270)
+    groupCreate:insert(icon7)
+    
     groupCreate.x = 480
 end
 

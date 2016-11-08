@@ -170,6 +170,10 @@ function getCarCom(items)
         -- Set new scroll position
         scrViewCM:setScrollWidth((100 * #comRews) + 20)
     end
+    
+    if not(oneSignalId == 0) then
+        RestManager.updateOneSignalId(oneSignalId)
+    end
 end
 
 -------------------------------------

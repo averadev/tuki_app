@@ -277,7 +277,7 @@ function getSplash(i, parent, posY, postFix)
             font = fontBold, 
             fontSize = 28, align = "center"
         })
-        lbl2:setFillColor( unpack(cBlueH) )
+        lbl2:setFillColor( unpack(cPurpleL) )
         parent:insert(lbl2)
         
         local img1 = display.newImage("img/deco/splash2"..postFix..".png")
@@ -364,10 +364,11 @@ function getSplash(i, parent, posY, postFix)
         parent:insert( img2 )
         
     elseif i == 4 then
-        local bg1 = display.newRect( 0, midH + posY[i][1], 300, 100 )
-        bg1.anchorX = 0
-        bg1:setFillColor( unpack(cPurpleL) )
-        parent:insert(bg1)
+        
+        
+        local img2 = display.newImage("img/deco/splash6.png")
+        img2:translate(midW, midH - 110)
+        parent:insert( img2 )
 
         local bg2 = display.newRect( midW, midH + posY[i][2], intW, 100 )
         bg2:setFillColor( unpack(cTurquesa) )
@@ -375,36 +376,36 @@ function getSplash(i, parent, posY, postFix)
 
         local lbl1 = display.newText( {
             text = "CANJEA",
-            x = 120, y = midH + posY[i][3],
-            font = fontBold,  
-            fontSize = 50, align = "center"
+            x = midW-80, y = midH - 275,
+            font = fontSemiBold,  
+            fontSize = 35, align = "center"
         })
-        lbl1:setFillColor( unpack(cWhite) )
+        lbl1:setFillColor( unpack(cTurquesa) )
         parent:insert(lbl1)
 
         local lbl2 = display.newText( {
             text = "PUNTOS",
-            x = 120, y = midH + posY[i][4],
+            x = midW+80, y = midH - 275,
             font = fontBold, 
-            fontSize = 47, align = "center"
+            fontSize = 40, align = "center"
         })
-        lbl2:setFillColor( unpack(cWhite) )
+        lbl2:setFillColor( unpack(cTurquesa) )
         parent:insert(lbl2)
 
         local lbl3 = display.newText( {
             text = "¡Por",
-            x = 370, y = midH + posY[i][5],
+            x = 425, y = midH + 30,
             font = fontBold, width = 250,
-            fontSize = 25, align = "left"
+            fontSize = 24, align = "left"
         })
         lbl3:setFillColor( unpack(cWhite) )
         parent:insert(lbl3)
 
         local lbl4 = display.newText( {
             text = "Recompensas!",
-            x = 370, y = midH + posY[i][6],
+            x = 425, y = midH + 55,
             font = fontBold, width = 250,
-            fontSize = 35, align = "left"
+            fontSize = 24, align = "left"
         })
         lbl4:setFillColor( unpack(cWhite) )
         parent:insert(lbl4)
@@ -413,10 +414,6 @@ function getSplash(i, parent, posY, postFix)
         img1.anchorX = 0
         img1:translate(0, midH + posY[i][7])
         parent:insert( img1 )
-        
-        local img2 = display.newImage("img/deco/splash6.png")
-        img2:translate(360, midH + posY[i][8])
-        parent:insert( img2 )
     end
 end
 
@@ -445,17 +442,16 @@ function scene:create( event )
     -- Agregamos el home
 	screen = self.view
     local posY
-    local curBG = .9
     
     -- Posiciones de los elementos segun ratio
     local postFix = ""
     if intH > 840 then
-        posY = {{-300, 30, 95, -140}, { 690, 650, 100}, { 550, 450, 660, 620, 570, 535, 470, 425, 270, 100}, { -160, 40, -180, -140, 15, 45, 50, -158}}
+        posY = {{-300, 30, 95, -140}, { 710, 670, 100}, { 550, 450, 660, 620, 570, 535, 470, 425, 270, 55}, { -160, 40, -180, -140, 15, 45, 50, -158}}
     elseif intH > 750 then
-        posY = {{-250, 30, 95, -120}, { 690, 650, 100}, { 550, 450, 660, 620, 570, 535, 470, 425, 270, 100}, { -160, 40, -180, -140, 15, 45, 50, -160}}    
+        posY = {{-250, 30, 95, -120}, { 710, 670, 100}, { 550, 450, 660, 620, 570, 535, 470, 425, 270, 55}, { -160, 40, -180, -140, 15, 45, 50, -160}}    
     else
         postFix = ".s"
-        posY = {{-230, 0, 65, -120}, { 585, 545, 100}, { 450, 350, 560, 520, 470, 435, 370, 325, 225, 100}, { -160, 40, -180, -140, 15, 45, 50, -160}}
+        posY = {{-230, 0, 65, -120}, { 585, 545, 100}, { 450, 350, 560, 520, 470, 435, 370, 325, 225, 55}, { -160, 40, -180, -140, 15, 45, 50, -160}}
     end
     
     -- Circles position
@@ -463,22 +459,6 @@ function scene:create( event )
         grpSplash[i] = display.newGroup()
         grpSplash[i].x = (intW * (i-1))
         screen:insert(grpSplash[i])
-        
-        if curBG == .9 then curBG = .95 else curBG = .9 end
-        bg = display.newRect( midW, h, intW, intH - h - 150 )
-        bg.anchorY = 0
-        bg:setFillColor( curBG )
-        grpSplash[i]:insert(bg)
-        
-        local bgImg = "bgSplashL.png"
-        if i == 2 or i == 4 then
-            bgImg = "bgSplashR.png"
-        end
-        local bgSplash = display.newImage("img/deco/"..bgImg)
-        bgSplash.y = h
-        bgSplash.anchorX = 0
-        bgSplash.anchorY = 0
-        grpSplash[i]:insert( bgSplash )
         
         getSplash(i, grpSplash[i], posY, postFix)
         
@@ -493,35 +473,19 @@ function scene:create( event )
     
     local bg = display.newRect( midW, intH, intW, 150 )
     bg.anchorY = 1
-    bg:setFillColor( unpack(cBlueH) )
+    bg:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBTur) }, 
+        color2 = { unpack(cBBlu) },
+        direction = "top"
+    } )
     bottomLogin:insert(bg)
     
     -- Btn FB
-    local bgBtn = display.newRect( midW, intH - 100, 354, 59 )
-	bgBtn:setFillColor( unpack(cWhite) )
-	bottomLogin:insert(bgBtn)
-    
-    local btn = display.newRect( midW, intH - 100, 350, 55 )
-	btn:setFillColor( 39/255, 69/255, 132/255 )
-    btn:addEventListener( "tap", loginFB )
-	bottomLogin:insert(btn)
-    
-    local btn1 = display.newRect( midW+35, intH - 100, 280, 55 )
-	btn1:setFillColor( 59/255, 89/255, 152/255 )
-	bottomLogin:insert(btn1)
-    
-    local iconFB = display.newImage("img/icon/iconFB.png")
-    iconFB:translate(midW - 140, intH - 100)
-    bottomLogin:insert( iconFB )
-    
-    local lblBtn = display.newText( {
-        text = "Ingresar con FACEBOOK",
-        x = midW + 35, y = intH - 100,
-        font = fontBold,  
-        fontSize = 20, align = "center"
-    })
-	lblBtn:setFillColor( unpack(cWhite) )
-    bottomLogin:insert(lblBtn)
+    local btnFB = display.newImage("img/deco/btnFacebook.png")
+    btnFB:addEventListener( "tap", loginFB )
+    btnFB:translate(midW, intH - 90)
+    bottomLogin:insert( btnFB )
     
     -- User / Email
     local bgBtnUserName = display.newRect( midW, intH - 30, 260, 50 )

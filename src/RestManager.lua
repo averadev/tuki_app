@@ -13,7 +13,7 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    local site = "http://localhost/tuki_ws/"
+    local site = "http://tukicard.com/beta_ws/"
     --local site = "http://mytuki.com/api/"
 	
 	function urlencode(str)
@@ -294,6 +294,20 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 	
+	RestManager.updateOneSignalId = function(oneSignalId)
+		local url = site.."mobile/updateOneSignalId/format/json/oneSignalId/"..oneSignalId.."/idUser/"..dbConfig.id
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
 	RestManager.getHomeRewards = function()
 		local url = site.."mobile/getHomeRewards/format/json/idUser/"..dbConfig.id
         
@@ -310,6 +324,7 @@ local RestManager = {}
             return true
         end
         -- Do request
+        print(url)
         network.request( url, "GET", callback )
 	end
 
@@ -447,7 +462,6 @@ local RestManager = {}
 
     RestManager.isGiftRedem = function(idReward)
 		local url = site.."mobile/isGiftRedem/format/json/idUser/"..dbConfig.id.."/idReward/"..idReward
-        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -559,7 +573,6 @@ local RestManager = {}
 
     RestManager.getCommerce = function(idCommerce)
 		local url = site.."mobile/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce.."/idCity/1"
-        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -574,7 +587,6 @@ local RestManager = {}
 
     RestManager.getWallet = function()
 		local url = site.."mobile/getWallet/format/json/idUser/"..dbConfig.id
-        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -629,8 +641,8 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
-    RestManager.getMessages = function()
-		local url = site.."mobile/getMessages/format/json/idUser/"..dbConfig.id
+    RestManager.getMessagesSeg = function()
+		local url = site.."mobile/getMessagesSeg/format/json/idUser/"..dbConfig.id
         
         local function callback(event)
             if ( event.isError ) then
@@ -641,26 +653,23 @@ local RestManager = {}
             return true
         end
         -- Do request
-        
         network.request( url, "GET", callback )
 	end
 
-    RestManager.getMessage = function(idMessage)
-		local url = site.."mobile/getMessage/format/json/idMessage/"..idMessage
+    RestManager.getMessageSeg = function(idMessage)
+		local url = site.."mobile/getMessageSeg/format/json/idMessage/"..idMessage
         
         local function callback(event)
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
-                local path = "assets/img/api/messages/"
-                if data.items[1].user then
-                    path = "assets/img/api/rewards/"
-                end
+                local path = "assets/img/api/message_photos/"
                 loadImage({idx = 0, name = "Message", path = path, items = data.items})
             end
             return true
         end
         -- Do request
+        print(url)
         network.request( url, "GET", callback )
 	end
     
@@ -674,7 +683,6 @@ local RestManager = {}
                 if data.results then
                     if #data.results > 1 then
                         if data.results[1].formatted_address then
-                            print(data.results[1].formatted_address)
                             RestManager.getIdCity(data.results[1].formatted_address)
                         end
                     end
@@ -685,12 +693,9 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback )
 	end
-
-
     
     RestManager.getIdCity = function(address)
 		local url = site.."mobile/getIdCity/format/json/address/"..urlencode(address)
-        print(url)
         local function callback(event)
             if ( event.isError ) then
             else

@@ -46,82 +46,95 @@ function setMessage(item)
     tools:setLoading(false)
     local yPosc = 0
     
-    -- Fondo
-    local bg1 = display.newRect(midW, 25, intW - 36, 310 )
-    bg1:setFillColor( 236/255 )
-    bg1.anchorY = 0
-    scrViewMe:insert( bg1 )
-    local bg2 = display.newRect(midW, 27, intW - 40, 306 )
-    bg2:setFillColor( 1 )
-    bg2.anchorY = 0
-    scrViewMe:insert( bg2 )
-    
     local lblFecha = display.newText({
         text = item.fecha,     
-        x = 350, y = 50, width = 200, 
+        x = 350, y = 45, width = 200, 
         font = fontRegular,
         fontSize = 16, align = "right"
     })
-    lblFecha:setFillColor( .3 )
+    lblFecha:setFillColor( unpack(cBlueH) )
     scrViewMe:insert( lblFecha )
+    
+    
+    local circleLogo = display.newImage("img/deco/circleLogo100.png")
+    circleLogo:translate( 65, 90 )
+    scrViewMe:insert( circleLogo )
+    
+    local imgLogo
+    local path = system.pathForFile( item.imagecom, system.TemporaryDirectory )
+    local fhd = io.open( path )
+    if fhd then
+        fhd:close()
+        imgLogo = display.newImage( item.imagecom, system.TemporaryDirectory )
+    else
+        imgLogo = display.newImage("img/icon/tukiIcon.png")
+    end
+    
+    local mask = graphics.newMask( "img/deco/maskLogo100.png" )
+    imgLogo:setMask( mask )
+    imgLogo:translate( 65, 90 )
+    imgLogo.height = 90
+    imgLogo.width = 90
+    scrViewMe:insert( imgLogo )
     
     local lblDe1 = display.newText({
         text = "De: ",     
-        x = 90, y = 95, width = 100, 
-        font = fontBold,
+        x = 180, y = 80, width = 100, 
+        font = fontSemiBold,
         fontSize = 18, align = "left"
     })
-    lblDe1:setFillColor( .3 )
+    lblDe1:setFillColor( unpack(cBlueH) )
     scrViewMe:insert( lblDe1 )
     
     local lblDe2 = display.newText({
-        text = item.from,     
-        x = 270, y = 95, width = 300, 
+        text = item.commerce,     
+        x = 290, y = 80, width = 250, 
         font = fontRegular,
-        fontSize = 18, align = "left"
+        fontSize = 20, align = "left"
     })
-    lblDe2:setFillColor( .3 )
+    lblDe2:setFillColor( unpack(cBlueH) )
     scrViewMe:insert( lblDe2 )
     
     local lblAsunto1 = display.newText({
         text = "Asunto: ",     
-        x = 90, y = 130, width = 100, 
-        font = fontBold,
+        x = 180, y = 95, width = 100, 
+        font = fontSemiBold,
         fontSize = 18, align = "left"
     })
-    lblAsunto1:setFillColor( .3 )
+    lblAsunto1.anchorY = 0
+    lblAsunto1:setFillColor( unpack(cBlueH) )
     scrViewMe:insert( lblAsunto1 )
     
     local lblAsunto2 = display.newText({
         text = item.name,     
-        x = 270, y = 130, width = 300, 
+        x = 315, y = 95, width = 230, 
         font = fontRegular,
         fontSize = 18, align = "left"
     })
-    lblAsunto2:setFillColor( .3 )
+    lblAsunto2.anchorY = 0
+    lblAsunto2:setFillColor( unpack(cBlueH) )
     scrViewMe:insert( lblAsunto2 )
     
     -- Imagen
+    local bgImage = display.newRoundedRect(midW, 157, 446, 160, 5 )
+    bgImage.anchorY = 0
+    bgImage:setFillColor( unpack(cBTur) )
+    scrViewMe:insert( bgImage )
     local imgPBig = display.newImage(item.image, system.TemporaryDirectory)
     imgPBig:translate( midW, 160 )
     imgPBig.anchorY = 0
     scrViewMe:insert( imgPBig )
-    -- Resize on Reward
-    local txtDesc = item.description
-    if item.user then
-        imgPBig.width = 400
-        imgPBig.height = 400
-        txtDesc = "Hola, "..item.from.." te compartio la siguiente recompensa: \n\n'"..item.description.."'."
-    end
+    
+    bgImage.height = imgPBig.height + 6
     
     local lastY = 180 + imgPBig.height
     local lblDesc = display.newText({
-        text = txtDesc,
-        x = midW, y = lastY, width = 400, 
+        text = item.description,
+        x = midW, y = lastY, width = 430, 
         font = fontRegular,
         fontSize = 18, align = "left"
     })
-    lblDesc:setFillColor( .3 )
+    lblDesc:setFillColor( unpack(cBlueH) )
     scrViewMe:insert( lblDesc )
     
     lblDesc.y = lastY + (lblDesc.height/2)
@@ -129,18 +142,24 @@ function setMessage(item)
     lastY = lastY + lblDesc.height + 10
     
     -- Ir a Reward
-    if item.user then
+    if not(item.idReward == '0') then
         lastY = lastY + 40
-        local bgCommerce = display.newRoundedRect( midW, lastY, 250, 60, 10 )
-        bgCommerce:setFillColor( .21 )
-        bgCommerce.idReward = item.id
+        
+        local bgCommerce = display.newRoundedRect( midW, lastY, 440, 60, 5 )
+        bgCommerce:setFillColor( {
+            type = 'gradient',
+            color1 = { unpack(cBBlu) }, 
+            color2 = { unpack(cBTur) },
+            direction = "right"
+        } )
+        bgCommerce.idReward = item.idReward
         bgCommerce:addEventListener( 'tap', tapReward)
         scrViewMe:insert(bgCommerce)
         local txtCommerce = display.newText({
-            text = "VER DETALLE", 
+            text = "IR A LA RECOMPENSA", 
             x = midW, y = lastY,
             font = fontBold,
-            fontSize = 18, align = "center"
+            fontSize = 20, align = "center"
         })
         txtCommerce:setFillColor( 1 )
         scrViewMe:insert( txtCommerce )
@@ -183,7 +202,7 @@ function scene:create( event )
     scrViewMe:toBack()
     
     tools:setLoading(true, scrViewMe)
-    RestManager.getMessage(idMessage)
+    RestManager.getMessageSeg(idMessage)
     
 end	
 -- Called immediately after scene has moved onscreen:
