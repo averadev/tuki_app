@@ -21,7 +21,7 @@ local screen, grpCumple, grpMale, grpFemale, dateBirthday
 local scene = composer.newScene()
 
 -- Variables
-local txt1, txt2, lblCumple
+local txtProfEmail, txtProfPhone, lblCumple, scrViewProf
 
 ---------------------------------------------------------------------------------
 -- FUNCIONES
@@ -37,6 +37,37 @@ function closeCumple(event)
         grpCumple:removeSelf()
         grpCumple = nil;
     end
+end
+
+------------------------------------
+-- Actualizar Perfil
+-- @param event objeto evento
+------------------------------------
+function updateProfile(event)
+    local gender = ''
+    if grpMale.alpha == 1 then
+        gender = 'male'
+    elseif grpFemale.alpha == 1 then
+        gender = 'female'
+    end
+    
+    local birthDate = ''
+    if lblCumple.month then
+        birthDate = lblCumple.year .. '-' .. lblCumple.month .. '-' .. lblCumple.day
+    end 
+    
+    hideTxt(true)
+    tools:setLoading(true, scrViewProf)
+    RestManager.updateProfile(txtProfEmail.text, txtProfPhone.text, gender, birthDate)
+end
+
+------------------------------------
+-- Termina Update Perfil
+-- @param event objeto evento
+------------------------------------
+function isUpdProfile(event)
+    hideTxt(false)
+    tools:setLoading(false)
 end
 
 ------------------------------------
@@ -62,11 +93,11 @@ end
 ------------------------------------
 function hideTxt(isHide)
     if isHide then
-        txt1.x = 600
-        txt2.x = 600
+        txtProfEmail.x = 600
+        txtProfPhone.x = 600
     else
-        txt1.x = midW + 60
-        txt2.x = midW + 60
+        txtProfEmail.x = midW + 60
+        txtProfPhone.x = midW + 60
     end
 end
 
@@ -171,21 +202,21 @@ function showProfile(usuario)
         color2 = { unpack(cBTur) },
         direction = "bottom"
     } )
-    scrViewA:insert(bgFB)
+    scrViewProf:insert(bgFB)
     
     if usuario.fbid == nil or usuario.fbid == '' or usuario.fbid == 0 or usuario.fbid == '0' then     
         local fbFrame = display.newImage("img/deco/circleLogo100.png")
         fbFrame:translate(100, 90)
-        scrViewA:insert( fbFrame )
+        scrViewProf:insert( fbFrame )
         local fbPhoto = display.newImage("img/deco/fbPhoto.png")
         fbPhoto:translate(100, 90)
-        scrViewA:insert( fbPhoto )
+        scrViewProf:insert( fbPhoto )
     else
         local fbFrame = display.newImage("img/deco/circleLogo120.png")
         fbFrame:translate(100, 90)
-        scrViewA:insert( fbFrame )
+        scrViewProf:insert( fbFrame )
         url = "http://graph.facebook.com/"..usuario.fbid.."/picture?large&width=150&height=150"
-        retriveImage(usuario.fbid.."fbmax", url, scrViewA, 100, 90, 120, 120, true)
+        retriveImage(usuario.fbid.."fbmax", url, scrViewProf, 100, 90, 120, 120, true)
     end
     
     local txtNombre = display.newText({
@@ -195,7 +226,7 @@ function showProfile(usuario)
         fontSize = 22, align = "left"
     })
     txtNombre:setFillColor( unpack(cWhite) )
-    scrViewA:insert( txtNombre )
+    scrViewProf:insert( txtNombre )
     local txtUbicacion = display.newText({
         text = usuario.ciudad, 
         x = 350, y = lastY + 98, width = 300, 
@@ -203,7 +234,7 @@ function showProfile(usuario)
         fontSize = 20, align = "left"
     })
     txtUbicacion:setFillColor( unpack(cWhite) )
-    scrViewA:insert( txtUbicacion )
+    scrViewProf:insert( txtUbicacion )
     
     local txtDescTime = display.newText({
         text = "Eres TUKER desde: "..usuario.signin, 
@@ -212,7 +243,7 @@ function showProfile(usuario)
         fontSize = 14, align = "left"
     })
     txtDescTime:setFillColor( unpack(cWhite) )
-    scrViewA:insert( txtDescTime )
+    scrViewProf:insert( txtDescTime )
     
     -- Campos editables
     lastY = 230
@@ -224,19 +255,19 @@ function showProfile(usuario)
         fontSize = 16, align = "left"
     })
     lbl1:setFillColor( unpack(cBlueH) )
-    scrViewA:insert( lbl1 )
+    scrViewProf:insert( lbl1 )
     local bg1A = display.newRoundedRect(midW + 60, lastY, 250, 50, 5 )
     bg1A:setFillColor( unpack(cTurquesa) )
-    scrViewA:insert(bg1A)
+    scrViewProf:insert(bg1A)
     local bg1B = display.newRoundedRect(midW + 60, lastY, 246, 46, 5 )
     bg1B:setFillColor( unpack(cWhite) )
-    scrViewA:insert(bg1B)
-    txt1 = native.newTextField( midW + 60, lastY, 220, 40 )
-    txt1.size = 18
-    txt1.inputType = "email"
-    txt1.hasBackground = false
-    txt1.placeholder = "Correo electronico"
-	scrViewA:insert(txt1)
+    scrViewProf:insert(bg1B)
+    txtProfEmail = native.newTextField( midW + 60, lastY, 220, 40 )
+    txtProfEmail.size = 18
+    txtProfEmail.inputType = "email"
+    txtProfEmail.hasBackground = false
+    txtProfEmail.placeholder = "Correo electronico"
+	scrViewProf:insert(txtProfEmail)
     
     local lbl2 = display.newText({
         text = "Telefono:", 
@@ -245,19 +276,19 @@ function showProfile(usuario)
         fontSize = 16, align = "left"
     })
     lbl2:setFillColor( unpack(cBlueH) )
-    scrViewA:insert( lbl2 )
+    scrViewProf:insert( lbl2 )
     local bg2A = display.newRoundedRect(midW + 60, lastY + 70, 250, 50, 5 )
     bg2A:setFillColor( unpack(cTurquesa) )
-    scrViewA:insert(bg2A)
+    scrViewProf:insert(bg2A)
     local bg2B = display.newRoundedRect(midW + 60, lastY + 70, 246, 46, 5 )
     bg2B:setFillColor( unpack(cWhite) )
-    scrViewA:insert(bg2B)
-    txt2 = native.newTextField( midW + 60, lastY + 70, 220, 40 )
-    txt2.size = 18
-    txt2.inputType = "email"
-    txt2.hasBackground = false
-    txt2.placeholder = "Telefono"
-	scrViewA:insert(txt2)
+    scrViewProf:insert(bg2B)
+    txtProfPhone = native.newTextField( midW + 60, lastY + 70, 220, 40 )
+    txtProfPhone.size = 18
+    txtProfPhone.inputType = "email"
+    txtProfPhone.hasBackground = false
+    txtProfPhone.placeholder = "Telefono"
+	scrViewProf:insert(txtProfPhone)
     
     local lbl3 = display.newText({
         text = "Sexo:", 
@@ -266,42 +297,42 @@ function showProfile(usuario)
         fontSize = 16, align = "left"
     })
     lbl3:setFillColor( unpack(cBlueH) )
-    scrViewA:insert( lbl3 )
+    scrViewProf:insert( lbl3 )
     local bg3A = display.newRoundedRect(midW + 10, lastY + 140, 150, 50, 5 )
     bg3A:setFillColor( unpack(cTurquesa) )
-    scrViewA:insert(bg3A)
+    scrViewProf:insert(bg3A)
     local bg3B = display.newRoundedRect(midW + 10, lastY + 140, 146, 46, 5 )
     bg3B:setFillColor( unpack(cWhite) )
-    scrViewA:insert(bg3B)
-    local icon3A = display.newImage("img/icon/iconMale.png")
+    scrViewProf:insert(bg3B)
+    local icon3A = display.newImage("img/icon/icoMale.png")
     icon3A:translate(midW - 28, lastY + 140)
-    scrViewA:insert( icon3A )
-    local icon3B = display.newImage("img/icon/iconFemale.png")
+    scrViewProf:insert( icon3A )
+    local icon3B = display.newImage("img/icon/icoFemale.png")
     icon3B:translate(midW + 48, lastY + 140)
-    scrViewA:insert( icon3B )
+    scrViewProf:insert( icon3B )
     grpMale = display.newGroup()
-    scrViewA:insert(grpMale)
+    scrViewProf:insert(grpMale)
     local bg3D = display.newRoundedRect(midW - 26, lastY + 140, 74, 46, 5 )
     bg3D:setFillColor( unpack(cBlueH) )
     bg3D.genere = 'male'
     bg3D:addEventListener( 'tap', tapGenere )
     grpMale:insert(bg3D)
-    local icon3C = display.newImage("img/icon/iconMaleA.png")
+    local icon3C = display.newImage("img/icon/icoMaleA.png")
     icon3C:translate(midW - 28, lastY + 140)
     grpMale:insert( icon3C )
     grpFemale = display.newGroup()
-    scrViewA:insert(grpFemale)
+    scrViewProf:insert(grpFemale)
     local bg3E = display.newRoundedRect(midW + 46, lastY + 140, 74, 46, 5 )
     bg3E:setFillColor( unpack(cBlueH) )
     bg3E.genere = 'female'
     bg3E:addEventListener( 'tap', tapGenere )
     grpFemale:insert(bg3E)
-    local icon3D = display.newImage("img/icon/iconFemaleA.png")
+    local icon3D = display.newImage("img/icon/icoFemaleA.png")
     icon3D:translate(midW + 48, lastY + 140)
     grpFemale:insert( icon3D )
     local bg3C = display.newRoundedRect(midW + 10, lastY + 140, 3, 50, 5 )
     bg3C:setFillColor( unpack(cTurquesa) )
-    scrViewA:insert(bg3C)
+    scrViewProf:insert(bg3C)
     grpMale.alpha = .01
     grpFemale.alpha = .01
     
@@ -312,17 +343,17 @@ function showProfile(usuario)
         fontSize = 16, align = "left"
     })
     lbl4:setFillColor( unpack(cBlueH) )
-    scrViewA:insert( lbl4 )
+    scrViewProf:insert( lbl4 )
     local bg4A = display.newRoundedRect(midW + 60, lastY + 210, 250, 50, 5 )
     bg4A:setFillColor( unpack(cTurquesa) )
-    scrViewA:insert(bg4A)
+    scrViewProf:insert(bg4A)
     local bg4B = display.newRoundedRect(midW + 60, lastY + 210, 246, 46, 5 )
     bg4B:setFillColor( unpack(cWhite) )
-    scrViewA:insert(bg4B)
+    scrViewProf:insert(bg4B)
     bg4B:addEventListener( 'tap', tapCumple )
     local iconSelect4 = display.newImage("img/icon/iconSelect.png")
     iconSelect4:translate(midW + 163, lastY + 210)
-    scrViewA:insert( iconSelect4 )
+    scrViewProf:insert( iconSelect4 )
     lblCumple = display.newText({
         text = "", 
         x = 300, y = lastY + 210, width = 200, 
@@ -333,13 +364,13 @@ function showProfile(usuario)
     lblCumple.month = nil
     lblCumple.day = nil
     lblCumple:setFillColor( unpack(cBlueH) )
-    scrViewA:insert( lblCumple )
+    scrViewProf:insert( lblCumple )
     
     if usuario.email then
-        txt1.text = usuario.email
+        txtProfEmail.text = usuario.email
     end
     if usuario.phone then
-        txt2.text = usuario.phone
+        txtProfPhone.text = usuario.phone
     end
     if usuario.gender then
         if usuario.gender == 'male' then
@@ -358,11 +389,32 @@ function showProfile(usuario)
         if usuario.biryear then
             lblCumple.year = tonumber(usuario.biryear)
         end
+        lblCumple.text = lblCumple.day .. ' de ' .. meses[tonumber(usuario.birmonth)] .. ', ' .. usuario.biryear
     end
+    
+    
+    local bgBtn = display.newRoundedRect(midW, lastY + 300, 230, 50, 5 )
+    bgBtn:setFillColor( {
+        type = 'gradient',
+        color1 = { unpack(cBBlu) }, 
+        color2 = { unpack(cBTur) },
+        direction = "bottom"
+    } )
+    bgBtn:addEventListener( 'tap', updateProfile )
+    scrViewProf:insert(bgBtn)
+    local lblBtn = display.newText({
+        text = "GUARDAR", 
+        x = midW, y = lastY + 300,
+        font = fontSemiBold,   
+        fontSize = 18, align = "left"
+    })
+    lblBtn:setFillColor( unpack(cWhite) )
+    scrViewProf:insert( lblBtn )
     
     tools:setLoading(false)
     
 end
+
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
@@ -374,7 +426,7 @@ function scene:create( event )
     tools:buildBottomBar()
     screen:insert(tools)
     
-    scrViewA = widget.newScrollView
+    scrViewProf = widget.newScrollView
 	{
 		top = h + 60,
 		left = 0,
@@ -383,11 +435,11 @@ function scene:create( event )
 		horizontalScrollDisabled = true,
 		backgroundColor = { 1 }
 	}
-	screen:insert(scrViewA)
-    scrViewA:toBack()
+	screen:insert(scrViewProf)
+    scrViewProf:toBack()
     
     -- Get Data
-    tools:setLoading(true, scrViewA)
+    tools:setLoading(true, scrViewProf)
     RestManager.getProfile()
     
 end	
@@ -400,21 +452,33 @@ function scene:show( event )
 end
 
 -- Remove Listener
-function scene:destroy( event )
-    if txt1 then
-        txt1:removeSelf()
-        txt1 = nil;
+function scene:hide( event )
+    if txtProfEmail then
+        txtProfEmail:removeSelf()
+        txtProfEmail = nil;
     end
-    if txt2 then
-        txt2:removeSelf()
-        txt2 = nil;
+    if txtProfPhone then
+        txtProfPhone:removeSelf()
+        txtProfPhone = nil;
+    end
+end
+
+-- Remove Listener
+function scene:destroy( event )
+    if txtProfEmail then
+        txtProfEmail:removeSelf()
+        txtProfEmail = nil;
+    end
+    if txtProfPhone then
+        txtProfPhone:removeSelf()
+        txtProfPhone = nil;
     end
 end
 
 -- Listener setup
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
---scene:addEventListener( "hide", scene )
+scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
 
 return scene

@@ -208,17 +208,13 @@ function Tools:new()
             self:insert(grpWallet)
             grpWallet.alpha = 0
 
-            local myCircle1 = display.newCircle( 63, intH - 80, 12 )
-            myCircle1:setFillColor( 1 )
-            grpWallet:insert(myCircle1)
-
-            local myCircle2 = display.newCircle( 63, intH - 80, 10 )
-            myCircle2:setFillColor( 1, .3, .3 )
-            grpWallet:insert(myCircle2)
+            local myCircle = display.newCircle( 63, intH - 60, 10 )
+            myCircle:setFillColor( 1, .3, .3 )
+            grpWallet:insert(myCircle)
 
             local txt = display.newText({
                 text = myWallet,     
-                x = 63, y = intH - 81, width = 30,
+                x = 63, y = intH - 61, width = 30,
                 font = fontBold, fontSize = 14, align = "center"
             })
             txt:setFillColor( 1 )
@@ -246,17 +242,13 @@ function Tools:new()
             self:insert(grpMessages)
             grpMessages.alpha = 0
 
-            local myCircle1 = display.newCircle( 165, intH - 80, 12 )
-            myCircle1:setFillColor( 1 )
-            grpMessages:insert(myCircle1)
-
-            local myCircle2 = display.newCircle( 165, intH - 80, 10 )
-            myCircle2:setFillColor( 1, .3, .3 )
-            grpMessages:insert(myCircle2)
+            local myCircle = display.newCircle( 165, intH - 60, 10 )
+            myCircle:setFillColor( 1, .3, .3 )
+            grpMessages:insert(myCircle)
 
             local txt = display.newText({
                 text = myMessages,     
-                x = 165, y = intH - 81, width = 30,
+                x = 165, y = intH - 61, width = 30,
                 font = fontBold, fontSize = 14, align = "center"
             })
             txt:setFillColor( 1 )

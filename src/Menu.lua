@@ -194,7 +194,7 @@ function Menu:new()
             width = 400,
             height = intH - (280+h),
             horizontalScrollDisabled = true,
-            isBounceEnabled = false,
+            --isBounceEnabled = false,
             hideBackground = true
         }
         self:insert(scrMMain)
@@ -321,7 +321,7 @@ function Menu:new()
         txtTitle5:setFillColor( unpack(cBlueH) )
         scrMMain:insert(txtTitle5)
         
-        scrMMain:setScrollHeight(250)
+        --scrMMain:setScrollHeight(250)
         
         -- Border Right
         local borderRight = display.newRect( 2, midH, 4, intH )

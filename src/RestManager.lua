@@ -143,7 +143,6 @@ local RestManager = {}
                     event.target.width = w
                     event.target.height = h
                     event.target:translate(x, y)
-                    if isMenu then getFrameFB(x, y) end
                 end
             end
             -- Descargamos de la nube
