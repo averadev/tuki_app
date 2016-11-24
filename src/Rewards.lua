@@ -89,7 +89,7 @@ function doFilter(txtFil)
     if txtFil == '' then
         tools:setEmpty(rowCom, scrViewR, "No tenemos recompensas con tu selección")
     else
-        tools:setLoading(true, scrViewR)
+        tools:setLoading(true, scrViewR, true)
         RestManager.getRewards(txtFil)
     end
 end
@@ -135,22 +135,18 @@ function getRowRew(parent, reward, cpoints)
     bg2:addEventListener( 'tap', tapReward)
     parent:insert( bg2 )
 
-    local bgFav = display.newRect(42, 0, 60, 64 )
+    local bgFav = display.newRect(440, 0, 60, 64 )
     bgFav:setFillColor( unpack(cWhite) )
     parent:insert( bgFav )
     bgFav.idReward = reward.id 
     bgFav:addEventListener( 'tap', tapFavRew)
-    
-    local bgPoints = display.newImage("img/deco/bgPoints80.png")
-    bgPoints:translate( 110, 0 )
-    parent:insert( bgPoints )
 
     bgFav.iconHeart1 = display.newImage("img/icon/iconRewardHeart1.png")
-    bgFav.iconHeart1:translate( 42, 0 )
+    bgFav.iconHeart1:translate( 440, 0 )
     parent:insert( bgFav.iconHeart1 )
 
     bgFav.iconHeart2 = display.newImage("img/icon/iconRewardHeart2.png")
-    bgFav.iconHeart2:translate( 42, 0 )
+    bgFav.iconHeart2:translate( 440, 0 )
     parent:insert( bgFav.iconHeart2 )
 
     -- Fav actions
@@ -161,11 +157,15 @@ function getRowRew(parent, reward, cpoints)
         bgFav.iconHeart2.alpha = 0
     end
     
+    local bgPoints = display.newImage("img/deco/bgPoints80.png")
+    bgPoints:translate( 60, 0 )
+    parent:insert( bgPoints )
+    
     -- Textos y descripciones
     if reward.points == 0 or reward.points == "0" then
         local points = display.newText({
             text = "GRATIS", 
-            x = 110, y = 0,
+            x = 60, y = 0,
             font = fontSemiBold,   
             fontSize = 18, align = "center"
         })
@@ -175,7 +175,7 @@ function getRowRew(parent, reward, cpoints)
     else
         local points = display.newText({
             text = reward.points, 
-            x = 110, y = -12,
+            x = 60, y = -12,
             font = fontBold,   
             fontSize = 32, align = "center"
         })
@@ -183,7 +183,7 @@ function getRowRew(parent, reward, cpoints)
         parent:insert( points )
         local points2 = display.newText({
             text = "TUKS", 
-            x = 110, y = 15,
+            x = 60, y = 15,
             font = fontSemiBold,   
             fontSize = 16, align = "center"
         })
@@ -193,7 +193,7 @@ function getRowRew(parent, reward, cpoints)
 
     local name = display.newText({
         text = reward.name, 
-        x = 310, y = 0, width = 280,
+        x = 255, y = 0, width = 280,
         font = fontRegular,   
         fontSize = 19, align = "left"
     })
@@ -203,7 +203,7 @@ function getRowRew(parent, reward, cpoints)
     -- Set value Progress Bar
     if cpoints then
         -- Progress Bar
-        local progressBar = display.newRect( 0, 0, 300, 5 )
+        local progressBar = display.newRect( -45, 0, 300, 5 )
         progressBar:setFillColor( {
             type = 'gradient',
             color1 = { .6, .5 }, 
@@ -227,7 +227,7 @@ function getRowRew(parent, reward, cpoints)
                 porcentaje  = userPoints/points
             end
 
-            local progressBar2 = display.newRect( 0, 0, 300*porcentaje, 5 )
+            local progressBar2 = display.newRect( -45, 0, 300*porcentaje, 5 )
             progressBar2:setFillColor( {
                     type = 'gradient',
                     color1 = { unpack(cBTur) }, 

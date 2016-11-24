@@ -340,12 +340,12 @@ function showAccountCom(items)
             local fbFrame = display.newImage("img/deco/circleLogo80.png")
             fbFrame:translate(-170, 0)
             container:insert( fbFrame )
-            local mask = graphics.newMask( "img/deco/maskLogo70.png" )
+            local mask = graphics.newMask( "img/deco/maskLogo80.png" )
             local img = display.newImage( items[z].image, system.TemporaryDirectory )
             img:translate( -170, 0 )
             img:setMask( mask )
-            img.width = 70
-            img.height = 70
+            img.width = 80
+            img.height = 80
             container:insert( img )
             
             local lnDot = display.newImage("img/deco/lnDot.png")

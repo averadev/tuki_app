@@ -16,7 +16,7 @@ function Tools:new()
     -- Variables
     local self = display.newGroup()
     local bgShadow, headLogo, grpLoading, grpAnimate, filters, scrViewF
-    local h = display.topStatusBarContentHeight, grpBubble
+    local h = display.topStatusBarContentHeight, grpWallet, grpMessages
     local fxTap = audio.loadSound( "fx/click.wav")
     self.y = h
     
@@ -55,8 +55,11 @@ function Tools:new()
         
         local iconLogo = display.newImage("img/icon/iconHeader.png")
         iconLogo:translate( midW, 40 )
-        iconLogo:addEventListener( 'tap', toHome)
         headLogo:insert( iconLogo )
+        if composer.getSceneName( "current" ) == "src.Map" then
+            iconLogo.y = 30
+            iconLogo:scale(.9, .9)
+        end
         
         if not isWelcome then
             if not ("src.Home" == composer.getSceneName( "current" )) then
@@ -64,6 +67,11 @@ function Tools:new()
                 iconReturn:translate(40, 30)
                 iconReturn:addEventListener( 'tap', backScreen)
                 self:insert( iconReturn )
+                
+                local iconHome = display.newImage("img/icon/iconHome.png")
+                iconHome:translate(intW-110, 27)
+                iconHome:addEventListener( 'tap', toHome)
+                self:insert( iconHome )
             end
             
             local headMenu = display.newImage("img/icon/headMenu.png")
@@ -167,9 +175,9 @@ function Tools:new()
         self:insert( iconCheckIn )
         -- Reduce Size
         if composer.getSceneName( "current" ) == "src.Map" then
-            iconCheckIn.width = 80
-            iconCheckIn.height = 80
-            iconCheckIn.y = intH - 40
+            iconCheckIn.width = 60
+            iconCheckIn.height = 60
+            iconCheckIn.y = intH - 30
         end
         
         local bottomWallet = display.newImage("img/icon/bottomWallet.png")
@@ -189,24 +197,24 @@ function Tools:new()
     -------------------------------------
     -- Muestra el bubble
     ------------------------------------ 
-    function self:showBubble(animate)
+    function self:showBubble(isGift, isMessage)
         if myWallet > 0 then 
-            if grpBubble then
-                grpBubble:removeSelf()
-                grpBubble = nil
+            if grpWallet then
+                grpWallet:removeSelf()
+                grpWallet = nil
             end 
 
-            grpBubble = display.newGroup()
-            self:insert(grpBubble)
-            grpBubble.alpha = 0
+            grpWallet = display.newGroup()
+            self:insert(grpWallet)
+            grpWallet.alpha = 0
 
             local myCircle1 = display.newCircle( 63, intH - 80, 12 )
             myCircle1:setFillColor( 1 )
-            grpBubble:insert(myCircle1)
+            grpWallet:insert(myCircle1)
 
             local myCircle2 = display.newCircle( 63, intH - 80, 10 )
             myCircle2:setFillColor( 1, .3, .3 )
-            grpBubble:insert(myCircle2)
+            grpWallet:insert(myCircle2)
 
             local txt = display.newText({
                 text = myWallet,     
@@ -214,17 +222,55 @@ function Tools:new()
                 font = fontBold, fontSize = 14, align = "center"
             })
             txt:setFillColor( 1 )
-            grpBubble:insert(txt)
+            grpWallet:insert(txt)
 
-            if animate then
-                transition.to( grpBubble, { alpha = 1, time = 600})
+            if isGift then
+                transition.to( grpWallet, { alpha = 1, time = 600})
             else
-                grpBubble.alpha = 1
+                grpWallet.alpha = 1
             end
         else
-            if grpBubble then
-                grpBubble:removeSelf()
-                grpBubble = nil
+            if grpWallet then
+                grpWallet:removeSelf()
+                grpWallet = nil
+            end 
+        end
+        
+        if myMessages > 0 then 
+            if grpMessages then
+                grpMessages:removeSelf()
+                grpMessages = nil
+            end 
+
+            grpMessages = display.newGroup()
+            self:insert(grpMessages)
+            grpMessages.alpha = 0
+
+            local myCircle1 = display.newCircle( 165, intH - 80, 12 )
+            myCircle1:setFillColor( 1 )
+            grpMessages:insert(myCircle1)
+
+            local myCircle2 = display.newCircle( 165, intH - 80, 10 )
+            myCircle2:setFillColor( 1, .3, .3 )
+            grpMessages:insert(myCircle2)
+
+            local txt = display.newText({
+                text = myMessages,     
+                x = 165, y = intH - 81, width = 30,
+                font = fontBold, fontSize = 14, align = "center"
+            })
+            txt:setFillColor( 1 )
+            grpMessages:insert(txt)
+
+            if isMessage then
+                transition.to( grpMessages, { alpha = 1, time = 600})
+            else
+                grpMessages.alpha = 1
+            end
+        else
+            if grpMessages then
+                grpMessages:removeSelf()
+                grpMessages = nil
             end 
         end
     end
@@ -307,7 +353,7 @@ function Tools:new()
     -- @param isLoading activar/desactivar
     -- @param parent objeto contenedor
     ------------------------------------
-    function self:setLoading(isLoading, parent)
+    function self:setLoading(isLoading, parent, isFilter)
         if isLoading then
             if grpLoading then
                 grpLoading:removeSelf()
@@ -319,11 +365,15 @@ function Tools:new()
             function setDes(event)
                 return true
             end
-            local bg = display.newRect( (display.contentWidth / 2), (parent.height / 2), 
-                display.contentWidth, parent.height )
+            local bg = display.newRect( (display.contentWidth / 2), 0, display.contentWidth, parent.height )
+            bg.anchorY = 0
             bg:setFillColor( 1 )
             bg:addEventListener( 'tap', setDes)
             grpLoading:insert(bg)
+            if isFilter then
+                bg.y = 120
+            end
+            
             local sheet = graphics.newImageSheet(Sprites.loading.source, Sprites.loading.frames)
             local loading = display.newSprite(sheet, Sprites.loading.sequences)
             loading.x = display.contentWidth / 2

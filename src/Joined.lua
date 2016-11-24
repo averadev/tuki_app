@@ -82,7 +82,7 @@ function doFilter(txtFil)
     if txtFil == '' then
         tools:setEmpty(rowPartner, scrViewP, "No tienes comercios afiliados con tu selección")
     else
-        tools:setLoading(true, scrViewP)
+        tools:setLoading(true, scrViewP, true)
         RestManager.getJoined(txtFil)
     end
 end
@@ -111,15 +111,15 @@ function setListCommerce(items)
             rowPartner[z]:insert( bg2 )
 
             -- Imagen Comercio
-            local fbFrame = display.newImage("img/deco/circleLogo100.png")
+            local fbFrame = display.newImage("img/deco/circleLogo80.png")
             fbFrame:translate( -153, -20 )
             rowPartner[z]:insert( fbFrame )
-            local mask = graphics.newMask( "img/deco/maskLogo100.png" )
+            local mask = graphics.newMask( "img/deco/maskLogo80.png" )
             local img = display.newImage( items[z].image, system.TemporaryDirectory )
             img:setMask( mask )
             img:translate( -153, -20 )
-            img.width = 90
-            img.height = 90
+            img.width = 80
+            img.height = 80
             rowPartner[z]:insert( img )
 
             -- Textos

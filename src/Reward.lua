@@ -441,15 +441,15 @@ function setReward(item)
 end
     
 function setRewardLogo(item)
-    local circleLogo = display.newImage("img/deco/circleLogo100.png")
+    local circleLogo = display.newImage("img/deco/circleLogo80.png")
     circleLogo:translate( 65, 60 )
     scrViewRe:insert( circleLogo )
     
-    local mask = graphics.newMask( "img/deco/maskLogo100.png" )
+    local mask = graphics.newMask( "img/deco/maskLogo80.png" )
     local imgPBig = display.newImage(item.image, system.TemporaryDirectory)
     imgPBig:translate( 65, 60 )
-    imgPBig.height = 90
-    imgPBig.width = 90
+    imgPBig.height = 80
+    imgPBig.width = 80
     imgPBig:setMask( mask )
     scrViewRe:insert( imgPBig )
 end

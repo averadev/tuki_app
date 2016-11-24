@@ -42,8 +42,10 @@ fontBold = 'Raleway ExtraBold'
 -- Otras
 myTuks = ''
 myWallet = 0
+myMessages = 0
 locIdCity = 0
 oneSignalId = 0
+meses = {'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'}
 local Globals = {}
 Globals.filtros = {
     {"TODO", "iconFilterA"}, 
@@ -57,6 +59,6 @@ Globals.filtros = {
     {"AUTOSERVICIOS", "iconFilterI"},
     {"OTROS", "iconFilterJ"}
 }
-Globals.scenes = { }
+Globals.scenes = { 'src.Home' }
 Globals.menu = nil
 return Globals

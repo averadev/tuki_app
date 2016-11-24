@@ -221,8 +221,9 @@ end
 -- Muestra el bubble de wallet
 -- @param wallet number
 ------------------------------------
-function showB(wallet)
+function showB(wallet, message)
     myWallet = wallet
+    myMessages = message
     tools:showBubble(true)
 end
 
@@ -447,13 +448,12 @@ function scene:create( event )
     workSite = display.newGroup()
     screen:insert(workSite)
     
-    local bgGrayT = display.newRect(midW - (wCmp/2) + 40, initHY, 100, 100 )
-    bgGrayT.anchorY = 0
+    local bgGrayT = display.newRect(midW - 15, initHY + 35, 400, 80 )
     bgGrayT:setFillColor( unpack(cWhite) )
     bgGrayT:addEventListener( 'tap', tapCommerce) 
     workSite:insert( bgGrayT )
     
-    local bgGray = display.newRect(midW, initHY + 80,  wCmp + 4, hCmp )
+    local bgGray = display.newRect(midW, initHY + 90,  wCmp + 4, hCmp + 70 )
     bgGray.anchorY = 0
     bgGray:setFillColor( unpack(cWhite) )
     bgGray:addEventListener( 'tap', tapReward) 

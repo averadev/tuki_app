@@ -72,7 +72,7 @@ function doFilter(txtFil)
         tools:setEmpty(rowReward, scrViewR, "No tienes recompensas favoritas con tu selección")
     else
         lastYP = 80
-        tools:setLoading(true, scrViewR)
+        tools:setLoading(true, scrViewR, true)
         RestManager.getRewardFavs(txtFil)
     end
 end
@@ -124,22 +124,18 @@ function setListReward(rewards)
             bg2.idReward = rewards[z].id
             bg2:addEventListener( 'tap', tapReward)
 
-            local bgFav = display.newRect(-205, 0, 40, 74 )
+            local bgFav = display.newRect(205, 0, 40, 74 )
             bgFav:setFillColor( unpack(cWhite) )
             rowReward[z]:insert( bgFav )
             bgFav.idReward = rewards[z].id
             bgFav:addEventListener( 'tap', tapFavFavs)
-            
-            local bgPoints = display.newImage("img/deco/bgPoints80.png")
-            bgPoints:translate( -140, 0 )
-            rowReward[z]:insert( bgPoints )
 
             bgFav.iconHeart1 = display.newImage("img/icon/iconRewardHeart1.png")
-            bgFav.iconHeart1:translate( -205, 0 )
+            bgFav.iconHeart1:translate( 205, 0 )
             rowReward[z]:insert( bgFav.iconHeart1 )
 
             bgFav.iconHeart2 = display.newImage("img/icon/iconRewardHeart2.png")
-            bgFav.iconHeart2:translate( -205, 0 )
+            bgFav.iconHeart2:translate( 205, 0 )
             rowReward[z]:insert( bgFav.iconHeart2 )
 
             -- Fav actions
@@ -149,12 +145,16 @@ function setListReward(rewards)
             else
                 bgFav.iconHeart2.alpha = 0
             end
+            
+            local bgPoints = display.newImage("img/deco/bgPoints80.png")
+            bgPoints:translate( -180, 0 )
+            rowReward[z]:insert( bgPoints )
 
             -- Textos y descripciones
             if rewards[z].points == 0 or rewards[z].points == "0" then
                 local points = display.newText({
                     text = "GRATIS", 
-                    x = -140, y = 0,
+                    x = -180, y = 0,
                     font = fontSemiBold,   
                     fontSize = 18, align = "center"
                 })
@@ -164,7 +164,7 @@ function setListReward(rewards)
             else
                 local points = display.newText({
                     text = rewards[z].points, 
-                    x = -140, y = -12,
+                    x = -180, y = -12,
                     font = fontBold,   
                     fontSize = 32, align = "center"
                 })
@@ -172,7 +172,7 @@ function setListReward(rewards)
                 rowReward[z]:insert( points )
                 local points2 = display.newText({
                     text = "TUKS", 
-                    x = -140, y = 15,
+                    x = -180, y = 15,
                     font = fontSemiBold,   
                     fontSize = 16, align = "center"
                 })
@@ -182,7 +182,7 @@ function setListReward(rewards)
 
             local name = display.newText({
                 text = rewards[z].name, 
-                x = 60, y = 0, width = 280,
+                x = 20, y = 0, width = 280,
                 font = fontRegular,   
                 fontSize = 19, align = "left"
             })
@@ -203,7 +203,7 @@ function setListReward(rewards)
             end
             if usrPoints then
                 -- Progress Bar
-                local progressBar = display.newRect( -10, 0, 300, 7 )
+                local progressBar = display.newRect( -50, 0, 300, 7 )
                 progressBar:setFillColor( {
                     type = 'gradient',
                     color1 = { .6, .5 }, 
@@ -225,7 +225,7 @@ function setListReward(rewards)
                         porcentaje  = usrPoints/points
                     end
 
-                    local progressBar2 = display.newRect( -10, 0, 300*porcentaje, 7 )
+                    local progressBar2 = display.newRect( -50, 0, 300*porcentaje, 7 )
                     progressBar2:setFillColor( {
                         type = 'gradient',
                         color1 = { unpack(cBTur) }, 

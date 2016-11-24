@@ -49,6 +49,8 @@ function Menu:new()
         transition.to( bgGray, { alpha = 0, time = 400, transition = easing.outExpo })
         if composer.getSceneName( "current" ) == "src.Map" then
             moveMap(0)
+        elseif composer.getSceneName( "current" ) == "src.Profile" then
+            hideTxt(false)
         end
         return true;
     end
@@ -64,6 +66,8 @@ function Menu:new()
     function self:getMenu()
         if composer.getSceneName( "current" ) == "src.Map" then
             moveMap(400)
+        elseif composer.getSceneName( "current" ) == "src.Profile" then
+            hideTxt(true)
         end
         transition.to( self, { x = 80, time = 400, onComplete=function() 
             bgGray.alpha = .5
@@ -118,16 +122,16 @@ function Menu:new()
             fbPhoto:translate(100, 80)
             self:insert( fbPhoto )
         else
-            local fbFrame = display.newImage("img/deco/circleLogo100.png")
+            local fbFrame = display.newImage("img/deco/circleLogo120.png")
             fbFrame:translate(100, 80)
             self:insert( fbFrame )
             url = "http://graph.facebook.com/"..dbConfig.fbid.."/picture?large&width=150&height=150"
-            retriveImage(dbConfig.fbid.."fbmax", url, self, 100, 80, 100, 100, true)
+            retriveImage(dbConfig.fbid.."fbmax", url, self, 100, 80, 120, 120, true)
         end
         
         local txtNombre = display.newText({
             text = dbConfig.name, 
-            x = 275, y = 80, width = 220, 
+            x = 285, y = 80, width = 220, 
             font = fontBold, fontSize = 20
         })
         txtNombre.anchorY = 1
@@ -135,7 +139,7 @@ function Menu:new()
         self:insert( txtNombre )
         local txtUbicacion = display.newText({
             text = dbConfig.city, 
-            x = 275, y = 80, width = 220, 
+            x = 285, y = 80, width = 220, 
             font = fontLight, fontSize = 17
         })
         txtUbicacion.anchorY = 0
@@ -196,58 +200,78 @@ function Menu:new()
         self:insert(scrMMain)
         
         -- Menu vertical
-        local bgMenu1 = display.newRect( 200, 40, 400, 60 )
+        local bgMenu0 = display.newRect( 200, 40, 400, 60 )
+        bgMenu0.alpha = .01
+        bgMenu0.screen = "Profile"
+        bgMenu0:setFillColor( .7 )
+        bgMenu0:addEventListener( 'tap', changeScreen)
+        scrMMain:insert(bgMenu0)
+        local img0 = display.newImage("img/icon/iconEdit.png")
+        img0:translate(66, 40)
+        scrMMain:insert( img0 )
+        local txtTitle0 = display.newText({
+            text = "Editar Perfil", 
+            x = 260, y = 40, width = 300,
+            font = fontSemiBold, fontSize = 18, align = "left"
+        })
+        txtTitle0:setFillColor( unpack(cBlueH) )
+        scrMMain:insert(txtTitle0)
+        
+        local dotM1 = display.newImage("img/deco/dot400Gray.png")
+        dotM1:translate(200, 80)
+        scrMMain:insert( dotM1 )
+        local bgMenu1 = display.newRect( 200, 120, 400, 60 )
         bgMenu1.alpha = .01
         bgMenu1.screen = "Joined"
         bgMenu1:setFillColor( .7 )
         bgMenu1:addEventListener( 'tap', changeScreen)
         scrMMain:insert(bgMenu1)
         local menuComercios = display.newImage("img/icon/menuComercios.png")
-        menuComercios:translate(66, 40)
+        menuComercios:translate(66, 120)
         scrMMain:insert( menuComercios )
         local txtTitle1 = display.newText({
             text = "Mis programas de lealtad", 
-            x = 260, y = 40, width = 300,
+            x = 260, y = 120, width = 300,
             font = fontSemiBold, fontSize = 18, align = "left"
         })
         txtTitle1:setFillColor( unpack(cBlueH) )
         scrMMain:insert(txtTitle1)
         
         local dotM2 = display.newImage("img/deco/dot400Gray.png")
-        dotM2:translate(200, 80)
+        dotM2:translate(200, 160)
         scrMMain:insert( dotM2 )
-        local bgMenu2 = display.newRect( 200, 120, 400, 60 )
+        local bgMenu2 = display.newRect( 200, 200, 400, 60 )
         bgMenu2.alpha = .01
         bgMenu2.screen = "Partners"
         bgMenu2:setFillColor( .7 )
         bgMenu2:addEventListener( 'tap', changeScreen)
         scrMMain:insert(bgMenu2)
         local menuComercios = display.newImage("img/icon/menuAfiliado.png")
-        menuComercios:translate(66, 120)
+        menuComercios:translate(66, 200)
         scrMMain:insert( menuComercios )
         local txtTitle2 = display.newText({
             text = "Comercios Afiliados", 
-            x = 260, y = 120, width = 300,
+            x = 260, y = 200, width = 300,
             font = fontSemiBold, fontSize = 18, align = "left"
         })
         txtTitle2:setFillColor( unpack(cBlueH) )
         scrMMain:insert(txtTitle2)
         
         local dotM3 = display.newImage("img/deco/dot400Gray.png")
-        dotM3:translate(200, 160)
+        dotM3:translate(200, 240)
         scrMMain:insert( dotM3 )
-        local bgMenu3 = display.newRect( 200, 200, 400, 60 )
+        local bgMenu3 = display.newRect( 200, 280, 400, 60 )
         bgMenu3.alpha = .01
         bgMenu3.screen = "Rewards"
         bgMenu3:setFillColor( .7 )
         bgMenu3:addEventListener( 'tap', changeScreen)
         scrMMain:insert(bgMenu3)
         local menuComercios = display.newImage("img/icon/menuProgramas.png")
-        menuComercios:translate(66, 200)
+        menuComercios:translate(66, 280)
         scrMMain:insert( menuComercios )
         local txtTitle3 = display.newText({
             text = "Recompensas Disponibles", 
-            x = 260, y = 200, width = 300,
+            x = 260, y = 280, width = 300,
             font = fontSemiBold, fontSize = 18, align = "left"
         })
         txtTitle3:setFillColor( unpack(cBlueH) )
@@ -256,20 +280,20 @@ function Menu:new()
         scrMMain:setScrollHeight(250)
         
         local dotM4 = display.newImage("img/deco/dot400Gray.png")
-        dotM4:translate(200, 240)
+        dotM4:translate(200, 320)
         scrMMain:insert( dotM4 )
-        local bgMenu4 = display.newRect( 200, 280, 400, 60 )
+        local bgMenu4 = display.newRect( 200, 360, 400, 60 )
         bgMenu4.alpha = .01
         bgMenu4.screen = "Cities"
         bgMenu4:setFillColor( .7 )
         bgMenu4:addEventListener( 'tap', changeScreen)
         scrMMain:insert(bgMenu4)
         local menu4 = display.newImage("img/icon/menuCambiarCiudad.png")
-        menu4:translate(66, 280)
+        menu4:translate(66, 360)
         scrMMain:insert( menu4 )
         local txtTitle4 = display.newText({
             text = "Cambiar de Ciudad", 
-            x = 260, y = 280, width = 300,
+            x = 260, y = 360, width = 300,
             font = fontSemiBold, fontSize = 18, align = "left"
         })
         txtTitle4:setFillColor( unpack(cBlueH) )
@@ -278,20 +302,20 @@ function Menu:new()
         scrMMain:setScrollHeight(250)
         
         local dotM5 = display.newImage("img/deco/dot400Gray.png")
-        dotM5:translate(200, 320)
+        dotM5:translate(200, 400)
         scrMMain:insert( dotM5 )
-        local bgMenu5 = display.newRect( 200, 360, 400, 60 )
+        local bgMenu5 = display.newRect( 200, 440, 400, 60 )
         bgMenu5.alpha = .01
         bgMenu5.screen = "Login"
         bgMenu5:setFillColor( .7 )
         bgMenu5:addEventListener( 'tap', closeSession)
         scrMMain:insert(bgMenu5)
         local menu5 = display.newImage("img/icon/menuCerrarSesion.png")
-        menu5:translate(66, 360)
+        menu5:translate(66, 440)
         scrMMain:insert( menu5 )
         local txtTitle5 = display.newText({
             text = "Cerrar Sesión", 
-            x = 260, y = 360, width = 300,
+            x = 260, y = 440, width = 300,
             font = fontSemiBold, fontSize = 18, align = "left"
         })
         txtTitle5:setFillColor( unpack(cBlueH) )

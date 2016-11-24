@@ -56,7 +56,7 @@ function setMessage(item)
     scrViewMe:insert( lblFecha )
     
     
-    local circleLogo = display.newImage("img/deco/circleLogo100.png")
+    local circleLogo = display.newImage("img/deco/circleLogo80.png")
     circleLogo:translate( 65, 90 )
     scrViewMe:insert( circleLogo )
     
@@ -70,11 +70,11 @@ function setMessage(item)
         imgLogo = display.newImage("img/icon/tukiIcon.png")
     end
     
-    local mask = graphics.newMask( "img/deco/maskLogo100.png" )
+    local mask = graphics.newMask( "img/deco/maskLogo80.png" )
     imgLogo:setMask( mask )
     imgLogo:translate( 65, 90 )
-    imgLogo.height = 90
-    imgLogo.width = 90
+    imgLogo.height = 80
+    imgLogo.width = 80
     scrViewMe:insert( imgLogo )
     
     local lblDe1 = display.newText({

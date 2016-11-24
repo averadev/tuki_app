@@ -81,7 +81,7 @@ function doFilter(txtFil)
         tools:setEmpty(rowPartner, scrViewP, "No tenemos comercios cercanos con tu selección")
     else
         lastYP = 80
-        tools:setLoading(true, scrViewP)
+        tools:setLoading(true, scrViewP, true)
         RestManager.getCommerces(txtFil)
     end
 end

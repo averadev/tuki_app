@@ -44,6 +44,22 @@ local txtBg, txtFiltro, fpRows = {}, {}, {}
 -- Tap reward event
 function tapMessage(event)
     local t = event.target
+    if t.status == "1" then
+        t.status = "2"
+        myMessages = myMessages -1
+        RestManager.setReadMessage(t.idMessage)
+        
+        if t.border then
+            t.border:removeSelf()
+            t.border = nil
+        end
+        if t.circle then
+            t.circle:removeSelf()
+            t.circle = nil
+        end
+    end
+    
+    local t = event.target
     audio.play(fxTap)
     composer.removeScene( "src.Message" )
     composer.gotoScene("src.Message", { time = 400, effect = "slideLeft", params = { idMessage = t.idMessage } } )
@@ -83,6 +99,7 @@ function setListMessages(rewards)
             local bg = display.newRect(0, 0, intW, 120 )
             bg:setFillColor( 1 )
             bg.idMessage = rewards[z].id
+            bg.status = rewards[z].status
             bg:addEventListener( 'tap', tapMessage)
             rowReward[z]:insert( bg )
         
@@ -94,9 +111,15 @@ function setListMessages(rewards)
             lnDot2:translate( 0, 60 )
             rowReward[z]:insert( lnDot2 )
             
-            local circleLogo = display.newImage("img/deco/circleLogo80.png")
+            
+            local circleLogo = display.newImage("img/deco/circleLogo80B.png")
             circleLogo:translate( -178, 0 )
             rowReward[z]:insert( circleLogo )
+            if rewards[z].status == "1" then
+                bg.circle = display.newImage("img/deco/circleLogo80.png")
+                bg.circle:translate( -178, 0 )
+                rowReward[z]:insert( bg.circle )
+            end
             
             local img
             if rewards[z].image then
@@ -112,8 +135,7 @@ function setListMessages(rewards)
             img.width = 80
             img.height = 80
             rowReward[z]:insert( img )
-
-
+            
             local lblFecha = display.newText({
                 text = rewards[z].fecha,     
                 x = 35, y = -35, width = 350, 
@@ -162,14 +184,14 @@ function setListMessages(rewards)
 
             -- Diseño visto
             if rewards[z].status == "1" then
-                local bgSel = display.newRect( midW-4, 0, 8, 120 )
-                bgSel:setFillColor( {
+                bg.border = display.newRect( midW-4, 0, 8, 120 )
+                bg.border:setFillColor( {
                     type = 'gradient',
                     color1 = { unpack(cBBlu) }, 
                     color2 = { unpack(cBTur) },
                     direction = "top"
                 } ) 
-                rowReward[z]:insert(bgSel)
+                rowReward[z]:insert(bg.border)
             end
 
         end

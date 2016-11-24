@@ -316,9 +316,8 @@ local RestManager = {}
             else
                 local data = json.decode(event.response)
                 local wallet = tonumber(data.wallet)
-                if wallet > 0 then
-                    showB(wallet)
-                end
+                local message = tonumber(data.message)
+                showB(wallet, message)
                 loadImage({idx = 0, name = "HomeCommerces", path = "assets/img/api/commerce/", items = data.items})
             end
             return true
@@ -342,6 +341,43 @@ local RestManager = {}
         end
         -- Do request
         
+        network.request( url, "GET", callback )
+	end
+
+    RestManager.getProfile = function()
+		local url = site.."mobile/getProfile/format/json/idUser/"..dbConfig.id
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                showProfile(data.user)
+            end
+            return true
+        end
+        -- Do request
+        print(url)
+        network.request( url, "GET", callback )
+	end
+
+    RestManager.updateProfile = function(email, phone, gender, birthDate)
+		local url = site.."mobile/updateProfile/format/json/idUser/"..dbConfig.id.."/email/"..urlencode(email).."/phone/"..phone
+        if not(gender == '') then
+            url = url.."/gender/"..gender
+        end
+        if not(birthDate == '') then
+            url = url.."/birthDate/"..birthDate
+        end
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                isUpdProfile()
+            end
+            return true
+        end
+        -- Do request
+        print(url)
         network.request( url, "GET", callback )
 	end
 
@@ -596,6 +632,21 @@ local RestManager = {}
             return true
         end
         -- Do request
+        network.request( url, "GET", callback )
+	end
+    
+    RestManager.setReadMessage = function(idMessage)
+		local url = site.."mobile/setReadMessage/format/json/idUser/"..dbConfig.id.."/idMessage/"..idMessage
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                
+            end
+            return true
+        end
+        -- Do request
+    print(url)
         network.request( url, "GET", callback )
 	end
 

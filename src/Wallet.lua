@@ -50,9 +50,13 @@ function tapReward(event)
         t.status = "2"
         myWallet = myWallet -1
         
-        if t.border then
-            t.border:removeSelf()
-            t.border = nil
+        if t.arrow then
+            t.arrow:removeSelf()
+            t.arrow = nil
+        end
+        if t.circle then
+            t.circle:removeSelf()
+            t.circle = nil
         end
         RestManager.setReadGift(t.idReward)
     elseif t.status == "3" then
@@ -67,16 +71,16 @@ end
 function setWalletLogos(rewards)
     for z = 1, #rewards, 1 do 
         if rowReward[z] then
-            local circleLogo = display.newImage("img/deco/circleLogo.png")
+            local circleLogo = display.newImage("img/deco/circleLogo120B.png")
             circleLogo:translate(-130, -50 )
             rowReward[z]:insert( circleLogo )
             
-            local mask = graphics.newMask( "img/deco/maskLogo.png" )
+            local mask = graphics.newMask( "img/deco/maskLogo120.png" )
             local img = display.newImage( rewards[z].image, system.TemporaryDirectory )
             img:setMask( mask )
             img:translate( -130, -50 )
-            img.width = 150
-            img.height = 150
+            img.width = 120
+            img.height = 120
             rowReward[z]:insert( img )
         end
     end
@@ -134,7 +138,7 @@ function setListWallet(rewards)
             bgImg:setFillColor( unpack(cBTur) )
             rowReward[z]:insert( bgImg )
             
-            local bgImg = display.newRect( 0, 100, 440, 80 )
+            local bgImg = display.newRect( 0, 0, 480, 330 )
             bgImg.idReward = rewards[z].id
             bgImg.status = rewards[z].status
             bgImg:addEventListener( 'tap', tapReward)
@@ -146,8 +150,13 @@ function setListWallet(rewards)
             img.height = 196
             img.idReward = rewards[z].id
             img.status = rewards[z].status
-            img:addEventListener( 'tap', tapReward)
             rowReward[z]:insert( img )
+            
+            if rewards[z].status == '1' then
+                bgImg.circle = display.newImage("img/deco/circleLogo120.png")
+                bgImg.circle:translate(-130, -50 )
+                rowReward[z]:insert( bgImg.circle )
+            end
             
             local lblCommerce = display.newText({
                 text = rewards[z].commerce,     
@@ -185,9 +194,14 @@ function setListWallet(rewards)
             lblGift2:setFillColor( unpack(cBBlu) )
             rowReward[z]:insert( lblGift2 )
             
-            local iconArrowR = display.newImage("img/icon/iconArrowR.png")
+            local iconArrowR = display.newImage("img/icon/iconArrowRB.png")
             iconArrowR:translate( 200, 105 )
             rowReward[z]:insert( iconArrowR )
+            if rewards[z].status == '1' then
+                bgImg.arrow = display.newImage("img/icon/iconArrowR.png")
+                bgImg.arrow:translate( 200, 105 )
+                rowReward[z]:insert( bgImg.arrow )
+            end
             
             local lnDot1 = display.newImage("img/deco/lnDot.png")
             lnDot1:translate( 0, 140 )

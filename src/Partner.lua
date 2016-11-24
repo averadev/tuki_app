@@ -145,21 +145,21 @@ function setCommerce(item, branchs, rewards)
     
     local circleLogo = display.newImage("img/deco/circleLogo.png")
     circleLogo.anchorY = 0
-    circleLogo:translate( 105, yPosc + 5 )
+    circleLogo:translate( 107, yPosc + 5 )
     scrViewPa:insert( circleLogo )
     local mask = graphics.newMask( "img/deco/maskLogo.png" )
     local img = display.newImage( item.image, system.TemporaryDirectory )
     img.anchorY = 0
-    img.height = 150
-    img.width = 150
+    img.height = 160
+    img.width = 160
     img:setMask( mask )
-    img:translate( 105, yPosc + 10 )
+    img:translate( 107, yPosc + 10 )
     scrViewPa:insert( img )
     
     local txtCommerce = display.newText({
         text = item.name,
         y = yPosc + 67,
-        x = midW + 90, width = 270,
+        x = midW + 90, width = 260,
         font = fontBold,   
         fontSize = 30, align = "left"
     })
@@ -168,7 +168,7 @@ function setCommerce(item, branchs, rewards)
     local txtCommerceDesc = display.newText({
         text = item.description,
         y = yPosc + 93,
-        x = midW + 90, width = 270,
+        x = midW + 90, width = 260,
         font = fontLight,   
         fontSize = 18, align = "left"
     })
@@ -491,22 +491,18 @@ function newReward(reward, lastYP, cpoints)
     bg2.idReward = reward.id
     bg2:addEventListener( 'tap', tapReward)
 
-    local bgFav = display.newRect(-205, 0, 40, 74 )
+    local bgFav = display.newRect(205, 0, 40, 74 )
     bgFav:setFillColor( unpack(cWhite) )
     container:insert( bgFav )
     bgFav.idReward = reward.id
     bgFav:addEventListener( 'tap', tapComRewFav)
-    
-    local bgPoints = display.newImage("img/deco/bgPoints80.png")
-    bgPoints:translate( -140, 0 )
-    container:insert( bgPoints )
 
     bgFav.iconHeart1 = display.newImage("img/icon/iconRewardHeart1.png")
-    bgFav.iconHeart1:translate( -205, 0 )
+    bgFav.iconHeart1:translate( 205, 0 )
     container:insert( bgFav.iconHeart1 )
 
     bgFav.iconHeart2 = display.newImage("img/icon/iconRewardHeart2.png")
-    bgFav.iconHeart2:translate( -205, 0 )
+    bgFav.iconHeart2:translate( 205, 0 )
     container:insert( bgFav.iconHeart2 )
 
     -- Fav actions
@@ -516,12 +512,16 @@ function newReward(reward, lastYP, cpoints)
     else
         bgFav.iconHeart2.alpha = 0
     end
+    
+    local bgPoints = display.newImage("img/deco/bgPoints80.png")
+    bgPoints:translate( -180, 0 )
+    container:insert( bgPoints )
 
     -- Textos y descripciones
     if reward.points == 0 or reward.points == "0" then
         local points = display.newText({
             text = "GRATIS", 
-            x = -140, y = 0,
+            x = -180, y = 0,
             font = fontSemiBold,   
             fontSize = 18, align = "center"
         })
@@ -531,7 +531,7 @@ function newReward(reward, lastYP, cpoints)
     else
         local points = display.newText({
             text = reward.points, 
-            x = -140, y = -12,
+            x = -180, y = -12,
             font = fontBold,   
             fontSize = 32, align = "center"
         })
@@ -539,7 +539,7 @@ function newReward(reward, lastYP, cpoints)
         container:insert( points )
         local points2 = display.newText({
             text = "TUKS", 
-            x = -140, y = 13,
+            x = -180, y = 13,
             font = fontSemiBold,   
             fontSize = 16, align = "center"
         })
@@ -549,7 +549,7 @@ function newReward(reward, lastYP, cpoints)
 
     local name = display.newText({
         text = reward.name, 
-        x = 60, y = 0, width = 280,
+        x = 20, y = 0, width = 280,
         font = fontRegular,   
         fontSize = 19, align = "left"
     })
@@ -559,7 +559,7 @@ function newReward(reward, lastYP, cpoints)
     -- Set value Progress Bar
     if usrPoints then
         -- Progress Bar
-        local progressBar = display.newRect( -10, 0, 300, 7 )
+        local progressBar = display.newRect( -50, 0, 300, 7 )
         progressBar:setFillColor( {
             type = 'gradient',
             color1 = { .6, .5 }, 
@@ -581,7 +581,7 @@ function newReward(reward, lastYP, cpoints)
                 porcentaje  = usrPoints/points
             end
 
-            local progressBar2 = display.newRect( -10, 0, 300*porcentaje, 7 )
+            local progressBar2 = display.newRect( -50, 0, 300*porcentaje, 7 )
             progressBar2:setFillColor( {
                 type = 'gradient',
                 color1 = { unpack(cBTur) }, 
