@@ -65,7 +65,7 @@ function Menu:new()
     -- Obtenemos el Menu
     function self:getMenu()
         if composer.getSceneName( "current" ) == "src.Map" then
-            moveMap(400)
+            moveMap(500)
         elseif composer.getSceneName( "current" ) == "src.Profile" then
             hideTxt(true)
         end

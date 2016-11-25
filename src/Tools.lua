@@ -540,6 +540,10 @@ function Tools:new()
         local last = Globals.scenes[#Globals.scenes - 1]
         table.remove( Globals.scenes )
         table.remove( Globals.scenes )
+        if last == "src.Profile" then
+            composer.removeScene( "src.Profile" )
+        end
+            
         composer.gotoScene(last, { time = 400, effect = "slideRight" } )
         return true
     end

@@ -380,16 +380,18 @@ function showProfile(usuario)
         end
     end
     if usuario.birthDate then
-        if usuario.birday then
-            lblCumple.day = tonumber(usuario.birday)
+        if tonumber(usuario.biryear) > 0 then
+            if usuario.birday then
+                lblCumple.day = tonumber(usuario.birday)
+            end
+            if usuario.birmonth then
+                lblCumple.month = tonumber(usuario.birmonth)
+            end
+            if usuario.biryear then
+                lblCumple.year = tonumber(usuario.biryear)
+            end
+            lblCumple.text = lblCumple.day .. ' de ' .. meses[tonumber(usuario.birmonth)] .. ', ' .. usuario.biryear
         end
-        if usuario.birmonth then
-            lblCumple.month = tonumber(usuario.birmonth)
-        end
-        if usuario.biryear then
-            lblCumple.year = tonumber(usuario.biryear)
-        end
-        lblCumple.text = lblCumple.day .. ' de ' .. meses[tonumber(usuario.birmonth)] .. ', ' .. usuario.biryear
     end
     
     
