@@ -120,7 +120,7 @@ local function doShare( event )
             },
             url = 
             { 
-                "http://www.facebook.com/tukicard",
+                "http://mytuki.com/rewards/"..idxReward,
             }
         })
     else

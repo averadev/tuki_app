@@ -467,7 +467,7 @@ local RestManager = {}
     
     RestManager.getRewardFavs = function(filters)
 		local url = site.."mobile/getRewardFavs/format/json/idUser/"..dbConfig.id.."/filters/"..filters
-        
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
