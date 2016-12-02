@@ -7,6 +7,11 @@
 settings =
 {
 
+    splashScreen = 
+    {
+        enable = false
+    },
+
 	orientation =
 	{
 		-- Supported values for orientation:
