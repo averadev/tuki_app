@@ -397,6 +397,23 @@ function touchScreen(event)
     end
 end
 
+-------------------------------------
+-- Get current position
+-- @param event objeto evento
+------------------------------------
+local getGPS = function( event )
+
+    -- Check for error (user may have turned off location services)
+    if ( event.errorCode ) then
+        print( "Location error: " .. tostring( event.errorMessage ) )
+    else
+        print("latitude "..event.latitude)
+        print("longitude "..event.longitude)
+        --RestManager.getHomeRewardsGPS()
+		Runtime:removeEventListener( "location", getGPS )
+    end
+end
+
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
@@ -582,6 +599,8 @@ function scene:create( event )
     -- Crea la primera tanda
     tools:toFront()
     tools:setLoading(true, screen)
+    
+    Runtime:addEventListener( "location", getGPS )
     RestManager.getHomeRewards()
     
 end	
@@ -596,6 +615,7 @@ end
 
 -- Remove Listener
 function scene:destroy( event )
+    Runtime:removeEventListener( "location", getGPS )
 end
 
 -- Listener setup

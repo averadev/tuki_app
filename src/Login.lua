@@ -424,11 +424,8 @@ local cityHandler = function( event )
         native.showAlert( "GPS Location Error", event.errorMessage, {"OK"} )
         print( "Location error: " .. tostring( event.errorMessage ) )
     else
-        print("latitude "..event.latitude)
-        print("longitude "..event.longitude)
-        
-		Runtime:removeEventListener( "location", locationHandler )
         RestManager.getLocationCity(event.latitude, event.longitude)
+		Runtime:removeEventListener( "location", cityHandler )
     end
 end
 

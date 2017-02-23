@@ -142,7 +142,6 @@ function setReward(item)
         isGift = true
     end
     
-    local color = {tonumber(item.colorA1)/255, tonumber(item.colorA2)/255, tonumber(item.colorA3)/255}
     local bgTop = display.newRoundedRect(midW, yPosc, 440, 80, 10 )
     bgTop.idCommerce = item.idCommerce
     bgTop:addEventListener( 'tap', tapCommerce)
