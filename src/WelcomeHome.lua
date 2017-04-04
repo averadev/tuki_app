@@ -27,18 +27,11 @@ local h = display.topStatusBarContentHeight
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------
-function goToWCat(event)
+function goToProfile(event)
     local t = event.target
     audio.play(fxTap)
-    composer.removeScene( "src.WelcomeCat" )
-    composer.gotoScene("src.WelcomeCat", { time = 400, effect = "slideLeft" } )
-end
-
-function goToList(event)
-    local t = event.target
-    audio.play(fxTap)
-    composer.removeScene( "src.WelcomeList" )
-    composer.gotoScene("src.WelcomeList", { time = 400, effect = "slideLeft", params = { isLocation = true } } )
+    composer.removeScene( "src.WelcomeProfile" )
+    composer.gotoScene("src.WelcomeProfile", { time = 400, effect = "slideLeft", params = { isLocation = true } } )
 end
 
 ---------------------------------------------------------------------------------
@@ -65,7 +58,7 @@ function scene:create( event )
     screen:insert( txt1 )
     
     local txt2 = display.newText({
-        text = "Comienza buscando",
+        text = "Recibe Regalos exclusivos",
         x = midW, y = midH-15,
         font = fontSemiBold,   
         fontSize = 25, align = "center"
@@ -74,7 +67,7 @@ function scene:create( event )
     screen:insert( txt2 )
     
     local txt3 = display.newText({
-        text = "los comercios afiliados",
+        text = "de tus comercios favoritos.",
         x = midW, y = midH+15,
         font = fontSemiBold,   
         fontSize = 25, align = "center"
@@ -90,40 +83,19 @@ function scene:create( event )
         color2 = { unpack(cBTur) },
         direction = "right"
     } )
-    btnNearBg1:addEventListener( 'tap', goToList )
+    btnNearBg1:addEventListener( 'tap', goToProfile )
     screen:insert(btnNearBg1)
-    local icoWLocation = display.newImage("img/icon/icoWLocation.png")
-    icoWLocation:translate( midW - 120, midH + 120 )
-    screen:insert( icoWLocation )
+    local icoWArrow = display.newImage("img/icon/icoWArrow.png")
+    icoWArrow:translate( midW + 60, midH + 120 )
+    screen:insert( icoWArrow )
     local txtNear2 = display.newText({
-        text = "LO MAS CERCA DE MI",
+        text = "CONTINUAR",
         x = midW + 35, y = midH + 120,
         font = fontBold, width = 250,  
         fontSize = 20, align = "left"
     })
     txtNear2:setFillColor( unpack(cWhite) )
     screen:insert( txtNear2 )
-    
-    local btnInterBg1 = display.newRoundedRect( midW, midH + 210, 350, 70, 10 )
-    btnInterBg1:setFillColor( {
-        type = 'gradient',
-        color1 = { unpack(cBBlu) }, 
-        color2 = { unpack(cBTur) },
-        direction = "right"
-    } )
-    btnInterBg1:addEventListener( 'tap', goToWCat )
-    screen:insert(btnInterBg1)
-    local icoWCategories = display.newImage("img/icon/icoWCategories.png")
-    icoWCategories:translate( midW - 120, midH + 210 )
-    screen:insert( icoWCategories )
-    local txtInter2 = display.newText({
-        text = "POR MIS INTERESES",
-        x = midW + 35, y = midH + 210,
-        font = fontBold, width = 250,
-        fontSize = 20, align = "left"
-    })
-    txtInter2:setFillColor( unpack(cWhite) )
-    screen:insert( txtInter2 )
 end	
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )

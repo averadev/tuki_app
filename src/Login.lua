@@ -10,6 +10,7 @@
 local composer = require( "composer" )
 local Globals = require('src.Globals')
 local Sprites = require('src.Sprites')
+local widget = require( "widget" )
 local DBManager = require('src.DBManager')
 local RestManager = require('src.RestManager')
 local facebook = require("plugin.facebook.v4")
@@ -21,7 +22,7 @@ local circles = {}
 local grpSplash = {}
 local direction = 0
 local idxScr = 1
-local bottomLogin, loadLogin
+local bottomLogin, loadLogin, grpTerminos
 
 
 ---------------------------------------------------------------------------------
@@ -38,8 +39,6 @@ function toLoginFB(isWelcome)
             RestManager.setCity(locIdCity)
             scrLogin = "src.WelcomeHome"
         end
-            
-        --
     else
         DBManager.updateAfiliated(1)
     end
@@ -59,6 +58,112 @@ function toLoginFree()
     Globals.isReadOnly = true
     composer.removeScene( "src.Home" )
     composer.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
+end
+
+function closeTerminos(event)
+    if grpTerminos then
+        grpTerminos:removeSelf()
+        grpTerminos = nil;
+    end
+end
+
+function toTerminos()
+    if grpTerminos then
+        grpTerminos:removeSelf()
+        grpTerminos = nil;
+    end
+    grpTerminos = display.newGroup()
+    screen:insert(grpTerminos)
+    
+    function setDes(event)
+        return true
+    end
+    local bg = display.newRect(midW, midH, intW, intH )
+    bg.alpha = .5
+    bg:setFillColor( 0 )
+    bg:addEventListener( 'tap', setDes )
+    grpTerminos:insert(bg)
+    
+    local bg1 = display.newRoundedRect(midW, midH, 410, 440, 5 )
+    bg1:setFillColor( unpack(cTurquesa) )
+    grpTerminos:insert(bg1)
+    
+    local bg2 = display.newRoundedRect(midW, midH, 404, 434, 5 )
+    bg2:setFillColor( unpack(cWhite) )
+    grpTerminos:insert(bg2)
+    
+    local iconClose = display.newImage("img/icon/iconClose.png")
+    iconClose:translate(midW + 180, midH - 195)
+    iconClose:addEventListener( 'tap', closeTerminos )
+    grpTerminos:insert( iconClose )
+    
+    local scrViewTerminos = widget.newScrollView{
+		width = 400,
+		height = 390,
+		horizontalScrollDisabled = true
+	}
+    scrViewTerminos.x = midW
+    scrViewTerminos.y = midH + 10
+	grpTerminos:insert(scrViewTerminos)
+    
+    local lblTerm = display.newText( {
+        text = "Tuki Términos y Condiciones",
+        x = 200, y = 5,
+        font = fontBold, width = 370,
+        fontSize = 20, align = "left"
+    })
+    lblTerm.anchorY = 0
+    lblTerm:setFillColor( unpack(cPurpleL) )
+    scrViewTerminos:insert(lblTerm)
+    
+    local yPosc = 40
+    for z = 1, #tukiTerminos, 1 do 
+        
+         local lblTermX = display.newText( {
+            text = tukiTerminos[z],
+            x = 200, y = yPosc,
+            font = fontRegular, width = 370,
+            fontSize = 13, align = "left"
+        })
+        lblTermX.anchorY = 0
+        lblTermX:setFillColor( unpack(cPurpleL) )
+        scrViewTerminos:insert(lblTermX)
+        
+        yPosc = yPosc + lblTermX.height + 15
+        
+    end
+    yPosc = yPosc + 10
+    
+    local lblTerm = display.newText( {
+        text = "Tuki Aviso de Privacidad",
+        x = 200, y = yPosc,
+        font = fontBold, width = 370,
+        fontSize = 20, align = "left"
+    })
+    lblTerm.anchorY = 0
+    lblTerm:setFillColor( unpack(cPurpleL) )
+    scrViewTerminos:insert(lblTerm)
+    
+    yPosc = yPosc + 30
+    for z = 1, #tukiPrivacidad, 1 do 
+        
+         local lblTermX = display.newText( {
+            text = tukiPrivacidad[z],
+            x = 200, y = yPosc,
+            font = fontRegular, width = 370,
+            fontSize = 13, align = "left"
+        })
+        lblTermX.anchorY = 0
+        lblTermX:setFillColor( unpack(cPurpleL) )
+        scrViewTerminos:insert(lblTermX)
+        
+        yPosc = yPosc + lblTermX.height + 15
+        
+    end
+    
+    scrViewTerminos:setScrollHeight(yPosc)
+    
+    return true
 end
 
 function insertLoading(isLoading)
@@ -417,18 +522,6 @@ function getSplash(i, parent, posY, postFix)
     end
 end
 
-local cityHandler = function( event )
-
-    -- Check for error (user may have turned off location services)
-    if ( event.errorCode ) then
-        native.showAlert( "GPS Location Error", event.errorMessage, {"OK"} )
-        print( "Location error: " .. tostring( event.errorMessage ) )
-    else
-        RestManager.getLocationCity(event.latitude, event.longitude)
-		Runtime:removeEventListener( "location", cityHandler )
-    end
-end
-
 
 ---------------------------------------------------------------------------------
 -- OVERRIDING SCENES METHODS
@@ -484,22 +577,39 @@ function scene:create( event )
     btnFB:translate(midW, intH - 90)
     bottomLogin:insert( btnFB )
     
+    -- Terminos
+    local bgBtnTerminos = display.newRect( 150, intH - 30, 200, 50 )
+	bgBtnTerminos:setFillColor( .5 )
+    bgBtnTerminos.alpha = .01
+    bgBtnTerminos:addEventListener( "tap", toTerminos )
+	bottomLogin:insert(bgBtnTerminos)
+    
+    local lblTerminos = display.newText( {
+        text = "TERMINOS Y CONDICIONES AVISO DE PRIVACIDAD",
+        x = 150, y = intH - 33, 
+        font = fontBold, width = 190,
+        fontSize = 14, align = "right"
+    })
+    lblTerminos:setFillColor( unpack(cWhite) )
+    bottomLogin:insert(lblTerminos)
+    
     -- User / Email
-    local bgBtnUserName = display.newRect( midW, intH - 30, 260, 50 )
-	bgBtnUserName:setFillColor( 1 )
+    local bgBtnUserName = display.newRect( 355, intH - 30, 150, 50 )
+	bgBtnUserName:setFillColor( .5 )
     bgBtnUserName.alpha = .01
     bgBtnUserName:addEventListener( "tap", toLoginUserName )
 	bottomLogin:insert(bgBtnUserName)
     
-    local lblBottom = display.newText( {
+    local lblUserName = display.newText( {
         text = "INGRESA CON USERNAME Ó EMAIL",
-        x = midW, y = intH - 35, font = fontBold,
-        fontSize = 14, align = "center"
+        x = 370, y = intH - 33, 
+        font = fontBold, width = 170,
+        fontSize = 14, align = "left"
     })
-    lblBottom:setFillColor( unpack(cWhite) )
-    bottomLogin:insert(lblBottom)
+    lblUserName:setFillColor( unpack(cWhite) )
+    bottomLogin:insert(lblUserName)
     
-    local lineSep = display.newRect( midW, intH - 20, 260, 2 )
+    local lineSep = display.newRect( midW + 25, intH - 33, 2, 30 )
 	lineSep:setFillColor( .6 )
 	bottomLogin:insert(lineSep)
     
@@ -520,7 +630,6 @@ function scene:create( event )
     
     -- Touch Listener
     screen:addEventListener( "touch", touchScreen )
-    Runtime:addEventListener( "location", cityHandler )
 end
 
 -- Called immediately after scene has moved onscreen:
@@ -529,7 +638,6 @@ end
 
 -- Remove Listener
 function scene:destroy( event )
-    Runtime:removeEventListener( "location", cityHandler )
     screen:removeEventListener( "touch", touchScreen )
 end
 

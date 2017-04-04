@@ -13,7 +13,7 @@ local RestManager = {}
     local DBManager = require('src.DBManager')
     local dbConfig = DBManager.getSettings()
 
-    --local site = "http://localhost/tuki_ws/"
+    --local site = "http://192.168.1.70/tuki_ws/"
     local site = "http://mytuki.com/api/"
 	
 	function urlencode(str)
@@ -326,6 +326,26 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
+    RestManager.getHomeRewardsGPS = function(latitude, longitude)
+		local url = site.."mobile/getHomeRewardsGPS/format/json/idUser/"..dbConfig.id.."/lat/"..latitude.."/long/"..longitude
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                local wallet = tonumber(data.wallet)
+                local message = tonumber(data.message)
+                showB(wallet, message)
+                
+                loadImage({idx = 0, name = "HomeCommerces", path = "assets/img/api/commerce/", items = data.items})
+            end
+            return true
+        end
+        -- Do request
+        print(url)
+        network.request( url, "GET", callback )
+	end
+
     RestManager.getAccount = function()
 		local url = site.."mobile/getAccount/format/json/idUser/"..dbConfig.id
         
@@ -350,22 +370,26 @@ local RestManager = {}
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
-                showProfile(data.user)
+                showProfile(data.user, data.cities)
             end
             return true
         end
         -- Do request
-        print(url)
         network.request( url, "GET", callback )
 	end
 
-    RestManager.updateProfile = function(email, phone, gender, birthDate)
+    RestManager.updateProfile = function(email, phone, gender, birthDate, idCity)
 		local url = site.."mobile/updateProfile/format/json/idUser/"..dbConfig.id.."/email/"..urlencode(email).."/phone/"..phone
         if not(gender == '') then
             url = url.."/gender/"..gender
         end
         if not(birthDate == '') then
             url = url.."/birthDate/"..birthDate
+        end
+        if idCity then
+            if not(idCity == '') then
+                url = url.."/idCity/"..idCity
+            end
         end
         
         local function callback(event)
@@ -425,8 +449,11 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
     
-    RestManager.getCommercesWCat = function(filters)
-		local url = site.."mobile/getCommercesWCat/format/json/filters/"..filters
+    RestManager.getCommercesWList = function(idCity, gpsLat, gpsLon)
+		local url = site.."mobile/getCommercesWList/format/json/idCity/"..idCity
+        if gpsLat > 0 then
+            url = url.."/lat/"..gpsLat.."/long/"..gpsLon
+        end
         
         local function callback(event)
             if ( event.isError ) then
@@ -437,6 +464,7 @@ local RestManager = {}
             return true
         end
         -- Do request
+        print(url)
         network.request( url, "GET", callback )
 	end
 
@@ -750,7 +778,9 @@ local RestManager = {}
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
-                locIdCity = data.idCity
+                if data.idCity > 0 then
+                    changeCity(data.idCity)
+                end
             end
             return true
         end

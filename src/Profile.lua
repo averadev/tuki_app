@@ -178,7 +178,7 @@ function tapCumple(event)
         day = lblCumple.day
     end
     
-    dateBirthday = widget.newDatePickerWheel(year, month, day)
+    dateBirthday = widget.newDatePickerWheel(tonumber(year), tonumber(month), tonumber(day))
     dateBirthday.anchorChildren = true
     dateBirthday.x = midW
     dateBirthday.y = midH - 15

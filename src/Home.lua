@@ -12,6 +12,7 @@ require('src.Tools')
 local composer = require( "composer" )
 local RestManager = require( "src.RestManager" )
 local Globals = require( "src.Globals" )
+local Sprites = require('src.Sprites')
 local widget = require( "widget" )
 local fxFav = audio.loadSound( "fx/fav.wav")
 local fxTap = audio.loadSound( "fx/click.wav")
@@ -29,12 +30,13 @@ local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight
 local bgM, tools, grpElemns
 local currentCard = 1
-local isDown = true
+local isDown = false
+local isGPS = false
 local isCard, doFlow, direction, detailBox
 local txtPoints, txtTuks, txtPoints2, txtName, txtCommerce, iconRewardBig, btnDetail
 local yItem, itemSize, itemCoverSize, cTuks1, cTuks2, scrViewCM
 local cards, idxA, favH, favOn, favOff
-local wCmp, hCmp, midSize, currentPH
+local wCmp, hCmp, midSize, currentPH, loadMin
 local initHY
 
 -- Arrays
@@ -89,11 +91,13 @@ end
 -- @param event objeto evento
 ------------------------------------
 function tapCommerce(event)
-    local t = event.target
-    audio.play(fxTap)
-    print("Partner")
-    composer.removeScene( "src.Partner" )
-    composer.gotoScene("src.Partner", { time = 400, effect = "slideLeft", params = { idCommerce = comRews[currentPH].id } } )
+    if isDown then
+        local t = event.target
+        audio.play(fxTap)
+        print("Partner")
+        composer.removeScene( "src.Partner" )
+        composer.gotoScene("src.Partner", { time = 400, effect = "slideLeft", params = { idCommerce = comRews[currentPH].id } } )
+    end
     return true
 end
 
@@ -119,6 +123,7 @@ function getHPartner(event)
         workSite:insert(curLogo)
         txtCommerce.text = comRews[idx].name
         txtCommerceDesc.text = comRews[idx].description
+        loadMin.alpha = 1
         loadImage({idx = 0, name = "HomeRewards", path = "assets/img/api/rewards/", items = comRews[idx].rewards})
     end
 end
@@ -129,10 +134,11 @@ end
 ------------------------------------
 function getCarCom(items)
     comRews = items
-    
+    getWorksite()
+    isDown = true
     for z = 1, #comRews, 1 do 
         local xPosc = (z * 100) - 40
-
+        print(comRews[z].name)
         coverHComer[z] = display.newContainer( 95, 95 )
         coverHComer[z].idx = z
         coverHComer[z].active = false
@@ -162,6 +168,7 @@ function getCarCom(items)
         coverHComer[z]:insert( coverHComer[z].img )
     end
     -- Call first partner
+    
     getHPartner({target = coverHComer[1]})
     
     if #comRews < 4 then
@@ -182,6 +189,7 @@ end
 ------------------------------------
 function buildCardsR(items)
     -- Clear past
+    loadMin.alpha = 0
     for i = 1, #cardL, 1 do
         if cardL[i] then
             cardL[i]:removeSelf()
@@ -401,89 +409,44 @@ end
 -- Get current position
 -- @param event objeto evento
 ------------------------------------
-local getGPS = function( event )
-
+local getHomeR = function( event )
     -- Check for error (user may have turned off location services)
-    if ( event.errorCode ) then
-        print( "Location error: " .. tostring( event.errorMessage ) )
-    else
-        print("latitude "..event.latitude)
-        print("longitude "..event.longitude)
-        --RestManager.getHomeRewardsGPS()
-		Runtime:removeEventListener( "location", getGPS )
+    if not ( isGPS ) then
+        Runtime:removeEventListener( "location", getGPS )
+        RestManager.getHomeRewards()
     end
 end
 
----------------------------------------------------------------------------------
--- DEFAULT METHODS
----------------------------------------------------------------------------------
+-------------------------------------
+-- Get current position
+-- @param event objeto evento
+------------------------------------
+local getGPS = function( event )
+    -- Check for error (user may have turned off location services)
+    if ( event.errorCode ) then
+        print( "Location error: " .. tostring( event.errorMessage ) )
+        RestManager.getHomeRewards()
+		Runtime:removeEventListener( "location", getGPS )
+    else
+        if not ( isGPS ) then
+            isGPS = true
+            Runtime:removeEventListener( "location", getGPS )
+            RestManager.getHomeRewardsGPS(event.latitude, event.longitude)
+        end
+    end
+end
 
-function scene:create( event )
-	screen = self.view
-    
-    -- Background
-    bgM = display.newRect(midW, midH, intW, intH )
-    bgM.alpha = .01
-    screen:insert(bgM)
-    
-	tools = Tools:new()
-    tools:buildHeader()
-    tools:buildBottomBar()
-    screen:insert(tools)
-    
-    scrViewCM = widget.newScrollView {
-        top = h + 60,
-        left = 0,
-        width = intW,
-        height = 130,
-        verticalScrollDisabled = true,
-		backgroundColor = { unpack(cGrayXXL) }
-    }
-    screen:insert(scrViewCM)
-    
-    -- Tamaños y posicones
-    initHY  = h + 220 
-    allH = intH - h
-    wCmp, hCmp = 440, 330
-    wCTitle, rLRest, hHPoints, yHPoints, hHTuks, xxLCircle = 0, 0, 0, 0, 0, 0
-    -- Footer
-    isFooter = true
-    if allH <= 750 then
-        isFooter = false
-    end
-    -- Resize Cmp
-    if allH <= 685 then
-        wCTitle, rLRest, hHPoints, yHPoints, hHTuks, xxLCircle = 100, 30, 15, 10, 8, 20
-        wCmp, hCmp, hHPoints = 320, 240, 20
-    elseif allH <= 780 then
-        wCTitle, rLRest, hHPoints, yHPoints, hHTuks = 45, 20, 15, 10, 8
-        wCmp, hCmp, hHPoints = 380, 285, 20
-    end
-    midSize = wCmp/2
-    
-    -- Contenedor area de trabajo
-    workSite = display.newGroup()
-    screen:insert(workSite)
-    
-    local bgGrayT = display.newRect(midW - 15, initHY + 35, 400, 80 )
-    bgGrayT:setFillColor( unpack(cWhite) )
-    bgGrayT:addEventListener( 'tap', tapCommerce) 
-    workSite:insert( bgGrayT )
-    
-    local bgGray = display.newRect(midW, initHY + 90,  wCmp + 4, hCmp + 70 )
-    bgGray.anchorY = 0
-    bgGray:setFillColor( unpack(cWhite) )
-    bgGray:addEventListener( 'tap', tapReward) 
-    workSite:insert( bgGray )
-    cards = display.newGroup()
-    workSite:insert(cards)
-    
+-------------------------------------
+-- Obtiene elementos del worksite
+------------------------------------
+function getWorksite()
+    tools:setLoading(false)
     txtCommerce = display.newText({
         text = '',
         y = initHY + 25,
         x = midW + 50, width = 350 - wCTitle,
         font = fontSemiBold,   
-        fontSize = 35, align = "left"
+        fontSize = 28, align = "left"
     })
     txtCommerce:setFillColor( unpack(cBlueH) )
     workSite:insert(txtCommerce)
@@ -556,6 +519,7 @@ function scene:create( event )
     txtTuks:setFillColor( unpack(cWhite) )
     workSite:insert(txtTuks)
     
+    
     -- Bottom
     if isFooter then
         local bgBottom1 = display.newRect(midW, initHY, wCmp + 4, 80 )
@@ -593,15 +557,96 @@ function scene:create( event )
         txtName:setFillColor( unpack(cWhite) )
         workSite:insert(txtName)
     end
+    
+    loadMin = display.newContainer( 442, 405 )
+    loadMin.x = midW
+    loadMin.y = initHY - 122
+    loadMin.alpha = 0
+    workSite:insert(loadMin)
+    local bgLoad = display.newRect(0, 0, 500, 600 )
+    bgLoad:setFillColor( 1 )
+    bgLoad.alpha = .5
+    loadMin:insert(bgLoad)
+    local sheet = graphics.newImageSheet(Sprites.loadingMin.source, Sprites.loadingMin.frames)
+    local loading = display.newSprite(sheet, Sprites.loadingMin.sequences)
+    loadMin:insert(loading)
+    loading:setSequence("play")
+    loading:play()
+end
+
+---------------------------------------------------------------------------------
+-- DEFAULT METHODS
+---------------------------------------------------------------------------------
+
+function scene:create( event )
+	screen = self.view
+    
+    -- Background
+    bgM = display.newRect(midW, midH, intW, intH )
+    bgM.alpha = .01
+    screen:insert(bgM)
+    
+	tools = Tools:new()
+    tools:buildHeader()
+    tools:buildBottomBar()
+    screen:insert(tools)
+    
+    scrViewCM = widget.newScrollView {
+        top = h + 60,
+        left = 0,
+        width = intW,
+        height = 130,
+        verticalScrollDisabled = true,
+		backgroundColor = { unpack(cGrayXXL) }
+    }
+    screen:insert(scrViewCM)
+    
+    -- Tamaños y posicones
+    initHY  = h + 220 
+    allH = intH - h
+    wCmp, hCmp = 440, 330
+    wCTitle, rLRest, hHPoints, yHPoints, hHTuks, xxLCircle = 0, 0, 0, 0, 0, 0
+    -- Footer
+    isFooter = true
+    if allH <= 750 then
+        isFooter = false
+    end
+    -- Resize Cmp
+    if allH <= 685 then
+        wCTitle, rLRest, hHPoints, yHPoints, hHTuks, xxLCircle = 100, 30, 15, 10, 8, 20
+        wCmp, hCmp, hHPoints = 320, 240, 20
+    elseif allH <= 780 then
+        wCTitle, rLRest, hHPoints, yHPoints, hHTuks = 45, 20, 15, 10, 8
+        wCmp, hCmp, hHPoints = 380, 285, 20
+    end
+    midSize = wCmp/2
+    
+    -- Contenedor area de trabajo
+    workSite = display.newGroup()
+    screen:insert(workSite)
+    
+    local bgGrayT = display.newRect(midW - 15, initHY + 35, 400, 80 )
+    bgGrayT:setFillColor( unpack(cWhite) )
+    bgGrayT:addEventListener( 'tap', tapCommerce) 
+    workSite:insert( bgGrayT )
+    
+    local bgGray = display.newRect(midW, initHY + 90,  wCmp + 4, hCmp + 70 )
+    bgGray.anchorY = 0
+    bgGray:setFillColor( unpack(cWhite) )
+    bgGray:addEventListener( 'tap', tapReward) 
+    workSite:insert( bgGray )
+    cards = display.newGroup()
+    workSite:insert(cards)
+    
+    
     -- Obtener imagen QR
     RestManager.getQR()
     
     -- Crea la primera tanda
     tools:toFront()
     tools:setLoading(true, screen)
-    
-    Runtime:addEventListener( "location", getGPS )
-    RestManager.getHomeRewards()
+    local statLocation = Runtime:addEventListener( "location", getGPS )
+    timer.performWithDelay( 1000, getHomeR )
     
 end	
 
@@ -614,6 +659,11 @@ function scene:show( event )
 end
 
 -- Remove Listener
+function scene:hide( event )
+    Runtime:removeEventListener( "location", getGPS )
+end
+
+-- Remove Listener
 function scene:destroy( event )
     Runtime:removeEventListener( "location", getGPS )
 end
@@ -621,7 +671,7 @@ end
 -- Listener setup
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
---scene:addEventListener( "hide", scene )
+scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
 
 

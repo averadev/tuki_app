@@ -165,10 +165,7 @@ function setMessage(item)
         scrViewMe:insert( txtCommerce )
         lastY = lastY + 20
     end 
-    
-    bg1.height = lastY
-    bg2.height = lastY - 4
-    
+        
     -- Set new scroll position
     scrViewMe:setScrollHeight( lastY + 50)
     

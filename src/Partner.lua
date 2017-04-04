@@ -29,7 +29,7 @@ local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight 
 local scrViewPa, tools
 local yPosc = 0
-local idxPartner, usrPoints
+local idxPartner, usrPoints, grpSucursales
 
 -- Arrays
 
@@ -115,6 +115,143 @@ function addB(gift)
     tools:showBubble(true)
 end
 
+function closeSucursales(event)
+    grpSucursales.alpha = 0
+end
+
+function showSucursales(event)
+    grpSucursales.alpha = 1
+end
+
+function makeSucursales(items)
+    grpSucursales = display.newGroup()
+    grpSucursales.alpha = 0
+    screen:insert(grpSucursales)
+    
+    function setDes(event)
+        return true
+    end
+    local bg = display.newRect(midW, midH, intW, intH )
+    bg.alpha = .5
+    bg:setFillColor( 0 )
+    bg:addEventListener( 'tap', setDes )
+    grpSucursales:insert(bg)
+    
+    local bg1 = display.newRoundedRect(midW, midH, 450, 450, 5 )
+    bg1:setFillColor( unpack(cTurquesa) )
+    grpSucursales:insert(bg1)
+    
+    local bg2 = display.newRoundedRect(midW, midH, 444, 444, 5 )
+    bg2:setFillColor( unpack(cWhite) )
+    grpSucursales:insert(bg2)
+    
+    local lblSuc1 = display.newText({
+        text = "TODAS LAS SUCURSALES",     
+        x = 220 - 10, y = midH - 205, width = 350,
+        font = fontSemiBold,
+        fontSize = 20, align = "left"
+    })
+    lblSuc1.anchorY = 0
+    lblSuc1:setFillColor( unpack(cBlueH) )
+    grpSucursales:insert(lblSuc1)
+    
+    local iconClose = display.newImage("img/icon/iconClose.png")
+    iconClose:translate(midW + 195, midH - 200)
+    iconClose:addEventListener( 'tap', closeSucursales )
+    grpSucursales:insert( iconClose )
+    
+    local scrViewSuc = widget.newScrollView{
+		width = 440,
+		height = 390,
+		horizontalScrollDisabled = true
+	}
+    scrViewSuc.x = midW
+    scrViewSuc.y = midH + 15
+	grpSucursales:insert(scrViewSuc)
+    
+    local sucPosc = -20
+    for z = 1, #items, 1 do 
+        sucPosc = sucPosc + 110
+        local bgTitle1 = display.newRoundedRect( 220, sucPosc - 80, 440, 95, 5 )
+        bgTitle1.anchorY = 0
+        bgTitle1:setFillColor( unpack(cBTur) )
+        scrViewSuc:insert( bgTitle1 )
+        local bgTitle2 = display.newRoundedRect( 220, sucPosc - 78, 436, 91, 5 )
+        bgTitle2.anchorY = 0
+        bgTitle2:setFillColor( unpack(cWhite) )
+        scrViewSuc:insert( bgTitle2 )
+
+        local lblSuc1 = display.newText({
+            text = items[z].name,     
+            x = 220 - 10, y = sucPosc - 70, width = 350,
+            font = fontSemiBold,
+            fontSize = 15, align = "left"
+        })
+        lblSuc1.anchorY = 0
+        lblSuc1:setFillColor( unpack(cBlueH) )
+        scrViewSuc:insert(lblSuc1)
+
+        local lblSuc2 = display.newText({
+            text = items[z].address,     
+            x = 220 - 60, y = sucPosc - 50, width = 250,
+            font = fontRegular,
+            fontSize = 14, align = "left"
+        })
+        lblSuc2.anchorY = 0
+        lblSuc2:setFillColor( unpack(cBlueH) )
+        scrViewSuc:insert(lblSuc2)
+        
+        local xtrXpc = 0
+        if lblSuc2.height > 25 then
+            xtrXpc = 15
+        end 
+
+        local lblSuc3 = display.newText({
+            text = items[z].city,     
+            x = 220 - 60, y = (sucPosc - 30) + xtrXpc, width = 250,
+            font = fontRegular,
+            fontSize = 14, align = "left"
+        })
+        lblSuc3.anchorY = 0
+        lblSuc3:setFillColor( unpack(cBlueH) )
+        scrViewSuc:insert(lblSuc3)
+
+        if items[z].phone == '' or not(items[z].phone) then
+            xtrXpc = xtrXpc - 15
+        else
+            local lblSuc4 = display.newText({
+                text = 'Tel: '..items[z].phone,     
+                x = 220 - 60, y = (sucPosc - 12) + xtrXpc, width = 250,
+                font = fontRegular,
+                fontSize = 14, align = "left"
+            })
+            lblSuc4.anchorY = 0
+            lblSuc4:setFillColor( unpack(cBlueH) )
+            scrViewSuc:insert(lblSuc4)
+        end
+        
+        bgTitle1.height = bgTitle1.height + xtrXpc
+        bgTitle2.height = bgTitle2.height + xtrXpc
+        sucPosc = sucPosc + xtrXpc
+        
+        local midSucPosc = bgTitle1.y + (bgTitle1.height / 2)
+        if not (items[z].phone == '' or not(items[z].phone)) then
+            local iconComPhone = display.newImage("img/icon/iconComPhone.png")
+            iconComPhone:translate( 220 + 110, midSucPosc )
+            iconComPhone.url = "tel:"..items[z].phone
+            iconComPhone:addEventListener( 'tap', openUrl)
+            scrViewSuc:insert( iconComPhone )
+        end
+        local iconComPosition = display.newImage("img/icon/iconComPosition.png")
+        iconComPosition:translate( 220 + 175, midSucPosc )
+        scrViewSuc:insert( iconComPosition )
+    end
+    
+    scrViewSuc:setScrollHeight(sucPosc + 20)
+    
+    return true
+end
+
 -------------------------------------
 -- Mostramos informacion del comercio
 -- @param item comercio
@@ -161,7 +298,7 @@ function setCommerce(item, branchs, rewards)
         y = yPosc + 67,
         x = midW + 90, width = 260,
         font = fontBold,   
-        fontSize = 30, align = "left"
+        fontSize = 23, align = "left"
     })
     txtCommerce:setFillColor( unpack(cWhite) )
     scrViewPa:insert(txtCommerce)
@@ -320,7 +457,11 @@ function setCommerce(item, branchs, rewards)
     end
     
     -- Branch's
-    for z = 1, #branchs, 1 do 
+    local maxR = #branchs
+    if maxR > 4 then
+        maxR = 4
+    end
+    for z = 1, maxR, 1 do 
         yPosc = yPosc + 110
         local bgTitle1 = display.newRoundedRect( midW, yPosc - 80, 440, 95, 5 )
         bgTitle1.anchorY = 0
@@ -395,6 +536,31 @@ function setCommerce(item, branchs, rewards)
         local iconComPosition = display.newImage("img/icon/iconComPosition.png")
         iconComPosition:translate( midW + 175, midSucPosc )
         scrViewPa:insert( iconComPosition )
+    end
+    -- Additionals branchs
+    if #branchs > 4 then
+        local bgMore = display.newRoundedRect( midW, yPosc + 50, 200, 45, 5 )
+        bgMore:setFillColor( {
+            type = 'gradient',
+            color1 = { unpack(cBTur) }, 
+            color2 = { unpack(cBBlu) },
+            direction = "top"
+        } )
+        bgMore:addEventListener( 'tap', showSucursales)
+        scrViewPa:insert( bgMore )
+        
+        local lblSuc1 = display.newText({
+            text = "Ver mas sucursales...",     
+            x = midW, y = yPosc + 50, width = 180,
+            font = fontSemiBold,
+            fontSize = 15, align = "center"
+        })
+        lblSuc1:setFillColor( unpack(cWhite) )
+        scrViewPa:insert(lblSuc1)
+        
+        makeSucursales(branchs)
+        
+        yPosc = yPosc + 60
     end
     
     -- Social Buttons

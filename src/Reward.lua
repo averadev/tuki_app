@@ -432,6 +432,7 @@ function setReward(item)
     scrViewRe:insert( txtTerminos2 )
     
     yPosc = txtTerminos2.y + txtTerminos2.height + 40
+    print("setScrollHeight"..yPosc)
     scrViewRe:setScrollHeight(yPosc)
     
     -- Load logo Comercio

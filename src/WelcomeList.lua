@@ -287,18 +287,11 @@ function scene:create( event )
     
     tools:setLoading(true, scrViewWL)
     
+    RestManager.getCommercesWList(locIdCity, gpsLat, gpsLon)
+    
 end	
 -- Called immediately after scene has moved onscreen:
 function scene:show( event )
-    if event.phase == "will" then 
-        -- Get by Location
-        if event.params.isLocation then
-            --Runtime:addEventListener( "location", locationHandler )
-            RestManager.getCommercesByGPS(21.163405, -86.815875)
-        else
-            RestManager.getCommercesWCat(event.params.filter)
-        end
-    end
 end
 
 -- Remove Listener
