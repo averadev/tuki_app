@@ -40,10 +40,29 @@ function closeCumple(event)
 end
 
 ------------------------------------
+-- Oculta teclado
+-- @param event objeto evento
+------------------------------------
+function closeKeyboard(event)
+    -- Hide Keyboard
+    native.setKeyboardFocus(nil)
+end
+
+------------------------------------
 -- Actualizar Perfil
 -- @param event objeto evento
 ------------------------------------
 function updateProfile(event)
+    local email = '-'
+    if not (txtProfEmail.text == '') then
+        email = txtProfEmail.text
+    end 
+    
+    local phone = '-'
+    if not (txtProfPhone.text == '') then
+        phone = txtProfPhone.text
+    end
+    
     local gender = ''
     if grpMale.alpha == 1 then
         gender = 'male'
@@ -58,7 +77,7 @@ function updateProfile(event)
     
     hideTxt(true)
     tools:setLoading(true, scrViewProf)
-    RestManager.updateProfile(txtProfEmail.text, txtProfPhone.text, gender, birthDate)
+    RestManager.updateProfile(email, phone, gender, birthDate)
 end
 
 ------------------------------------
@@ -438,6 +457,7 @@ function scene:create( event )
 		backgroundColor = { 1 }
 	}
 	screen:insert(scrViewProf)
+    scrViewProf:addEventListener( 'tap', closeKeyboard )
     scrViewProf:toBack()
     
     -- Get Data

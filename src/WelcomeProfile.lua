@@ -62,16 +62,35 @@ function changeCity(idCity)
 end
 
 ------------------------------------
+-- Oculta teclado
+-- @param event objeto evento
+------------------------------------
+function closeKeyboard(event)
+    -- Hide Keyboard
+    native.setKeyboardFocus(nil)
+end
+
+------------------------------------
 -- Actualizar Perfil
 -- @param event objeto evento
 ------------------------------------
-function updateProfile(event)
+function updateProfile(event)    
+    local email = '-'
+    if not (txtProfEmail.text == '') then
+        email = txtProfEmail.text
+    end 
+    
+    local phone = '-'
+    if not (txtProfPhone.text == '') then
+        phone = txtProfPhone.text
+    end
+    
     local gender = ''
     if grpMale.alpha == 1 then
         gender = 'male'
     elseif grpFemale.alpha == 1 then
         gender = 'female'
-    end
+    end 
     
     local birthDate = ''
     if lblCumple.month then
@@ -85,7 +104,7 @@ function updateProfile(event)
     
     hideTxt(true)
     tools:setLoading(true, screen)
-    RestManager.updateProfile(txtProfEmail.text, txtProfPhone.text, gender, birthDate, idCity)
+    RestManager.updateProfile(email, phone, gender, birthDate, idCity)
 end
 
 ------------------------------------
@@ -370,6 +389,8 @@ function scene:create( event )
 	screen = self.view
     
     tools = Tools:new()
+    
+    screen:addEventListener( 'tap', closeKeyboard )
     
     local bgWelcome = display.newImage("img/deco/bgWelcome.png")
     bgWelcome:translate( midW, 480)
