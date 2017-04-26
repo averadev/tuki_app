@@ -117,7 +117,7 @@ function showAccount(usuario)
     scrViewA:insert( lnDot480 )
     
     local lblTopL = display.newText({
-        text = (#usuario.joined), 
+        text = tostring(#usuario.joined), 
         x = 120, y = lastY, width = 160, 
         font = fontBold,   
         fontSize = 30, align = "center"
@@ -134,7 +134,7 @@ function showAccount(usuario)
     scrViewA:insert( lblTopL0 )
     
     local lblTopR = display.newText({
-        text = availableR, 
+        text = tostring(availableR), 
         x = 360, y = lastY, width = 70, 
         font = fontBold,   
         fontSize = 30, align = "center"

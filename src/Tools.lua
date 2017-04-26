@@ -213,7 +213,7 @@ function Tools:new()
             grpWallet:insert(myCircle)
 
             local txt = display.newText({
-                text = myWallet,     
+                text = tostring(myWallet),     
                 x = 63, y = intH - 61, width = 30,
                 font = fontBold, fontSize = 14, align = "center"
             })
@@ -247,7 +247,7 @@ function Tools:new()
             grpMessages:insert(myCircle)
 
             local txt = display.newText({
-                text = myMessages,     
+                text = tostring(myMessages),     
                 x = 165, y = intH - 61, width = 30,
                 font = fontBold, fontSize = 14, align = "center"
             })
