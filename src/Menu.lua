@@ -113,6 +113,14 @@ function Menu:new()
         } )
         self:insert(bgFB)
         
+        local txtVer = display.newText({
+            text = "V. "..system.getInfo( "appVersionString" ), 
+            x = 375, y = 15, width = 100, 
+            font = fontLight, fontSize = 14
+        })
+        txtVer:setFillColor( unpack(cWhite) )
+        self:insert( txtVer )
+        
         -- Avatar
         if dbConfig.fbid == nil or dbConfig.fbid == '' or dbConfig.fbid == 0 or dbConfig.fbid == '0' then     
             local fbFrame = display.newImage("img/deco/circleLogo100.png")
