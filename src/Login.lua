@@ -33,12 +33,7 @@ local bottomLogin, loadLogin, grpTerminos
 function toLoginFB(isWelcome)
     local scrLogin = "src.Home"
     if isWelcome then
-        if locIdCity == 0 or locIdCity == '0' then
-            scrLogin = "src."
-        else
-            RestManager.setCity(locIdCity)
-            scrLogin = "src.WelcomeHome"
-        end
+        scrLogin = "src.WelcomeHome"
     else
         DBManager.updateAfiliated(1)
     end

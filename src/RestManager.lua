@@ -280,6 +280,7 @@ local RestManager = {}
                 local data = json.decode(event.response)
                 if data.success then
                     DBManager.updateUser(data.user)
+                    print('updateUser')
                     if tonumber(data.user.totalCom) == 0 then
                         toLoginFB(true)
                     else
@@ -636,6 +637,7 @@ local RestManager = {}
 
     RestManager.getCommerce = function(idCommerce)
 		local url = site.."mobile/getCommerce/format/json/idUser/"..dbConfig.id.."/idCommerce/"..idCommerce.."/idCity/1"
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
