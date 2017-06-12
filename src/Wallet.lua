@@ -177,7 +177,7 @@ function setListWallet(rewards)
             rowReward[z]:insert( lblGift1 )
             
             local lblGift1 = display.newText({
-                text = rewards[z].name..' '..rewards[z].name,     
+                text = rewards[z].name,     
                 x = 20, y = 100, width = 300, 
                 font = fontSemiBold, height = 23,   
                 fontSize = 18, align = "left"
