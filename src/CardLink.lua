@@ -30,13 +30,12 @@ local scene = composer.newScene()
 -- @param event objeto del evento
 ------------------------------------
 function getQRScan(event)
-    RestManager.cardLink("1011650132082297")
-    local function listQR(message)  
+    local function listQR(event)  
         tools:setLoading(true, screen)
-        RestManager.cardLink(message)
+        RestManager.cardLink(event.message)
     end
     -- Ejecuta el plugin
-    qrscanner.show(listQR, {strings = { title = 'TUKI' }})  
+    qrscanner.show({listener = listQR, text = 'TUKI' })  
 end
 
 -------------------------------------

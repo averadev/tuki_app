@@ -75,6 +75,8 @@ settings =
                 NSAllowsArbitraryLoads = true
             },
             
+            NSPhotoLibraryUsageDescription = "Not used in this app",  
+            NSCameraUsageDescription = "Used to scan QR codes and barcodes",
             UIRequiredDeviceCapabilities = {"location-services", "gps" },
 		 	NSLocationWhenInUseUsageDescription = "Get commerce by location.",
 
@@ -134,6 +136,7 @@ settings =
         facebookAppId = "1091330010907264",
 		usesPermissions =
 		{
+            "android.permission.CAMERA",
 			"android.permission.INTERNET",
             "android.permission.CALL_PHONE",
             "android.permission.ACCESS_FINE_LOCATION",

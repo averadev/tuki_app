@@ -295,20 +295,22 @@ function setCommerce(item, branchs, rewards)
     
     local txtCommerce = display.newText({
         text = item.name,
-        y = yPosc + 67,
+        y = yPosc + 83,
         x = midW + 90, width = 260,
         font = fontBold,   
-        fontSize = 23, align = "left"
+        fontSize = 20, align = "left"
     })
+    txtCommerce.anchorY = 1
     txtCommerce:setFillColor( unpack(cWhite) )
     scrViewPa:insert(txtCommerce)
     local txtCommerceDesc = display.newText({
         text = item.description,
-        y = yPosc + 93,
+        y = yPosc + 83,
         x = midW + 90, width = 260,
         font = fontLight,   
-        fontSize = 18, align = "left"
+        fontSize = 14, align = "left"
     })
+    txtCommerceDesc.anchorY = 0
     txtCommerceDesc:setFillColor( unpack(cWhite) )
     scrViewPa:insert(txtCommerceDesc)
     

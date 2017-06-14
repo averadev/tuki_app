@@ -443,11 +443,12 @@ function getWorksite()
     tools:setLoading(false)
     txtCommerce = display.newText({
         text = '',
-        y = initHY + 25,
+        y = initHY + 35,
         x = midW + 50, width = 350 - wCTitle,
         font = fontSemiBold,   
-        fontSize = 28, align = "left"
+        fontSize = 24, align = "left"
     })
+    txtCommerce.anchorY = 1
     txtCommerce:setFillColor( unpack(cBlueH) )
     workSite:insert(txtCommerce)
     txtCommerceDesc = display.newText({
@@ -455,7 +456,7 @@ function getWorksite()
         y = initHY + 55,
         x = midW + 53, width = 350 - wCTitle,
         font = fontLight,   
-        fontSize = 18, align = "left"
+        fontSize = 16, align = "left"
     })
     txtCommerceDesc:setFillColor( unpack(cBlueH) )
     workSite:insert(txtCommerceDesc)
